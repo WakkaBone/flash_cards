@@ -3,7 +3,7 @@ import express from "express";
 import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
-import api from "./api";
+import cardsApi from "./api/cards";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 
@@ -18,6 +18,6 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true, limit: "30mb" }));
 app.use(cookieParser());
 
-app.use("/api/", api);
+app.use("/api/cards/", cardsApi);
 
 export default app;
