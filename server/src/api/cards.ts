@@ -1,10 +1,32 @@
 import { Router } from "express";
-const router = Router();
-import { addCardValidator } from "../validators/add-card-validator";
-import { addCardController } from "../controllers/add-card-controller";
-import { getCardsController } from "../controllers/get-cards-controller";
+import {
+  addCardController,
+  deleteCardController,
+  getCardsController,
+  markLearnedController,
+  updateCardController,
+  updateStatisticsController,
+} from "../controllers/cards";
+import {
+  addCardValidator,
+  deleteCardValidator,
+  getCardsValidator,
+  markLearnedValidator,
+  updateCardValidator,
+  updateStatisticsValidator,
+} from "../validators";
 
-router.get("/", getCardsController);
+const router = Router();
+
+router.get("/", getCardsValidator, getCardsController);
 router.post("/", addCardValidator, addCardController);
+router.put("/:id", updateCardValidator, updateCardController);
+router.delete("/:id", deleteCardValidator, deleteCardController);
+router.patch(
+  "/:id/statistics/:action",
+  updateStatisticsValidator,
+  updateStatisticsController
+);
+router.patch("/:id/learned", markLearnedValidator, markLearnedController);
 
 export default router;
