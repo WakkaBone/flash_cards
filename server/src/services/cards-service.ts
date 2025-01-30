@@ -20,15 +20,15 @@ type GetCardsFilters = {
 export const CardsService = {
   getCards: async (filters?: GetCardsFilters) => {
     let queryRef = query(collection(db, COLLECTIONS.cards));
-    if (filters.category) {
+    if (filters?.category) {
       queryRef = query(queryRef, where("category", "==", filters.category));
     }
-    if (filters.search) {
+    if (filters?.search) {
       queryRef = query(queryRef, where("english", "==", filters.search));
     }
 
     const { docs } = await getDocs(queryRef);
-    return docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    return docs.map((doc) => ({ id: doc.id, ...(doc.data() as CardModel) }));
   },
 
   addCard: async (card: CardModel) => {

@@ -15,10 +15,12 @@ import {
   updateCardValidator,
   updateStatisticsValidator,
 } from "../validators";
+import { getRandomCardController } from "../controllers/cards/get-random-card-controller";
 
 const router = Router();
 
 router.get("/", getCardsValidator, getCardsController);
+router.get("/random", getRandomCardController);
 router.post("/", addCardValidator, addCardController);
 router.put("/:id", updateCardValidator, updateCardController);
 router.delete("/:id", deleteCardValidator, deleteCardController);
