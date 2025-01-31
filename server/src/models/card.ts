@@ -16,4 +16,5 @@ export type CardModel = {
   category: Categories;
   statistics: StatisticsType;
   isLearned: boolean;
+  createdAt: string;
 };

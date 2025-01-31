@@ -13,13 +13,15 @@ export const updateCardController = async (
   if (!isValid(req, res)) return;
   try {
     const { id } = req.params;
-    const { category, english, hebrew, isLearned, statistics } = req.body;
+    const { category, english, hebrew, isLearned, statistics, createdAt } =
+      req.body;
     const card = {
       category,
       english,
       hebrew,
       statistics,
       isLearned,
+      createdAt,
     };
     await CardsService.updateCard(id, card);
     const response: ApiResponse = { isSuccess: true };

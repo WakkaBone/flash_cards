@@ -21,6 +21,7 @@ export const addCardController = async (
       hebrew,
       statistics: { wrong: 0, correct: 0 },
       isLearned: false,
+      createdAt: new Date().toISOString(),
     };
     const result = await CardsService.addCard(card);
     res.json({ isSuccess: true, data: result });
