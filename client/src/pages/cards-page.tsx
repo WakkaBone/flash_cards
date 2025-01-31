@@ -1,14 +1,12 @@
-import { useEffect, useState } from "react";
-import { useGetCards } from "../hooks/useGetCards";
-import { GetCardsFilters } from "../models/api";
+import { Box } from "@mui/material";
+import { CardsTable } from "../components/cards-table/cards-table";
+import { PageTitle } from "../components/layout/page-title";
 
 export const CardsPage = () => {
-  const [filters, setFilters] = useState<GetCardsFilters>({});
-  const { data } = useGetCards(filters);
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
-  return <h1>Cards</h1>;
+  return (
+    <Box>
+      <PageTitle>Cards</PageTitle>
+      <CardsTable />
+    </Box>
+  );
 };

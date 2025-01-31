@@ -1,5 +1,5 @@
 export enum Categories {
-  Noun,
+  Noun = 1,
   Adjective,
   Verb,
   Other,
@@ -11,6 +11,7 @@ type StatisticsType = {
 };
 
 export type CardModel = {
+  id: string;
   hebrew: string;
   english: string;
   category: Categories;

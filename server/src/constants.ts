@@ -1,5 +1,5 @@
 export const COLLECTIONS = {
-  cards: "cards",
+  cards: "products",
 };
 
 export enum STATISTICS_ACTIONS {

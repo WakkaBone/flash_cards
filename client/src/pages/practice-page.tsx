@@ -1,3 +1,5 @@
+import { PageTitle } from "../components/layout/page-title";
+
 export const PracticePage = () => {
-  return <h1>Practice</h1>;
+  return <PageTitle>Practice</PageTitle>;
 };

@@ -1,3 +1,5 @@
+import { PageTitle } from "../components/layout/page-title";
+
 export const AddCardPage = () => {
-  return <h1>Add Card</h1>;
+  return <PageTitle>Add Card</PageTitle>;
 };

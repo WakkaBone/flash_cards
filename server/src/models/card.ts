@@ -1,5 +1,5 @@
 export enum Categories {
-  Noun,
+  Noun = 1,
   Adjective,
   Verb,
   Other,
