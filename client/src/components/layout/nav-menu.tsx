@@ -13,7 +13,11 @@ export const NavMenu = () => {
     <List>
       {menuOptions.map(({ id, path, label }) => (
         <ListItem key={id}>
-          <ListItemText primary={label} onClick={() => navigate(path)} />
+          <ListItemText
+            sx={{ cursor: "pointer" }}
+            primary={label}
+            onClick={() => navigate(path)}
+          />
         </ListItem>
       ))}
     </List>
