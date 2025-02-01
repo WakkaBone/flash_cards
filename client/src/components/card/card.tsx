@@ -9,23 +9,23 @@ import {
 } from "@mui/material";
 import { PracticeModes } from "../../pages/practice-page";
 import { useRandomCard } from "../../hooks/use-random-card";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { categoryMapper } from "../../utils/mappers";
 import { STATISTICS_ACTIONS } from "../../models/api";
 import { ToastContainer } from "react-toastify";
+import { useMarkCardLearned } from "../../hooks/use-mark-learned";
+import { useDeleteCard } from "../../hooks/use-delete-card";
 
 type WordCardPropsType = {
   mode: PracticeModes;
 };
 
 export const WordCard = ({ mode }: WordCardPropsType) => {
-  const {
-    cardData,
-    isLoading,
-    getAnotherCard,
-    updateCardStats,
-    markCardLearned,
-  } = useRandomCard();
+  const { cardData, isLoading, getAnotherCard, updateCardStats } =
+    useRandomCard();
+  const { markCardLearned, isPending: isMarkingLearned } = useMarkCardLearned();
+  const { deleteCard, isPending: isDeletingCard } = useDeleteCard();
+
   const [translation, setTranslation] = useState<string>("");
   const [showTranslation, setIsShowTranslation] = useState<boolean>(false);
 
@@ -73,15 +73,19 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
     }
   }, [mode, cardData, showTranslation, translation]);
 
+  useEffect(() => setTranslation(""), [showTranslation]);
+
   const getCardActionsByMode = useCallback(() => {
     switch (mode) {
       case PracticeModes.eth:
       case PracticeModes.hte:
         return (
           <>
-            <Button size="small" onClick={handleCheckTranslation}>
-              Check
-            </Button>
+            {!showTranslation && (
+              <Button size="small" onClick={handleCheckTranslation}>
+                Check
+              </Button>
+            )}
             <Button size="small" onClick={handleToggleTranslation}>
               {showTranslation ? "Hide translation" : "Show translation"}
             </Button>
@@ -103,10 +107,18 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
   ]);
 
   const handleMarkAsLearned = useCallback(() => {
-    markCardLearned({
+    if (!cardData) return;
+    markCardLearned(cardData.id, {
       onSuccess: () => getNextCard(),
     });
-  }, [markCardLearned, getNextCard]);
+  }, [markCardLearned, getNextCard, cardData]);
+
+  const handleDeleteCard = useCallback(() => {
+    if (!cardData) return;
+    deleteCard(cardData.id, {
+      onSuccess: () => getNextCard(),
+    });
+  }, [deleteCard, getNextCard, cardData]);
 
   if (isLoading) return <CircularProgress />;
   if (!cardData) return null;
@@ -131,8 +143,13 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
         {cardData.isLearned ? (
           <Button disabled>Learned</Button>
         ) : (
-          <Button onClick={handleMarkAsLearned}>Mark as learned</Button>
+          <Button loading={isMarkingLearned} onClick={handleMarkAsLearned}>
+            Mark as learned
+          </Button>
         )}
+        <Button loading={isDeletingCard} onClick={handleDeleteCard}>
+          Delete card
+        </Button>
       </CardActions>
     </Card>
   );

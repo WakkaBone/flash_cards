@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { GetCardsFilters } from "../../models/api";
 import { useGetCards } from "../../hooks/use-get-cards";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { categoryMapper } from "../../utils/mappers";
 import { CardsTableFilters } from "./cards-table-filters";
 import { CardModel } from "../../models/card";
 import { defaultFilters } from "../../hooks/use-cards-table-filters";
+import { ActionsCell } from "./actions-cell";
+import { ToastContainer } from "react-toastify";
 
-const columns = [
+const columns: GridColDef<CardsTableRowType>[] = [
   { field: "english", headerName: "English" },
   { field: "hebrew", headerName: "Hebrew" },
   { field: "category", headerName: "Category" },
@@ -15,6 +17,12 @@ const columns = [
   { field: "wrong", headerName: "Wrong" },
   { field: "isLearned", headerName: "Is Learned" },
   { field: "createdAt", headerName: "Added At" },
+  {
+    field: "actions",
+    headerName: "",
+    flex: 1,
+    renderCell: (params) => params.value,
+  },
 ];
 
 export type CardsTableRowType = {
@@ -26,6 +34,7 @@ export type CardsTableRowType = {
   wrong: number;
   isLearned: string;
   createdAt: string;
+  actions: JSX.Element;
 };
 
 const mapCardToTableRow = (item: CardModel): CardsTableRowType => ({
@@ -35,6 +44,7 @@ const mapCardToTableRow = (item: CardModel): CardsTableRowType => ({
   wrong: item.statistics.wrong,
   isLearned: item.isLearned ? "Yes" : "No",
   createdAt: new Date().toLocaleString(),
+  actions: <ActionsCell card={item} />,
 });
 
 export const CardsTable = () => {
@@ -48,15 +58,18 @@ export const CardsTable = () => {
   }, [data]);
 
   return (
-    <DataGrid
-      loading={isLoading}
-      slots={{
-        toolbar: () => (
-          <CardsTableFilters filters={filters} onChange={setFilters} />
-        ),
-      }}
-      rows={rows}
-      columns={columns}
-    />
+    <>
+      <DataGrid
+        loading={isLoading}
+        slots={{
+          toolbar: () => (
+            <CardsTableFilters filters={filters} onChange={setFilters} />
+          ),
+        }}
+        rows={rows}
+        columns={columns}
+      />
+      <ToastContainer />
+    </>
   );
 };

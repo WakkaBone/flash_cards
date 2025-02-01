@@ -4,7 +4,6 @@ import { CardModel } from "../models/card";
 import { getRandomCardQuery } from "../queries/get-random-card-query";
 import { useEffect, useState } from "react";
 import { updateCardStatsMutation } from "../mutations/update-card-stats-mutation";
-import { markCardLearnedMutation } from "../mutations/mark-learned-mutation";
 import { toast } from "react-toastify";
 
 const defaultFilters = { category: 0, includeLearned: false };
@@ -61,24 +60,6 @@ export const useRandomCard = () => {
       }
     );
 
-  const { mutate: mutateMarkLearned } = useMutation(markCardLearnedMutation);
-  const markCardLearned = (
-    options?: MutateOptions<ApiResponse, unknown, { cardId: string }, unknown>
-  ) =>
-    mutateMarkLearned(
-      { cardId },
-      {
-        onSuccess: (...args) => {
-          toast("Card marked as learned", { type: "success" });
-          options?.onSuccess?.(...args);
-        },
-        onError: (...args) => {
-          toast("Something went wrong", { type: "error" });
-          options?.onError?.(...args);
-        },
-      }
-    );
-
   return {
     cardData,
     isLoading,
@@ -87,6 +68,5 @@ export const useRandomCard = () => {
     setFilters,
     resetFilters,
     updateCardStats,
-    markCardLearned,
   };
 };

@@ -51,4 +51,12 @@ export const CardsService = {
     );
     return response;
   },
+
+  async deleteCard(cardId: string) {
+    const { data: response } = await httpClient.delete<
+      ApiResponse,
+      ApiResponse
+    >(`${apiPostfix}/${cardId}`);
+    return response;
+  },
 };
