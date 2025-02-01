@@ -4,12 +4,22 @@ import { CardsService } from "../../services/cards-service";
 import { isValid } from "../../utils/validation-util";
 import { CardModel } from "../../models/card";
 
+type GetRandomCardQueryParams = {
+  category?: string;
+  includeLearned?: string;
+};
 export const getRandomCardController = async (
-  req: Request,
+  req: Request<null, ApiResponse, null, GetRandomCardQueryParams>,
   res: Response<ApiResponse<CardModel>>
 ) => {
+  if (!isValid(req, res)) return;
   try {
-    const cards = await CardsService.getCards();
+    const { category, includeLearned } = req.query;
+    const filters = {
+      category: category && Number(category),
+      includeLearned: includeLearned && includeLearned === "true",
+    };
+    const cards = await CardsService.getCards(filters);
     const randomIndex = Math.floor(Math.random() * cards.length);
     res.json({ isSuccess: true, data: cards[randomIndex] });
   } catch (error) {

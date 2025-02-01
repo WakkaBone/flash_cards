@@ -20,7 +20,7 @@ import { getRandomCardController } from "../controllers/cards/get-random-card-co
 const router = Router();
 
 router.get("/", getCardsValidator, getCardsController);
-router.get("/random", getRandomCardController);
+router.get("/random", getCardsValidator, getRandomCardController);
 router.post("/", addCardValidator, addCardController);
 router.put("/:id", updateCardValidator, updateCardController);
 router.delete("/:id", deleteCardValidator, deleteCardController);

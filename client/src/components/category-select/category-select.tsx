@@ -17,6 +17,7 @@ export const CategorySelect = (props: SelectProps) => {
     <FormControl fullWidth>
       <InputLabel id="category-select-label">Categories</InputLabel>
       <Select labelId="category-select-label" id="category-select" {...props}>
+        <MenuItem value={0}>All</MenuItem>
         {categories.map((category) => (
           <MenuItem key={category} value={category}>
             {categoryMapper[category]}

@@ -3,6 +3,8 @@ import { useDebounce } from "./use-debounce";
 import { GetCardsFilters } from "../models/api";
 import { SelectChangeEvent } from "@mui/material";
 
+export const defaultFilters = { includeLearned: false };
+
 export const useCardsTableFilters = (initialFilters: GetCardsFilters) => {
   const [filters, setFilters] = useState<GetCardsFilters>(initialFilters);
   const [search, setSearch] = useState<string>(initialFilters.search || "");
@@ -26,7 +28,7 @@ export const useCardsTableFilters = (initialFilters: GetCardsFilters) => {
   const handleIncludeLearned = (event: React.ChangeEvent<HTMLInputElement>) =>
     setFilters({ ...filters, includeLearned: event.target.checked });
 
-  const handleReset = () => setFilters({});
+  const handleReset = () => setFilters(defaultFilters);
 
   return {
     filters,

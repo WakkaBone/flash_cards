@@ -5,6 +5,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { categoryMapper } from "../../utils/mappers";
 import { CardsTableFilters } from "./cards-table-filters";
 import { CardModel } from "../../models/card";
+import { defaultFilters } from "../../hooks/use-cards-table-filters";
 
 const columns = [
   { field: "english", headerName: "English" },
@@ -37,7 +38,7 @@ const mapCardToTableRow = (item: CardModel): CardsTableRowType => ({
 });
 
 export const CardsTable = () => {
-  const [filters, setFilters] = useState<GetCardsFilters>({});
+  const [filters, setFilters] = useState<GetCardsFilters>(defaultFilters);
   const { data, isLoading } = useGetCards(filters);
   const [rows, setRows] = useState<CardsTableRowType[]>([]);
 
