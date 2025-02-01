@@ -5,6 +5,7 @@ import { getRandomCardQuery } from "../queries/get-random-card-query";
 import { useEffect, useState } from "react";
 import { updateCardStatsMutation } from "../mutations/update-card-stats-mutation";
 import { toast } from "react-toastify";
+import deepEqual from "deep-equal";
 
 const defaultFilters = { category: 0, includeLearned: false };
 
@@ -24,8 +25,9 @@ export const useRandomCard = () => {
   const resetFilters = () => setFilters(defaultFilters);
 
   useEffect(() => {
+    if (deepEqual(filters, defaultFilters)) return;
     getAnotherCard();
-  }, [filters.category, filters.includeLearned, getAnotherCard]);
+  }, [filters, getAnotherCard]);
 
   useEffect(() => {
     if (!cardData) return;

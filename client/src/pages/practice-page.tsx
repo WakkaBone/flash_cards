@@ -25,6 +25,7 @@ export const PracticePage = () => {
           onChange={(e) => setPracticeMode(e.target.value as PracticeModes)}
         />
         <CategorySelect
+          showAll
           value={filters.category}
           onChange={(event) =>
             setFilters({ ...filters, category: Number(event.target.value) })

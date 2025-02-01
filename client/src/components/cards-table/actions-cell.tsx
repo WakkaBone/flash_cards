@@ -1,12 +1,15 @@
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { CardModel } from "../../models/card";
 import { GridDeleteIcon } from "@mui/x-data-grid";
 import { EditNotificationsOutlined } from "@mui/icons-material";
 import { useMarkCardLearned } from "../../hooks/use-mark-learned";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useDeleteCard } from "../../hooks/use-delete-card";
+import { EditCardModal } from "../edit-card-modal/edit-card-modal";
 
 export const ActionsCell = ({ card }: { card: CardModel }) => {
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+
   const isLearned = !!card.isLearned;
   const { markCardLearned, isPending: isMarkLearnedPending } =
     useMarkCardLearned();
@@ -21,8 +24,11 @@ export const ActionsCell = ({ card }: { card: CardModel }) => {
     [deleteCard, card]
   );
 
+  const onOpenEditModal = () => setIsEdit(true);
+  const onCloseEditModal = () => setIsEdit(false);
+
   return (
-    <>
+    <Box>
       <Button
         size="small"
         onClick={handleDeleteCard}
@@ -31,17 +37,19 @@ export const ActionsCell = ({ card }: { card: CardModel }) => {
       >
         <GridDeleteIcon />
       </Button>
-      <Button size="small" title="Edit">
+      <Button onClick={onOpenEditModal} size="small" title="Edit">
         <EditNotificationsOutlined />
       </Button>
       <Button
         disabled={isLearned}
+        variant="contained"
         onClick={handleMarkAsLearned}
         loading={isMarkLearnedPending}
         size="small"
       >
-        {isLearned ? "Learned" : "Mark as Learned"}
+        Learned
       </Button>
-    </>
+      <EditCardModal open={isEdit} card={card} onClose={onCloseEditModal} />
+    </Box>
   );
 };

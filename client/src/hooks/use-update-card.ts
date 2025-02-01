@@ -3,21 +3,21 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { addCardMutation } from "../mutations/add-card-mutation";
-import { AddCardPayload, ApiResponse } from "../models/api";
+import { ApiResponse, UpdateCardPayload } from "../models/api";
 import { toast } from "react-toastify";
+import { updateCardMutation } from "../mutations/update-card-mutation";
 
-export const useAddCard = () => {
+export const useUpdateCard = () => {
   const queryClient = useQueryClient();
-  const { mutate, ...rest } = useMutation(addCardMutation);
+  const { mutate, ...rest } = useMutation(updateCardMutation);
 
-  const addCard = (
-    card: AddCardPayload,
-    options?: MutateOptions<ApiResponse, unknown, AddCardPayload, unknown>
+  const updateCard = (
+    card: UpdateCardPayload,
+    options?: MutateOptions<ApiResponse, unknown, UpdateCardPayload, unknown>
   ) =>
     mutate(card, {
       onSuccess: (...args) => {
-        toast("Card added successfully", { type: "success" });
+        toast("Card updated successfully", { type: "success" });
         queryClient.invalidateQueries({ queryKey: ["cards"] });
         options?.onSuccess?.(...args);
       },
@@ -26,5 +26,5 @@ export const useAddCard = () => {
         options?.onError?.(...args);
       },
     });
-  return { addCard, ...rest };
+  return { updateCard, ...rest };
 };

@@ -1,36 +1,26 @@
-import { Button, Stack, TextField } from "@mui/material";
+import { Stack, TextField } from "@mui/material";
 import { Categories } from "../../models/card";
-import { useForm, Controller } from "react-hook-form";
+import { Controller, UseFormReturn } from "react-hook-form";
 import { CategorySelect } from "../category-select/category-select";
-import { useAddCard } from "../../hooks/use-add-card";
 import { ToastContainer } from "react-toastify";
 
-type AddCardFormType = {
+export type EditCardFormType = {
   category: Categories;
   english: string;
   hebrew: string;
 };
 
-export const AddCardForm = () => {
-  const { addCard, isPending } = useAddCard();
-
+type EditCardFormPropsType = {
+  formProps: UseFormReturn<EditCardFormType>;
+};
+export const EditCardForm = ({ formProps }: EditCardFormPropsType) => {
   const {
     control,
-    handleSubmit,
-    reset,
     formState: { errors },
-  } = useForm<AddCardFormType>({
-    defaultValues: { category: Categories.Noun, english: "", hebrew: "" },
-  });
-
-  const onSubmit = (data: AddCardFormType) => {
-    addCard(data, {
-      onSuccess: () => reset(),
-    });
-  };
+  } = formProps;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
+    <>
       <Stack spacing={2} mb={2} direction={"row"} alignItems={"start"}>
         <Controller
           name="english"
@@ -70,16 +60,8 @@ export const AddCardForm = () => {
             <CategorySelect {...field} fullWidth error={!!errors.category} />
           )}
         />
-        <Button
-          disabled={isPending}
-          type="submit"
-          variant="contained"
-          fullWidth
-        >
-          Add
-        </Button>
       </Stack>
       <ToastContainer />
-    </form>
+    </>
   );
 };

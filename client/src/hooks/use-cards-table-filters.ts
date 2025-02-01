@@ -10,14 +10,13 @@ export const useCardsTableFilters = (initialFilters: GetCardsFilters) => {
   const [search, setSearch] = useState<string>(initialFilters.search || "");
   const debouncedSearch = useDebounce(search, 500);
 
-  useEffect(
-    () =>
+  useEffect(() => {
+    debouncedSearch &&
       setFilters((prevFilters) => ({
         ...prevFilters,
         search: debouncedSearch,
-      })),
-    [debouncedSearch]
-  );
+      }));
+  }, [debouncedSearch]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) =>
     setSearch(event.target.value);

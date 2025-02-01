@@ -1,4 +1,4 @@
-import { Categories } from "./card";
+import { CardModel, Categories } from "./card";
 
 export interface ApiResponse<T = any> {
   isSuccess: boolean;
@@ -22,3 +22,5 @@ export type AddCardPayload = {
   english: string;
   hebrew: string;
 };
+
+export type UpdateCardPayload = CardModel;

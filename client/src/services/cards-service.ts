@@ -4,6 +4,7 @@ import {
   ApiResponse,
   GetCardsFilters,
   STATISTICS_ACTIONS,
+  UpdateCardPayload,
 } from "../models/api";
 import { CardModel } from "../models/card";
 import { buildUrl } from "../utils/url-util";
@@ -57,6 +58,15 @@ export const CardsService = {
       ApiResponse,
       ApiResponse
     >(`${apiPostfix}/${cardId}`);
+    return response;
+  },
+
+  async updateCard(card: UpdateCardPayload) {
+    const { data: response } = await httpClient.put<
+      ApiResponse,
+      ApiResponse,
+      UpdateCardPayload
+    >(`${apiPostfix}/${card.id}`, card);
     return response;
   },
 };
