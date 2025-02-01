@@ -16,10 +16,15 @@ import { COLLECTIONS, STATISTICS_ACTIONS } from "../constants";
 type GetCardsFilters = {
   category?: number;
   search?: string;
+  includeLearned?: boolean;
 };
 export const CardsService = {
   getCards: async (filters?: GetCardsFilters) => {
     let queryRef = query(collection(db, COLLECTIONS.cards));
+
+    if (filters?.includeLearned === false) {
+      queryRef = query(queryRef, where("isLearned", "==", false));
+    }
     if (filters?.category) {
       queryRef = query(queryRef, where("category", "==", filters.category));
     }

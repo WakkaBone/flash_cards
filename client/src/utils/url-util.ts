@@ -2,7 +2,7 @@ import { getApiBaseUrl } from "./env-util";
 
 export const buildUrl = (
   path: string,
-  params?: Record<string, string | number>
+  params?: Record<string, string | number | boolean>
 ) => {
   const safeParams = params
     ? Object.fromEntries(

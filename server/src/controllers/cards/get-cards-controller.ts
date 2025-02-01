@@ -6,6 +6,7 @@ import { isValid } from "../../utils/validation-util";
 type GetCardsQueryParams = {
   search?: string;
   category?: string;
+  includeLearned?: string;
 };
 export const getCardsController = async (
   req: Request<null, ApiResponse, null, GetCardsQueryParams>,
@@ -13,10 +14,11 @@ export const getCardsController = async (
 ) => {
   if (!isValid(req, res)) return;
   try {
-    const { search, category } = req.query;
+    const { search, category, includeLearned } = req.query;
     const filters = {
       search: search && search.toString(),
       category: category && Number(category),
+      includeLearned: includeLearned && includeLearned === "true",
     };
     const result = await CardsService.getCards(filters);
     res.json({ isSuccess: true, data: result });

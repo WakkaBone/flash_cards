@@ -23,6 +23,9 @@ export const useCardsTableFilters = (initialFilters: GetCardsFilters) => {
   const handleCategory = (event: SelectChangeEvent<unknown>) =>
     setFilters({ ...filters, category: Number(event.target.value) });
 
+  const handleIncludeLearned = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setFilters({ ...filters, includeLearned: event.target.checked });
+
   const handleReset = () => setFilters({});
 
   return {
@@ -30,6 +33,7 @@ export const useCardsTableFilters = (initialFilters: GetCardsFilters) => {
     search,
     handleSearch,
     handleCategory,
+    handleIncludeLearned,
     handleReset,
   };
 };

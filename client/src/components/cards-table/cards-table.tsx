@@ -12,6 +12,7 @@ const columns = [
   { field: "category", headerName: "Category" },
   { field: "correct", headerName: "Correct" },
   { field: "wrong", headerName: "Wrong" },
+  { field: "isLearned", headerName: "Is Learned" },
   { field: "createdAt", headerName: "Added At" },
 ];
 
@@ -22,6 +23,7 @@ export type CardsTableRowType = {
   category: string;
   correct: number;
   wrong: number;
+  isLearned: string;
   createdAt: string;
 };
 
@@ -30,6 +32,7 @@ const mapCardToTableRow = (item: CardModel): CardsTableRowType => ({
   category: categoryMapper[item.category],
   correct: item.statistics.correct,
   wrong: item.statistics.wrong,
+  isLearned: item.isLearned ? "Yes" : "No",
   createdAt: new Date().toLocaleString(),
 });
 

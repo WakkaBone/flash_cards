@@ -6,7 +6,16 @@ export interface ApiResponse<T = any> {
   error?: any;
 }
 
-export type GetCardsFilters = { category?: Categories; search?: string };
+export type GetCardsFilters = {
+  category?: Categories;
+  search?: string;
+  includeLearned?: boolean;
+};
+
+export enum STATISTICS_ACTIONS {
+  Correct = "correct",
+  Wrong = "wrong",
+}
 
 export type AddCardPayload = {
   category: Categories;
