@@ -1,9 +1,9 @@
 import { MutateOptions, useMutation, useQuery } from "@tanstack/react-query";
 import { ApiResponse, STATISTICS_ACTIONS } from "../models/api";
 import { CardModel } from "../models/card";
-import { getRandomCardQuery } from "../queries/get-random-card-query";
+import { getRandomCardQuery } from "../queries/cards";
 import { useEffect, useState } from "react";
-import { updateCardStatsMutation } from "../mutations/update-card-stats-mutation";
+import { updateCardStatsMutation } from "../mutations/cards";
 import { toast } from "react-toastify";
 import deepEqual from "deep-equal";
 
@@ -58,6 +58,11 @@ export const useRandomCard = () => {
         onError: (...args) => {
           toast("Something went wrong", { type: "error" });
           options?.onError?.(...args);
+        },
+        onSettled(data, error, variables, context) {
+          if (!data?.isSuccess)
+            toast("Something went wrong", { type: "error" });
+          options?.onSettled?.(data, error, variables, context);
         },
       }
     );

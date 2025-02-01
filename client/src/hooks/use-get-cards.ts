@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getCardsQuery } from "../queries/get-cards-query";
+import { getCardsQuery } from "../queries/cards";
 import { ApiResponse, GetCardsFilters } from "../models/api";
 import { CardModel } from "../models/card";
 

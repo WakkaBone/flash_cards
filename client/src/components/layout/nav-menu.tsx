@@ -1,6 +1,6 @@
 import { List, ListItem, ListItemText, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/auth-context";
+import { useAuthContext } from "../../context/auth-context";
 
 const menuOptions = [
   { id: "cards", path: "/", label: "Cards" },
@@ -35,8 +35,9 @@ const MenuItem = ({ id, label, onClick }: MenuItemPropsType) => (
 
 export const NavMenu = () => {
   const navigate = useNavigate();
-  const authContext = useAuth();
+  const authContext = useAuthContext();
   if (!authContext) return null;
+
   return (
     <List sx={{ p: 4 }}>
       {menuOptions.map(({ id, path, label }) => (

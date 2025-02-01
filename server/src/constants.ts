@@ -1,5 +1,6 @@
 export const COLLECTIONS = {
-  cards: "products",
+  users: "users",
+  cards: "cards",
 };
 
 export enum STATISTICS_ACTIONS {

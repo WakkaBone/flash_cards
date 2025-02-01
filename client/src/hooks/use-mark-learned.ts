@@ -4,7 +4,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ApiResponse } from "../models/api";
-import { markCardLearnedMutation } from "../mutations/mark-learned-mutation";
+import { markCardLearnedMutation } from "../mutations/cards";
 import { toast } from "react-toastify";
 
 export const useMarkCardLearned = () => {
@@ -28,6 +28,11 @@ export const useMarkCardLearned = () => {
         onError: (...args) => {
           toast("Something went wrong", { type: "error" });
           options?.onError?.(...args);
+        },
+        onSettled(data, error, variables, context) {
+          if (!data?.isSuccess)
+            toast("Something went wrong", { type: "error" });
+          options?.onSettled?.(data, error, variables, context);
         },
       }
     );

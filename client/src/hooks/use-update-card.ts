@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-query";
 import { ApiResponse, UpdateCardPayload } from "../models/api";
 import { toast } from "react-toastify";
-import { updateCardMutation } from "../mutations/update-card-mutation";
+import { updateCardMutation } from "../mutations/cards";
 
 export const useUpdateCard = () => {
   const queryClient = useQueryClient();
@@ -24,6 +24,10 @@ export const useUpdateCard = () => {
       onError: (...args) => {
         toast("Something went wrong", { type: "error" });
         options?.onError?.(...args);
+      },
+      onSettled(data, error, variables, context) {
+        if (!data?.isSuccess) toast("Something went wrong", { type: "error" });
+        options?.onSettled?.(data, error, variables, context);
       },
     });
   return { updateCard, ...rest };

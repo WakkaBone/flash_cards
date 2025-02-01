@@ -4,6 +4,7 @@ import { updateStatisticsValidator } from "./update-statistics-validator";
 import { deleteCardValidator } from "./delete-card-validator";
 import { markLearnedValidator } from "./mark-learned-validator";
 import { getCardsValidator } from "./get-cards-validator";
+import { loginValidator } from "./login-validator";
 
 export {
   addCardValidator,
@@ -12,4 +13,5 @@ export {
   deleteCardValidator,
   markLearnedValidator,
   getCardsValidator,
+  loginValidator,
 };

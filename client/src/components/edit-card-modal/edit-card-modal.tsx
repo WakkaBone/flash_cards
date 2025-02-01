@@ -8,7 +8,7 @@ import {
 import { CardModel } from "../../models/card";
 import { EditCardForm, EditCardFormType } from "./edit-card-form";
 import { useForm } from "react-hook-form";
-import { useUpdateCard } from "../../hooks/use-update-card";
+import { useUpdateCard } from "../../hooks";
 import { useEffect } from "react";
 
 type EditCardModalPropsType = {

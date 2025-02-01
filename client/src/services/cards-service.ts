@@ -15,7 +15,8 @@ export const CardsService = {
   async getCards(filters: GetCardsFilters) {
     const url = buildUrl(apiPostfix, filters);
     const { data: response } = await httpClient.get<ApiResponse<CardModel[]>>(
-      url
+      url,
+      { withCredentials: true }
     );
     return response;
   },
@@ -25,7 +26,8 @@ export const CardsService = {
     if (category) params["category"] = category;
     const url = buildUrl(`${apiPostfix}/random`, params);
     const { data: response } = await httpClient.get<ApiResponse<CardModel>>(
-      url
+      url,
+      { withCredentials: true }
     );
     return response;
   },
@@ -35,20 +37,24 @@ export const CardsService = {
       ApiResponse,
       ApiResponse,
       AddCardPayload
-    >(apiPostfix, card);
+    >(apiPostfix, card, { withCredentials: true });
     return response;
   },
 
   async updateCardStats(cardId: string, outcome: STATISTICS_ACTIONS) {
     const { data: response } = await httpClient.patch<ApiResponse, ApiResponse>(
-      `${apiPostfix}/${cardId}/statistics/${outcome}`
+      `${apiPostfix}/${cardId}/statistics/${outcome}`,
+      undefined,
+      { withCredentials: true }
     );
     return response;
   },
 
   async markLearned(cardId: string) {
     const { data: response } = await httpClient.patch<ApiResponse, ApiResponse>(
-      `${apiPostfix}/${cardId}/learned`
+      `${apiPostfix}/${cardId}/learned`,
+      undefined,
+      { withCredentials: true }
     );
     return response;
   },
@@ -57,7 +63,7 @@ export const CardsService = {
     const { data: response } = await httpClient.delete<
       ApiResponse,
       ApiResponse
-    >(`${apiPostfix}/${cardId}`);
+    >(`${apiPostfix}/${cardId}`, { withCredentials: true });
     return response;
   },
 
@@ -66,7 +72,7 @@ export const CardsService = {
       ApiResponse,
       ApiResponse,
       UpdateCardPayload
-    >(`${apiPostfix}/${card.id}`, card);
+    >(`${apiPostfix}/${card.id}`, card, { withCredentials: true });
     return response;
   },
 };

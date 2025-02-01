@@ -3,7 +3,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { addCardMutation } from "../mutations/add-card-mutation";
+import { addCardMutation } from "../mutations/cards";
 import { AddCardPayload, ApiResponse } from "../models/api";
 import { toast } from "react-toastify";
 
@@ -24,6 +24,10 @@ export const useAddCard = () => {
       onError: (...args) => {
         toast("Something went wrong", { type: "error" });
         options?.onError?.(...args);
+      },
+      onSettled(data, error, variables, context) {
+        if (!data?.isSuccess) toast("Something went wrong", { type: "error" });
+        options?.onSettled?.(data, error, variables, context);
       },
     });
   return { addCard, ...rest };

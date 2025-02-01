@@ -8,13 +8,11 @@ import {
   Typography,
 } from "@mui/material";
 import { PracticeModes } from "../../pages/practice-page";
-import { useRandomCard } from "../../hooks/use-random-card";
 import { useCallback, useEffect, useState } from "react";
 import { categoryMapper } from "../../utils/mappers";
 import { STATISTICS_ACTIONS } from "../../models/api";
 import { ToastContainer } from "react-toastify";
-import { useMarkCardLearned } from "../../hooks/use-mark-learned";
-import { useDeleteCard } from "../../hooks/use-delete-card";
+import { useMarkCardLearned, useDeleteCard, useRandomCard } from "../../hooks";
 
 type WordCardPropsType = {
   mode: PracticeModes;
@@ -108,6 +106,7 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
     handleCheckTranslation,
     handleToggleTranslation,
     showTranslation,
+    translation,
   ]);
 
   const handleMarkAsLearned = useCallback(() => {

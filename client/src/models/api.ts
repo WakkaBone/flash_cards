@@ -24,3 +24,8 @@ export type AddCardPayload = {
 };
 
 export type UpdateCardPayload = CardModel;
+
+export type LoginPayload = {
+  username: string;
+  password: string;
+};

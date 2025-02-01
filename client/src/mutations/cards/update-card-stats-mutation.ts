@@ -1,6 +1,6 @@
 import { UseMutationOptions } from "@tanstack/react-query";
-import { CardsService } from "../services/cards-service";
-import { ApiResponse, STATISTICS_ACTIONS } from "../models/api";
+import { CardsService } from "../../services/cards-service";
+import { ApiResponse, STATISTICS_ACTIONS } from "../../models/api";
 
 type ArgsType = {
   cardId: string;

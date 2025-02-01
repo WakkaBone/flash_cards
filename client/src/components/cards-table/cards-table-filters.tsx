@@ -3,7 +3,7 @@ import { GetCardsFilters } from "../../models/api";
 import { useEffect } from "react";
 import deepEqual from "deep-equal";
 import { CategorySelect } from "../category-select/category-select";
-import { useCardsTableFilters } from "../../hooks/use-cards-table-filters";
+import { useCardsTableFilters } from "../../hooks";
 
 type CardsTableFiltersPropsType = {
   filters: GetCardsFilters;

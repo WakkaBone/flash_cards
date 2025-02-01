@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-query";
 import { ApiResponse } from "../models/api";
 import { toast } from "react-toastify";
-import { deleteCardMutation } from "../mutations/delete-card-mutation";
+import { deleteCardMutation } from "../mutations/cards";
 
 export const useDeleteCard = () => {
   const queryClient = useQueryClient();
@@ -27,6 +27,11 @@ export const useDeleteCard = () => {
         onError: (...args) => {
           toast("Something went wrong", { type: "error" });
           options?.onError?.(...args);
+        },
+        onSettled(data, error, variables, context) {
+          if (!data?.isSuccess)
+            toast("Something went wrong", { type: "error" });
+          options?.onSettled?.(data, error, variables, context);
         },
       }
     );

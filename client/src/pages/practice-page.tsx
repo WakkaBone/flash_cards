@@ -3,7 +3,7 @@ import { WordCard } from "../components/card/card";
 import { PageTitle } from "../components/layout/page-title";
 import { PracticeModeSelect } from "../components/practice-mode-select/practice-mode-select";
 import { Button, Checkbox, FormControlLabel, Stack } from "@mui/material";
-import { useRandomCard } from "../hooks/use-random-card";
+import { useRandomCard } from "../hooks";
 import { CategorySelect } from "../components/category-select/category-select";
 
 export enum PracticeModes {

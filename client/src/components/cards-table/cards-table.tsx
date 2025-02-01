@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { GetCardsFilters } from "../../models/api";
-import { useGetCards } from "../../hooks/use-get-cards";
+import { useGetCards } from "../../hooks";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { categoryMapper } from "../../utils/mappers";
 import { CardsTableFilters } from "./cards-table-filters";

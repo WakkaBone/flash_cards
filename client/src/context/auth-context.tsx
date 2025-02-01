@@ -1,16 +1,16 @@
 import {
   PropsWithChildren,
-  useContext,
-  useState,
   createContext,
+  useContext,
   useEffect,
+  useState,
 } from "react";
 import { toast } from "react-toastify";
-import Cookies from "js-cookie"; // Import js-cookie
+import { useAuth } from "../hooks";
+import Cookies from "js-cookie";
 
 type SimpleCredentialsType = { username: string; password: string };
 interface AuthContextType {
-  user?: string;
   isAuthenticated: boolean;
   login: (credentials: SimpleCredentialsType) => void;
   logout: () => void;
@@ -18,43 +18,46 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const AUTH_TOKEN_KEY = "auth_token";
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const [user, setUser] = useState<string | undefined>(
-    Cookies.get(AUTH_TOKEN_KEY)
-  );
+  const { login: loginMutation, logout: logoutMutation } = useAuth();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const authToken = Cookies.get(AUTH_TOKEN_KEY);
-    if (authToken) setUser(authToken);
+    const authToken = Cookies.get("auth_token");
+    setIsAuthenticated(!!authToken);
   }, []);
 
   const login = (credentials: SimpleCredentialsType) => {
-    const username = process.env.REACT_APP_USERNAME;
-    const password = process.env.REACT_APP_PASSWORD;
-    if (
-      credentials.username === username &&
-      credentials.password === password
-    ) {
-      setUser(username);
-      Cookies.set(AUTH_TOKEN_KEY, username, { expires: 10 / 1440 });
-    } else {
-      toast("Invalid credentials", { type: "error" });
-    }
+    loginMutation(credentials, {
+      onSettled(data) {
+        const isSuccess = !!data?.isSuccess;
+        if (!isSuccess) {
+          toast("Failed to log in", { type: "error" });
+        } else {
+          setIsAuthenticated(true);
+        }
+      },
+    });
   };
 
   const logout = () => {
-    setUser(undefined);
-    Cookies.remove(AUTH_TOKEN_KEY);
+    logoutMutation({
+      onSettled(data) {
+        const isSuccess = !!data?.isSuccess;
+        if (!isSuccess) {
+          toast("Failed to log out", { type: "error" });
+        } else {
+          setIsAuthenticated(false);
+        }
+      },
+    });
   };
 
-  const isAuthenticated = !!user;
-
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuthContext = () => useContext(AuthContext);

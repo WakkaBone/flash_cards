@@ -2,7 +2,7 @@ import { Button, Stack, TextField } from "@mui/material";
 import { Categories } from "../../models/card";
 import { useForm, Controller } from "react-hook-form";
 import { CategorySelect } from "../category-select/category-select";
-import { useAddCard } from "../../hooks/use-add-card";
+import { useAddCard } from "../../hooks";
 import { ToastContainer } from "react-toastify";
 
 type AddCardFormType = {

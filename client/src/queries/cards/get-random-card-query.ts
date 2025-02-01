@@ -1,7 +1,7 @@
 import { DefinedInitialDataOptions } from "@tanstack/react-query";
-import { ApiResponse } from "../models/api";
-import { CardModel, Categories } from "../models/card";
-import { CardsService } from "../services/cards-service";
+import { ApiResponse } from "../../models/api";
+import { CardModel, Categories } from "../../models/card";
+import { CardsService } from "../../services/cards-service";
 
 export const getRandomCardQuery = ({
   includeLearned,

@@ -1,6 +1,6 @@
 import { Box, Button, TextField } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
-import { useAuth } from "../../context/auth-context";
+import { useAuthContext } from "../../context/auth-context";
 
 type AuthFormType = {
   username: string;
@@ -8,7 +8,7 @@ type AuthFormType = {
 };
 
 export const AuthForm = () => {
-  const authContext = useAuth();
+  const authContext = useAuthContext();
   const {
     control,
     formState: { errors },

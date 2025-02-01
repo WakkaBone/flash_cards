@@ -1,9 +1,8 @@
 import { Box, Button, Tooltip } from "@mui/material";
 import { CardModel } from "../../models/card";
 import { DeleteOutlineOutlined, Done, EditNote } from "@mui/icons-material";
-import { useMarkCardLearned } from "../../hooks/use-mark-learned";
 import { useCallback, useState } from "react";
-import { useDeleteCard } from "../../hooks/use-delete-card";
+import { useDeleteCard, useMarkCardLearned } from "../../hooks";
 import { EditCardModal } from "../edit-card-modal/edit-card-modal";
 
 export const ActionsCell = ({ card }: { card: CardModel }) => {

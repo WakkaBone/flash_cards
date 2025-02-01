@@ -1,11 +1,11 @@
 import { Container, Paper, Typography } from "@mui/material";
-import { useAuth } from "../context/auth-context";
+import { useAuthContext } from "../context/auth-context";
 import { ToastContainer } from "react-toastify";
 import { Navigate } from "react-router-dom";
 import { AuthForm } from "../components/auth-form/auth-form";
 
 export const AuthPage = () => {
-  const authContext = useAuth();
+  const authContext = useAuthContext();
   if (!authContext) return null;
 
   const { isAuthenticated } = authContext;
