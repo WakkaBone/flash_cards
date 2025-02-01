@@ -1,5 +1,6 @@
 import { List, ListItem, ListItemText, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/auth-context";
 
 const menuOptions = [
   { id: "cards", path: "/", label: "Cards" },
@@ -7,29 +8,45 @@ const menuOptions = [
   { id: "practice", path: "/practice", label: "Practice" },
 ];
 
+type MenuItemPropsType = {
+  id: string;
+  label: string;
+  onClick: () => void;
+};
+const MenuItem = ({ id, label, onClick }: MenuItemPropsType) => (
+  <ListItem key={id}>
+    <ListItemText
+      sx={{ cursor: "pointer" }}
+      primary={
+        <Typography
+          component="a"
+          sx={{
+            color: "primary.main",
+            cursor: "pointer",
+          }}
+        >
+          {label}
+        </Typography>
+      }
+      onClick={onClick}
+    />
+  </ListItem>
+);
+
 export const NavMenu = () => {
   const navigate = useNavigate();
+  const authContext = useAuth();
+  if (!authContext) return null;
   return (
     <List sx={{ p: 4 }}>
       {menuOptions.map(({ id, path, label }) => (
-        <ListItem key={id}>
-          <ListItemText
-            sx={{ cursor: "pointer" }}
-            primary={
-              <Typography
-                component="a"
-                sx={{
-                  color: "primary.main",
-                  cursor: "pointer",
-                }}
-              >
-                {label}
-              </Typography>
-            }
-            onClick={() => navigate(path)}
-          />
-        </ListItem>
+        <MenuItem id={id} label={label} onClick={() => navigate(path)} />
       ))}
+      <MenuItem
+        id="logout"
+        label="Logout"
+        onClick={() => authContext.logout()}
+      />
     </List>
   );
 };
