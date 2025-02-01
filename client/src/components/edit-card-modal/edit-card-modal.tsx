@@ -58,7 +58,12 @@ export const EditCardModal = ({
           <Button onClick={onClose} color="primary">
             Cancel
           </Button>
-          <Button loading={isPending} type="submit" color="primary">
+          <Button
+            loading={isPending}
+            disabled={!formProps.formState.isDirty}
+            type="submit"
+            color="primary"
+          >
             Save
           </Button>
         </DialogActions>

@@ -7,10 +7,9 @@ export const Layout = () => (
     <CssBaseline />
     <Drawer
       sx={{
-        width: "20vw",
+        width: "10vw",
         flexShrink: 0,
         "& .MuiDrawer-paper": {
-          width: 240,
           boxSizing: "border-box",
           position: "fixed",
         },

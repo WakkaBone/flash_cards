@@ -1,7 +1,6 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Tooltip } from "@mui/material";
 import { CardModel } from "../../models/card";
-import { GridDeleteIcon } from "@mui/x-data-grid";
-import { EditNotificationsOutlined } from "@mui/icons-material";
+import { DeleteOutlineOutlined, Done, EditNote } from "@mui/icons-material";
 import { useMarkCardLearned } from "../../hooks/use-mark-learned";
 import { useCallback, useState } from "react";
 import { useDeleteCard } from "../../hooks/use-delete-card";
@@ -29,25 +28,25 @@ export const ActionsCell = ({ card }: { card: CardModel }) => {
 
   return (
     <Box>
-      <Button
-        size="small"
-        onClick={handleDeleteCard}
-        loading={isDeletePending}
-        title="Remove"
-      >
-        <GridDeleteIcon />
+      <Button size="small" onClick={handleDeleteCard} loading={isDeletePending}>
+        <Tooltip title="Delete card">
+          <DeleteOutlineOutlined />
+        </Tooltip>
       </Button>
       <Button onClick={onOpenEditModal} size="small" title="Edit">
-        <EditNotificationsOutlined />
+        <Tooltip title="Edit card">
+          <EditNote />
+        </Tooltip>
       </Button>
       <Button
         disabled={isLearned}
-        variant="contained"
         onClick={handleMarkAsLearned}
         loading={isMarkLearnedPending}
         size="small"
       >
-        Learned
+        <Tooltip title="Mark as learned">
+          <Done />
+        </Tooltip>
       </Button>
       <EditCardModal open={isEdit} card={card} onClose={onCloseEditModal} />
     </Box>

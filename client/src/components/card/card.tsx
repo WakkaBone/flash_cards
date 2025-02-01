@@ -82,7 +82,11 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
         return (
           <>
             {!showTranslation && (
-              <Button size="small" onClick={handleCheckTranslation}>
+              <Button
+                disabled={!translation}
+                size="small"
+                onClick={handleCheckTranslation}
+              >
                 Check
               </Button>
             )}
