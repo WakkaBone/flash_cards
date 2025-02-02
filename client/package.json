@@ -19,6 +19,7 @@
     "ajv": "^8.17.1",
     "ajv-keywords": "^5.1.0",
     "axios": "^1.7.9",
+    "date-fns": "^4.1.0",
     "deep-equal": "^2.2.3",
     "js-cookie": "^3.0.5",
     "react": "^19.0.0",

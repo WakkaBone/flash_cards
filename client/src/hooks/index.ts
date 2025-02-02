@@ -6,6 +6,7 @@ import { useDeleteCard } from "./use-delete-card";
 import { useGetCards } from "./use-get-cards";
 import { useMarkCardLearned } from "./use-mark-learned";
 import { useRandomCard } from "./use-random-card";
+import { useScreenSize } from "./use-screen-size";
 import { useUpdateCard } from "./use-update-card";
 
 export {
@@ -17,5 +18,6 @@ export {
   useGetCards,
   useMarkCardLearned,
   useRandomCard,
+  useScreenSize,
   useUpdateCard,
 };

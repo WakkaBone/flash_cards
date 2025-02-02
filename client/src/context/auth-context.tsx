@@ -11,7 +11,7 @@ import Cookies from "js-cookie";
 
 type SimpleCredentialsType = { username: string; password: string };
 interface AuthContextType {
-  isAuthenticated: boolean;
+  isAuthenticated?: boolean;
   login: (credentials: SimpleCredentialsType) => void;
   logout: () => void;
 }
@@ -20,7 +20,9 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const { login: loginMutation, logout: logoutMutation } = useAuth();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     const authToken = Cookies.get("auth_token");

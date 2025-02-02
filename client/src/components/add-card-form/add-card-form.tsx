@@ -2,7 +2,7 @@ import { Button, Stack, TextField } from "@mui/material";
 import { Categories } from "../../models/card";
 import { useForm, Controller } from "react-hook-form";
 import { CategorySelect } from "../category-select/category-select";
-import { useAddCard } from "../../hooks";
+import { useAddCard, useScreenSize } from "../../hooks";
 import { ToastContainer } from "react-toastify";
 
 type AddCardFormType = {
@@ -13,6 +13,7 @@ type AddCardFormType = {
 
 export const AddCardForm = () => {
   const { addCard, isPending } = useAddCard();
+  const { isMobile } = useScreenSize();
 
   const {
     control,
@@ -31,7 +32,12 @@ export const AddCardForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
-      <Stack spacing={2} mb={2} direction={"row"} alignItems={"start"}>
+      <Stack
+        spacing={2}
+        mb={2}
+        direction={isMobile ? "column" : "row"}
+        alignItems={"start"}
+      >
         <Controller
           name="english"
           rules={{ required: "English translation is required" }}
@@ -41,7 +47,7 @@ export const AddCardForm = () => {
               {...field}
               fullWidth
               placeholder="English"
-              error={!!errors.category}
+              error={!!errors.english}
               helperText={errors.english?.message}
             />
           )}
@@ -55,13 +61,17 @@ export const AddCardForm = () => {
               {...field}
               fullWidth
               placeholder="Hebrew"
-              error={!!errors.category}
-              helperText={errors.english?.message}
+              error={!!errors.hebrew}
+              helperText={errors.hebrew?.message}
             />
           )}
         />
       </Stack>
-      <Stack spacing={2} direction={"row"} alignItems={"center"}>
+      <Stack
+        spacing={2}
+        direction={isMobile ? "column" : "row"}
+        alignItems={"center"}
+      >
         <Controller
           name="category"
           rules={{ required: "Category is required" }}

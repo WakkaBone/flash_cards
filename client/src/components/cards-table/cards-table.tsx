@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { GetCardsFilters } from "../../models/api";
-import { useGetCards } from "../../hooks";
+import { useGetCards, useScreenSize } from "../../hooks";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { categoryMapper } from "../../utils/mappers";
 import { CardsTableFilters } from "./cards-table-filters";
@@ -8,6 +8,7 @@ import { CardModel } from "../../models/card";
 import { defaultFilters } from "../../hooks/use-cards-table-filters";
 import { ActionsCell } from "./actions-cell";
 import { ToastContainer } from "react-toastify";
+import { format } from "date-fns";
 
 const columns: GridColDef<CardsTableRowType>[] = [
   { field: "english", headerName: "English" },
@@ -16,7 +17,16 @@ const columns: GridColDef<CardsTableRowType>[] = [
   { field: "correct", headerName: "Correct" },
   { field: "wrong", headerName: "Wrong" },
   { field: "isLearned", headerName: "Is Learned" },
-  { field: "createdAt", headerName: "Added At" },
+  {
+    field: "createdAt",
+    valueGetter: (value) => new Date(value),
+    headerName: "Added At",
+    type: "dateTime",
+    flex: 1,
+    sortComparator: (v1, v2) => v1 - v2,
+    renderCell: ({ row }) =>
+      row.createdAt ? format(new Date(row.createdAt), "dd/MM/yyyy HH:mm") : "",
+  },
   {
     field: "actions",
     headerName: "",
@@ -43,11 +53,12 @@ const mapCardToTableRow = (item: CardModel): CardsTableRowType => ({
   correct: item.statistics.correct,
   wrong: item.statistics.wrong,
   isLearned: item.isLearned ? "Yes" : "No",
-  createdAt: new Date().toLocaleString(),
   actions: <ActionsCell card={item} />,
 });
 
 export const CardsTable = () => {
+  const { isMobile } = useScreenSize();
+
   const [filters, setFilters] = useState<GetCardsFilters>(defaultFilters);
   const { data, isLoading } = useGetCards(filters);
   const [rows, setRows] = useState<CardsTableRowType[]>([]);
@@ -60,14 +71,22 @@ export const CardsTable = () => {
   return (
     <>
       <DataGrid
+        disableColumnFilter={isMobile}
+        disableColumnSorting={isMobile}
+        disableColumnMenu={isMobile}
         loading={isLoading}
+        initialState={{
+          sorting: {
+            sortModel: [{ field: "createdAt", sort: "desc" }],
+          },
+        }}
         slots={{
           toolbar: () => (
             <CardsTableFilters filters={filters} onChange={setFilters} />
           ),
         }}
         rows={rows}
-        columns={columns}
+        columns={isMobile ? columns.slice(0, 3) : columns}
       />
       <ToastContainer />
     </>

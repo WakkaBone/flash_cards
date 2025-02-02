@@ -4,6 +4,7 @@ import {
   CardActions,
   CardContent,
   CircularProgress,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
@@ -12,13 +13,20 @@ import { useCallback, useEffect, useState } from "react";
 import { categoryMapper } from "../../utils/mappers";
 import { STATISTICS_ACTIONS } from "../../models/api";
 import { ToastContainer } from "react-toastify";
-import { useMarkCardLearned, useDeleteCard, useRandomCard } from "../../hooks";
+import {
+  useMarkCardLearned,
+  useDeleteCard,
+  useRandomCard,
+  useScreenSize,
+} from "../../hooks";
 
 type WordCardPropsType = {
   mode: PracticeModes;
 };
 
 export const WordCard = ({ mode }: WordCardPropsType) => {
+  const { isMobile } = useScreenSize();
+
   const { cardData, isLoading, getAnotherCard, updateCardStats } =
     useRandomCard();
   const { markCardLearned, isPending: isMarkingLearned } = useMarkCardLearned();
@@ -126,10 +134,22 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
   if (isLoading) return <CircularProgress />;
   if (!cardData) return null;
 
+  //TODO fix bug with includeLearned
+
   return (
     <Card variant="outlined">
       <ToastContainer />
-      <CardContent>
+      <CardContent
+        sx={
+          isMobile
+            ? {
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+              }
+            : {}
+        }
+      >
         <Typography gutterBottom sx={{ color: "text.secondary", fontSize: 14 }}>
           Word
         </Typography>
@@ -141,18 +161,20 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
         </Typography>
         {getCardBodyByMode()}
       </CardContent>
-      <CardActions>
-        {getCardActionsByMode()}
-        {cardData.isLearned ? (
-          <Button disabled>Learned</Button>
-        ) : (
-          <Button loading={isMarkingLearned} onClick={handleMarkAsLearned}>
-            Mark as learned
+      <CardActions sx={{ justifyContent: isMobile ? "center" : "start" }}>
+        <Stack direction={isMobile ? "column" : "row"}>
+          {getCardActionsByMode()}
+          <Button
+            loading={isMarkingLearned}
+            disabled={cardData.isLearned}
+            onClick={handleMarkAsLearned}
+          >
+            Learned
           </Button>
-        )}
-        <Button loading={isDeletingCard} onClick={handleDeleteCard}>
-          Delete card
-        </Button>
+          <Button loading={isDeletingCard} onClick={handleDeleteCard}>
+            Delete card
+          </Button>
+        </Stack>
       </CardActions>
     </Card>
   );

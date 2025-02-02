@@ -8,7 +8,9 @@ export const ProtectedRoute = ({ children }: PropsWithChildren) => {
   if (!authContext) return null;
 
   const { isAuthenticated } = authContext;
-  if (!isAuthenticated) return <Navigate to={ROUTES.login} />;
+
+  if (isAuthenticated !== undefined && !isAuthenticated)
+    return <Navigate to={ROUTES.login} />;
 
   return <>{children}</>;
 };

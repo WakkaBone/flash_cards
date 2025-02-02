@@ -22,6 +22,7 @@ export const Layout = () => (
     <Box
       component="main"
       sx={{
+        width: "90vw",
         flexGrow: 1,
         bgcolor: "background.default",
         p: 3,

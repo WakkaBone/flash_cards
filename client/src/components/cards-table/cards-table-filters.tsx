@@ -3,7 +3,7 @@ import { GetCardsFilters } from "../../models/api";
 import { useEffect } from "react";
 import deepEqual from "deep-equal";
 import { CategorySelect } from "../category-select/category-select";
-import { useCardsTableFilters } from "../../hooks";
+import { useCardsTableFilters, useScreenSize } from "../../hooks";
 
 type CardsTableFiltersPropsType = {
   filters: GetCardsFilters;
@@ -14,6 +14,8 @@ export const CardsTableFilters = ({
   onChange,
   filters: initialFilters,
 }: CardsTableFiltersPropsType) => {
+  const { isMobile } = useScreenSize();
+
   const {
     filters,
     search,
@@ -28,7 +30,14 @@ export const CardsTableFilters = ({
   }, [filters, initialFilters, onChange]);
 
   return (
-    <Box sx={{ flexDirection: "row", display: "flex", gap: 2, padding: 2 }}>
+    <Box
+      sx={{
+        flexDirection: isMobile ? "column" : "row",
+        display: "flex",
+        gap: 2,
+        padding: 2,
+      }}
+    >
       <Input
         fullWidth
         value={search}

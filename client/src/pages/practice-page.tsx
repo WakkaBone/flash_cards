@@ -3,7 +3,7 @@ import { WordCard } from "../components/card/card";
 import { PageTitle } from "../components/layout/page-title";
 import { PracticeModeSelect } from "../components/practice-mode-select/practice-mode-select";
 import { Button, Checkbox, FormControlLabel, Stack } from "@mui/material";
-import { useRandomCard } from "../hooks";
+import { useRandomCard, useScreenSize } from "../hooks";
 import { CategorySelect } from "../components/category-select/category-select";
 
 export enum PracticeModes {
@@ -15,10 +15,17 @@ export enum PracticeModes {
 export const PracticePage = () => {
   const [practiceMode, setPracticeMode] = useState(PracticeModes.browse);
   const { filters, setFilters, resetFilters } = useRandomCard();
+  const { isMobile } = useScreenSize();
+
   return (
     <>
       <PageTitle>Practice</PageTitle>
-      <Stack direction={"row"} spacing={2} alignItems={"start"}>
+      <Stack
+        direction={isMobile ? "column" : "row"}
+        spacing={2}
+        alignItems={"start"}
+        mb={2}
+      >
         <PracticeModeSelect
           sx={{ mb: 2 }}
           value={practiceMode}
