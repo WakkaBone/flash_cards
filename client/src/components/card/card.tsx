@@ -111,9 +111,9 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
     () => ({
       size: "small",
       variant: "outlined",
-      sx: { margin: "0 5px 5px 0" },
+      sx: { margin: "0 5px 5px 0", width: isMobile ? "50%" : "unset" },
     }),
-    []
+    [isMobile]
   );
 
   const isLoading =
@@ -124,7 +124,7 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
       case PracticeModes.eth:
       case PracticeModes.hte:
         return (
-          <>
+          <Stack direction="row">
             <Button
               {...buttonStyles}
               loading={isLoading}
@@ -143,7 +143,7 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
             >
               Forgot
             </Button>
-          </>
+          </Stack>
         );
     }
   }, [
@@ -206,43 +206,47 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
       </CardContent>
       <CardActions sx={{ justifyContent: isMobile ? "center" : "start" }}>
         <Stack direction={isMobile ? "column" : "row"}>
-          <Button
-            {...buttonStyles}
-            loading={isLoading}
-            disabled={isLoading}
-            onClick={() => getNextCard()}
-            endIcon={<NavigateNextRounded />}
-          >
-            Next
-          </Button>
           {getCardActionsByMode()}
-          <Button
-            {...buttonStyles}
-            loading={isLoading}
-            disabled={isLoading || card.isLearned}
-            onClick={handleMarkAsLearned}
-            endIcon={<TaskAltRounded />}
-          >
-            Learned
-          </Button>
-          <Button
-            {...buttonStyles}
-            loading={isLoading}
-            disabled={isLoading}
-            onClick={onOpenEditModal}
-            endIcon={<EditRounded />}
-          >
-            Edit
-          </Button>
-          <Button
-            {...buttonStyles}
-            loading={isLoading}
-            disabled={isLoading}
-            onClick={handleDeleteCard}
-            endIcon={<DeleteForeverRounded />}
-          >
-            Delete
-          </Button>
+          <Stack direction="row">
+            <Button
+              {...buttonStyles}
+              loading={isLoading}
+              disabled={isLoading}
+              onClick={() => getNextCard()}
+              endIcon={<NavigateNextRounded />}
+            >
+              Next
+            </Button>
+            <Button
+              {...buttonStyles}
+              loading={isLoading}
+              disabled={isLoading || card.isLearned}
+              onClick={handleMarkAsLearned}
+              endIcon={<TaskAltRounded />}
+            >
+              Learned
+            </Button>
+          </Stack>
+          <Stack direction="row">
+            <Button
+              {...buttonStyles}
+              loading={isLoading}
+              disabled={isLoading}
+              onClick={onOpenEditModal}
+              endIcon={<EditRounded />}
+            >
+              Edit
+            </Button>
+            <Button
+              {...buttonStyles}
+              loading={isLoading}
+              disabled={isLoading}
+              onClick={handleDeleteCard}
+              endIcon={<DeleteForeverRounded />}
+            >
+              Delete
+            </Button>
+          </Stack>
         </Stack>
       </CardActions>
       <EditCardModal
