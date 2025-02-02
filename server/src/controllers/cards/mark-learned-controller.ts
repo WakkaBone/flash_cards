@@ -12,9 +12,9 @@ export const markLearnedController = async (
   try {
     const { id } = req.params;
     await CardsService.markLearned(id);
-    res.json({ isSuccess: true });
+    res.status(200).json({ isSuccess: true });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       isSuccess: false,
       error: { message: "Failed to mark the card as learned", data: error },
     });

@@ -11,9 +11,9 @@ export const logoutController = async (
     }`;
     res.setHeader("Set-Cookie", authCookie);
 
-    res.json({ isSuccess: true });
+    res.status(200).json({ isSuccess: true });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       isSuccess: false,
       error: { message: "Failed to logout", data: error },
     });

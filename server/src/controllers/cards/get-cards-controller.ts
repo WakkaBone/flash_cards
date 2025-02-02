@@ -21,9 +21,9 @@ export const getCardsController = async (
       includeLearned: includeLearned && includeLearned === "true",
     };
     const result = await CardsService.getCards(filters);
-    res.json({ isSuccess: true, data: result });
+    res.status(200).json({ isSuccess: true, data: result });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       isSuccess: false,
       error: { message: "Failed to get cards", data: error },
     });

@@ -13,9 +13,9 @@ export const updateStatisticsController = async (
   try {
     const { id, action } = req.params;
     await CardsService.updateStatistics(id, action as STATISTICS_ACTIONS);
-    res.json({ isSuccess: true });
+    res.status(200).json({ isSuccess: true });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       isSuccess: false,
       error: { message: "Failed to update statistics", data: error },
     });

@@ -21,9 +21,9 @@ export const getRandomCardController = async (
     };
     const cards = await CardsService.getCards(filters);
     const randomIndex = Math.floor(Math.random() * cards.length);
-    res.json({ isSuccess: true, data: cards[randomIndex] });
+    res.status(200).json({ isSuccess: true, data: cards[randomIndex] });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       isSuccess: false,
       error: { message: "Failed to get a random card", data: error },
     });

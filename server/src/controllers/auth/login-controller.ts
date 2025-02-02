@@ -18,12 +18,13 @@ export const loginController = async (
 
     const user = await AuthService.getUserByUsername(username);
     if (!user) {
-      res.json({
+      res.status(400).json({
         isSuccess: false,
         error: { message: "User not found" },
       });
       return;
     }
+
     if (username === user.username && password === user.password) {
       const payload = { username: user.username };
       const token = jwt.sign(payload, process.env.JWT_SECRET);
@@ -32,15 +33,15 @@ export const loginController = async (
       }`;
       res.setHeader("Set-Cookie", authCookie);
 
-      res.json({ isSuccess: true });
+      res.status(200).json({ isSuccess: true });
     } else {
-      res.json({
+      res.status(401).json({
         isSuccess: false,
         error: { message: "Invalid credentials" },
       });
     }
   } catch (error) {
-    res.json({
+    res.status(500).json({
       isSuccess: false,
       error: { message: "Failed to authenticate", data: error },
     });

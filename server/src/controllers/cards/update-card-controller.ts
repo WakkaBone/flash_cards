@@ -24,13 +24,11 @@ export const updateCardController = async (
       createdAt,
     };
     await CardsService.updateCard(id, card);
-    const response: ApiResponse = { isSuccess: true };
-    res.json(response);
+    res.status(200).json({ isSuccess: true });
   } catch (error) {
-    const response: ApiResponse = {
+    res.status(500).json({
       isSuccess: false,
       error: { message: "Failed to update the card", data: error },
-    };
-    res.json(response);
+    });
   }
 };

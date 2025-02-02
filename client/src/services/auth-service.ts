@@ -9,15 +9,13 @@ export const AuthService = {
       ApiResponse,
       ApiResponse,
       LoginPayload
-    >(`${apiPostfix}/login`, credentials, { withCredentials: true });
+    >(`${apiPostfix}/login`, credentials);
     return response;
   },
 
   async logout() {
     const { data: response } = await httpClient.post<ApiResponse, ApiResponse>(
-      `${apiPostfix}/logout`,
-      undefined,
-      { withCredentials: true }
+      `${apiPostfix}/logout`
     );
     return response;
   },

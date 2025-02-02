@@ -9,7 +9,7 @@ export const cardIdParamValidation = param("id")
 export const isValid = (req: Request, res: Response) => {
   const result = validationResult(req);
   if (result.isEmpty()) return true;
-  res.json({
+  res.status(400).json({
     isSuccess: false,
     error: {
       code: "ValidationError",

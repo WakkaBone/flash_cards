@@ -24,9 +24,9 @@ export const addCardController = async (
       createdAt: new Date().toISOString(),
     };
     const result = await CardsService.addCard(card);
-    res.json({ isSuccess: true, data: result });
+    res.status(200).json({ isSuccess: true, data: result });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       isSuccess: false,
       error: { message: "Failed to add the card", data: error },
     });

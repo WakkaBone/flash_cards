@@ -1,8 +1,9 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosError, AxiosInstance } from "axios";
 import { getApiBaseUrl } from "./utils/env-util";
 
 const instance = axios.create({
   baseURL: getApiBaseUrl(),
+  withCredentials: true,
   headers: {
     "Content-type": "application/json",
   },
@@ -14,8 +15,8 @@ function setupInterceptors(axiosInstance: AxiosInstance): AxiosInstance {
       console.log(request);
       return request;
     },
-    async (error) => {
-      console.log(error);
+    async (error: AxiosError) => {
+      console.error(error);
       return error;
     }
   );
@@ -25,8 +26,9 @@ function setupInterceptors(axiosInstance: AxiosInstance): AxiosInstance {
       console.log(response);
       return response;
     },
-    async (error) => {
-      console.log(error);
+    async (error: AxiosError) => {
+      console.error(error);
+      if (error.status === 401) window.location.reload();
       return error;
     }
   );

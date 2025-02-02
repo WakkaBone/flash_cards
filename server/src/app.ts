@@ -7,6 +7,7 @@ import cardsApi from "./api/cards";
 import authApi from "./api/auth";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import { isAuth } from "./middleware";
 
 config();
 
@@ -26,6 +27,6 @@ app.use(bodyParser.urlencoded({ extended: true, limit: "30mb" }));
 app.use(cookieParser());
 
 app.use("/api/auth/", authApi);
-app.use("/api/cards/", cardsApi);
+app.use("/api/cards/", isAuth, cardsApi); //TODO add middleware to check auth cookie
 
 export default app;
