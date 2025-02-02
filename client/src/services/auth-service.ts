@@ -19,4 +19,11 @@ export const AuthService = {
     );
     return response;
   },
+
+  async checkAuth() {
+    const { data: response } = await httpClient.post<ApiResponse, ApiResponse>(
+      `${apiPostfix}/check-auth`
+    );
+    return response;
+  },
 };

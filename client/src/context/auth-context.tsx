@@ -7,7 +7,6 @@ import {
 } from "react";
 import { toast } from "react-toastify";
 import { useAuth } from "../hooks";
-import Cookies from "js-cookie";
 
 type SimpleCredentialsType = { username: string; password: string };
 interface AuthContextType {
@@ -19,14 +18,17 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const { login: loginMutation, logout: logoutMutation } = useAuth();
+  const { login: loginMutation, logout: logoutMutation, checkAuth } = useAuth();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | undefined>(
     undefined
   );
 
   useEffect(() => {
-    const authToken = Cookies.get("auth_token");
-    setIsAuthenticated(!!authToken);
+    //TODO check why this request is sent twice
+    checkAuth({
+      onSuccess: (data) => setIsAuthenticated(data.isSuccess),
+      onError: () => setIsAuthenticated(false),
+    });
   }, []);
 
   const login = (credentials: SimpleCredentialsType) => {

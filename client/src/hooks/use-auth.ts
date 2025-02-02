@@ -1,15 +1,17 @@
 import { MutateOptions, useMutation } from "@tanstack/react-query";
-import { loginMutation } from "../mutations/auth";
+import {
+  checkAuthMutation,
+  loginMutation,
+  logoutMutation,
+} from "../mutations/auth";
 import { ApiResponse, LoginPayload } from "../models/api";
-import { logoutMutation } from "../mutations/auth";
-import { useState } from "react";
 import { toast } from "react-toastify";
 
 const useAuth = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
   const { mutate: loginMutate, ...loginRest } = useMutation(loginMutation);
   const { mutate: logoutMutate, ...logoutRest } = useMutation(logoutMutation);
+  const { mutate: checkAuthMutate, ...checkAuthRest } =
+    useMutation(checkAuthMutation);
 
   const login = (
     credentials: LoginPayload,
@@ -32,15 +34,18 @@ const useAuth = () => {
         options?.onError?.(...args);
       },
     });
-    setIsAuthenticated(false);
   };
+
+  const checkAuth = (options?: MutateOptions<ApiResponse>) =>
+    checkAuthMutate(undefined, { ...options });
 
   return {
     login,
     logout,
+    checkAuth,
     loginMutation: { ...loginRest },
     logoutMutation: { ...logoutRest },
-    isAuthenticated,
+    checkAuthMutation: { ...checkAuthRest },
   };
 };
 
