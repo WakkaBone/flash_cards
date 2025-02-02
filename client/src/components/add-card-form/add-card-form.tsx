@@ -9,6 +9,7 @@ type AddCardFormType = {
   category: Categories;
   english: string;
   hebrew: string;
+  details?: string;
 };
 
 export const AddCardForm = () => {
@@ -63,6 +64,22 @@ export const AddCardForm = () => {
               placeholder="Hebrew"
               error={!!errors.hebrew}
               helperText={errors.hebrew?.message}
+            />
+          )}
+        />
+      </Stack>
+      <Stack mb={2}>
+        <Controller
+          name="details"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Examples or details"
+              multiline
+              rows={2}
+              variant="outlined"
+              fullWidth
             />
           )}
         />

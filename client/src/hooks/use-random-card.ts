@@ -44,7 +44,7 @@ export const useRandomCard = () => {
       unknown,
       { cardId: string; outcome: STATISTICS_ACTIONS },
       unknown
-    > & { hideToast?: boolean }
+    > & { hideToast?: boolean } //TODO add this prop to other mutations to control toasts
   ) =>
     mutateCardStats(
       { cardId, outcome },
