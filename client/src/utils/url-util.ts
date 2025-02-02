@@ -8,7 +8,7 @@ export const buildUrl = (
       )
     : {};
   const url = new URL(
-    (process.env.REACT_APP_API_BASE_URL || "http://localhost:5000") + path
+    (process.env.REACT_APP_API_BASE_URL || "http://localhost:5000/api") + path
   );
   const urlParams = new URLSearchParams(safeParams);
   url.search = urlParams.toString();

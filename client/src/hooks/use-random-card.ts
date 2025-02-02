@@ -34,7 +34,9 @@ export const useRandomCard = () => {
     setCardId(cardData.id);
   }, [cardData]);
 
-  const { mutate: mutateCardStats } = useMutation(updateCardStatsMutation);
+  const { mutate: mutateCardStats, ...updateStatsRest } = useMutation(
+    updateCardStatsMutation
+  );
   const updateCardStats = (
     outcome: STATISTICS_ACTIONS,
     options?: MutateOptions<
@@ -75,5 +77,6 @@ export const useRandomCard = () => {
     setFilters,
     resetFilters,
     updateCardStats,
+    updateStatsRest,
   };
 };

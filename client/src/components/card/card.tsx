@@ -1,5 +1,6 @@
 import {
   Button,
+  ButtonOwnProps,
   Card,
   CardActions,
   CardContent,
@@ -9,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { PracticeModes } from "../../pages/practice-page";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { categoryMapper } from "../../utils/mappers";
 import { STATISTICS_ACTIONS } from "../../models/api";
 import { ToastContainer } from "react-toastify";
@@ -19,6 +20,15 @@ import {
   useRandomCard,
   useScreenSize,
 } from "../../hooks";
+import { EditCardModal } from "../edit-card-modal/edit-card-modal";
+import {
+  DeleteForeverRounded,
+  EditRounded,
+  QuestionMarkRounded,
+  SentimentVeryDissatisfiedRounded,
+  TaskAltRounded,
+  NavigateNextRounded,
+} from "@mui/icons-material";
 
 type WordCardPropsType = {
   mode: PracticeModes;
@@ -27,24 +37,35 @@ type WordCardPropsType = {
 export const WordCard = ({ mode }: WordCardPropsType) => {
   const { isMobile } = useScreenSize();
 
-  const { cardData, isLoading, getAnotherCard, updateCardStats } =
-    useRandomCard();
+  const {
+    cardData,
+    isLoading: isLoadingCard,
+    getAnotherCard,
+    updateCardStats,
+    updateStatsRest: { isPending: isUpdatingStats },
+  } = useRandomCard();
   const { markCardLearned, isPending: isMarkingLearned } = useMarkCardLearned();
   const { deleteCard, isPending: isDeletingCard } = useDeleteCard();
 
+  const [card, setCard] = useState(cardData);
+
+  useEffect(() => {
+    cardData && setCard(cardData);
+  }, [cardData]);
+
   const [translation, setTranslation] = useState<string>("");
-  const [showTranslation, setIsShowTranslation] = useState<boolean>(false);
+  const [showTranslation, setShowTranslation] = useState<boolean>(false);
 
   const getNextCard = useCallback(() => {
     getAnotherCard();
     setTranslation("");
-    setIsShowTranslation(false);
+    setShowTranslation(false);
   }, [getAnotherCard]);
 
   const handleCheckTranslation = useCallback(() => {
-    if (!cardData || mode === PracticeModes.browse || !translation) return;
+    if (!card || mode === PracticeModes.browse || !translation) return;
     const correctAnswer =
-      mode === PracticeModes.eth ? cardData.hebrew : cardData.english;
+      mode === PracticeModes.eth ? card.hebrew : card.english;
     const isCorrect =
       translation.trim().toLowerCase() === correctAnswer.trim().toLowerCase();
 
@@ -54,19 +75,22 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
         onSuccess: () => isCorrect && getNextCard(),
       }
     );
-  }, [cardData, mode, translation, updateCardStats, getNextCard]);
+  }, [card, mode, translation, updateCardStats, getNextCard]);
 
-  const handleToggleTranslation = useCallback(
-    () => setIsShowTranslation((val) => !val),
-    []
-  );
+  const handleToggleTranslation = useCallback(() => {
+    setShowTranslation((val) => !val);
+    updateCardStats(STATISTICS_ACTIONS.Wrong);
+  }, [updateCardStats]);
 
   const getCardBodyByMode = useCallback(() => {
     switch (mode) {
       case PracticeModes.eth:
       case PracticeModes.hte:
         return showTranslation ? (
-          cardData?.[PracticeModes.eth === mode ? "hebrew" : "english"]
+          <TextField
+            value={card?.[PracticeModes.eth === mode ? "hebrew" : "english"]}
+            disabled
+          />
         ) : (
           <TextField
             value={translation}
@@ -75,11 +99,25 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
           />
         );
       case PracticeModes.browse:
-        return <Typography variant="body2">{cardData?.english}</Typography>;
+        return (
+          <TextField value={card?.english} sx={{ pointerEvents: "none" }} />
+        );
     }
-  }, [mode, cardData, showTranslation, translation]);
+  }, [mode, card, showTranslation, translation]);
 
   useEffect(() => setTranslation(""), [showTranslation]);
+
+  const buttonStyles: ButtonOwnProps = useMemo(
+    () => ({
+      size: "small",
+      variant: "outlined",
+      sx: { margin: "0 5px 5px 0" },
+    }),
+    []
+  );
+
+  const isLoading =
+    isMarkingLearned || isDeletingCard || isUpdatingStats || isLoadingCard;
 
   const getCardActionsByMode = useCallback(() => {
     switch (mode) {
@@ -87,52 +125,57 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
       case PracticeModes.hte:
         return (
           <>
-            {!showTranslation && (
-              <Button
-                disabled={!translation}
-                size="small"
-                onClick={handleCheckTranslation}
-              >
-                Check
-              </Button>
-            )}
-            <Button size="small" onClick={handleToggleTranslation}>
-              {showTranslation ? "Hide translation" : "Show translation"}
+            <Button
+              {...buttonStyles}
+              loading={isLoading}
+              disabled={!translation || showTranslation || isLoading}
+              onClick={handleCheckTranslation}
+              endIcon={<QuestionMarkRounded />}
+            >
+              Check
+            </Button>
+            <Button
+              {...buttonStyles}
+              disabled={showTranslation || isLoading}
+              loading={isLoading}
+              onClick={handleToggleTranslation}
+              endIcon={<SentimentVeryDissatisfiedRounded />}
+            >
+              Forgot
             </Button>
           </>
         );
-      case PracticeModes.browse:
-        return (
-          <Button size="small" onClick={() => getAnotherCard()}>
-            Next
-          </Button>
-        );
     }
   }, [
+    buttonStyles,
     mode,
-    getAnotherCard,
     handleCheckTranslation,
     handleToggleTranslation,
     showTranslation,
     translation,
+    isLoading,
   ]);
 
   const handleMarkAsLearned = useCallback(() => {
-    if (!cardData) return;
-    markCardLearned(cardData.id, {
+    if (!card) return;
+    markCardLearned(card.id, {
       onSuccess: () => getNextCard(),
     });
-  }, [markCardLearned, getNextCard, cardData]);
+  }, [markCardLearned, getNextCard, card]);
 
   const handleDeleteCard = useCallback(() => {
-    if (!cardData) return;
-    deleteCard(cardData.id, {
+    if (!card) return;
+    deleteCard(card.id, {
       onSuccess: () => getNextCard(),
     });
-  }, [deleteCard, getNextCard, cardData]);
+  }, [deleteCard, getNextCard, card]);
 
-  if (isLoading) return <CircularProgress />;
-  if (!cardData) return null;
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const onOpenEditModal = () => setIsEdit(true);
+  const onCloseEditModal = () => setIsEdit(false);
+
+  if (isLoadingCard) return <CircularProgress />;
+  if (!card) return null;
 
   //TODO fix bug with includeLearned
 
@@ -154,28 +197,62 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
           Word
         </Typography>
         <Typography variant="h5" component="div">
-          {mode === PracticeModes.eth ? cardData.english : cardData.hebrew}
+          {mode === PracticeModes.eth ? card.english : card.hebrew}
         </Typography>
         <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-          {categoryMapper[cardData.category]}
+          {categoryMapper[card.category]}
         </Typography>
         {getCardBodyByMode()}
       </CardContent>
       <CardActions sx={{ justifyContent: isMobile ? "center" : "start" }}>
         <Stack direction={isMobile ? "column" : "row"}>
+          <Button
+            {...buttonStyles}
+            loading={isLoading}
+            disabled={isLoading}
+            onClick={() => getNextCard()}
+            endIcon={<NavigateNextRounded />}
+          >
+            Next
+          </Button>
           {getCardActionsByMode()}
           <Button
-            loading={isMarkingLearned}
-            disabled={cardData.isLearned}
+            {...buttonStyles}
+            loading={isLoading}
+            disabled={isLoading || card.isLearned}
             onClick={handleMarkAsLearned}
+            endIcon={<TaskAltRounded />}
           >
             Learned
           </Button>
-          <Button loading={isDeletingCard} onClick={handleDeleteCard}>
-            Delete card
+          <Button
+            {...buttonStyles}
+            loading={isLoading}
+            disabled={isLoading}
+            onClick={onOpenEditModal}
+            endIcon={<EditRounded />}
+          >
+            Edit
+          </Button>
+          <Button
+            {...buttonStyles}
+            loading={isLoading}
+            disabled={isLoading}
+            onClick={handleDeleteCard}
+            endIcon={<DeleteForeverRounded />}
+          >
+            Delete
           </Button>
         </Stack>
       </CardActions>
+      <EditCardModal
+        open={isEdit}
+        card={card}
+        onClose={onCloseEditModal}
+        onSuccess={(updatedData) => {
+          setCard(updatedData);
+        }}
+      />
     </Card>
   );
 };

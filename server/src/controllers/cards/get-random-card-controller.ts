@@ -8,6 +8,7 @@ type GetRandomCardQueryParams = {
   category?: string;
   includeLearned?: string;
 };
+let prevCardId = "";
 export const getRandomCardController = async (
   req: Request<null, ApiResponse, null, GetRandomCardQueryParams>,
   res: Response<ApiResponse<CardModel>>
@@ -20,8 +21,20 @@ export const getRandomCardController = async (
       includeLearned: includeLearned && includeLearned === "true",
     };
     const cards = await CardsService.getCards(filters);
+    if (cards.length === 1) {
+      res.status(200).json({ isSuccess: true, data: cards[0] });
+      return;
+    }
+
     const randomIndex = Math.floor(Math.random() * cards.length);
-    res.status(200).json({ isSuccess: true, data: cards[randomIndex] });
+    let randomCard = cards[randomIndex];
+    if (prevCardId) {
+      while (randomCard.id === prevCardId) {
+        randomCard = cards[Math.floor(Math.random() * cards.length)];
+      }
+    }
+    prevCardId = randomCard.id;
+    res.status(200).json({ isSuccess: true, data: randomCard });
   } catch (error) {
     res.status(500).json({
       isSuccess: false,

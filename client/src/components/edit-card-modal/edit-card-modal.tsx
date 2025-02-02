@@ -15,26 +15,23 @@ type EditCardModalPropsType = {
   open: boolean;
   card: CardModel;
   onClose: () => void;
+  onSuccess?: (updatedData: CardModel) => void;
 };
 export const EditCardModal = ({
   open,
   card,
   onClose,
+  onSuccess,
 }: EditCardModalPropsType) => {
   const { updateCard, isPending } = useUpdateCard();
 
-  const formProps = useForm<EditCardFormType>({
-    defaultValues: {
-      category: card.category,
-      english: card.english,
-      hebrew: card.hebrew,
-    },
-  });
+  const formProps = useForm<EditCardFormType>();
 
   useEffect(() => {
     formProps.setValue("category", card.category);
     formProps.setValue("english", card.english);
     formProps.setValue("hebrew", card.hebrew);
+    return () => formProps.reset();
   }, [formProps, card]);
 
   const onSave = async (formValues: EditCardFormType) => {
@@ -43,6 +40,7 @@ export const EditCardModal = ({
       onSuccess: () => {
         formProps.reset();
         onClose();
+        onSuccess?.(payload);
       },
     });
   };

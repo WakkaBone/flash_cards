@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosInstance } from "axios";
 import { ROUTES } from "./constants";
 
 const instance = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL || "http://localhost:5000",
+  baseURL: process.env.REACT_APP_API_BASE_URL || "http://localhost:5000/api",
   withCredentials: true,
   headers: {
     "Content-type": "application/json",
