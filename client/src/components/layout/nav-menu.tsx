@@ -1,11 +1,12 @@
 import { List, ListItem, ListItemText, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../context/auth-context";
+import { ROUTES } from "../../constants";
 
 const menuOptions = [
   { id: "cards", path: "/", label: "Cards" },
-  { id: "add", path: "/add", label: "Add Card" },
-  { id: "practice", path: "/practice", label: "Practice" },
+  { id: "add", path: ROUTES.addCard, label: "Add Card" },
+  { id: "practice", path: ROUTES.practice, label: "Practice" },
 ];
 
 type MenuItemPropsType = {

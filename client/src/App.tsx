@@ -13,6 +13,7 @@ import { Layout } from "./components/layout/layout";
 import { AuthPage } from "./pages/auth-page";
 import { AuthProvider } from "./context/auth-context";
 import { ProtectedRoute } from "./components/protected-route/protected-route";
+import { ROUTES } from "./constants";
 
 const queryClient = new QueryClient();
 
@@ -32,7 +33,7 @@ function App() {
                 }
               />
               <Route
-                path="/add"
+                path={ROUTES.addCard}
                 element={
                   <ProtectedRoute>
                     <AddCardPage />
@@ -40,7 +41,7 @@ function App() {
                 }
               />
               <Route
-                path="/practice"
+                path={ROUTES.practice}
                 element={
                   <ProtectedRoute>
                     <PracticePage />
@@ -49,7 +50,7 @@ function App() {
               />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Route>
-            <Route path="/login" element={<AuthPage />} />
+            <Route path={ROUTES.login} element={<AuthPage />} />
           </Routes>
         </Router>
       </AuthProvider>
