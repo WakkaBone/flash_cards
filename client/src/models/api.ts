@@ -21,6 +21,7 @@ export type AddCardPayload = {
   category: Categories;
   english: string;
   hebrew: string;
+  details?: string;
 };
 
 export type UpdateCardPayload = CardModel;

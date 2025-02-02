@@ -15,6 +15,7 @@ export type CardModel = {
   hebrew: string;
   english: string;
   category: Categories;
+  details?: string;
   statistics: StatisticsType;
   createdAt: string;
   isLearned: boolean;

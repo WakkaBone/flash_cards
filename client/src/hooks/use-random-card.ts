@@ -44,17 +44,18 @@ export const useRandomCard = () => {
       unknown,
       { cardId: string; outcome: STATISTICS_ACTIONS },
       unknown
-    >
+    > & { hideToast?: boolean }
   ) =>
     mutateCardStats(
       { cardId, outcome },
       {
         onSuccess: (data, variables, context) => {
           const isCorrect = variables.outcome === STATISTICS_ACTIONS.Correct;
-          toast(isCorrect ? "Correct!" : "Wrong!", {
-            type: isCorrect ? "success" : "error",
-            autoClose: 500,
-          });
+          !options?.hideToast &&
+            toast(isCorrect ? "Correct!" : "Wrong!", {
+              type: isCorrect ? "success" : "error",
+              autoClose: 500,
+            });
           options?.onSuccess?.(data, variables, context);
         },
         onError: (...args) => {

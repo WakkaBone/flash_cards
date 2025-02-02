@@ -79,7 +79,7 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
 
   const handleToggleTranslation = useCallback(() => {
     setShowTranslation((val) => !val);
-    updateCardStats(STATISTICS_ACTIONS.Wrong);
+    updateCardStats(STATISTICS_ACTIONS.Wrong, { hideToast: true });
   }, [updateCardStats]);
 
   const getCardBodyByMode = useCallback(() => {
@@ -203,6 +203,16 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
           {categoryMapper[card.category]}
         </Typography>
         {getCardBodyByMode()}
+        {(mode === PracticeModes.browse || showTranslation) && card.details && (
+          <Typography
+            variant="caption"
+            gutterBottom
+            sx={{ display: "block" }}
+            mt={2}
+          >
+            {card.details}
+          </Typography>
+        )}
       </CardContent>
       <CardActions sx={{ justifyContent: isMobile ? "center" : "start" }}>
         <Stack direction={isMobile ? "column" : "row"}>

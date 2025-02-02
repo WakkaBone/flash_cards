@@ -7,6 +7,7 @@ type CreateCardBody = {
   category: number;
   english: string;
   hebrew: string;
+  details?: string;
 };
 export const addCardController = async (
   req: Request<null, ApiResponse, CreateCardBody>,
@@ -14,11 +15,12 @@ export const addCardController = async (
 ) => {
   if (!isValid(req, res)) return;
   try {
-    const { category, english, hebrew } = req.body;
+    const { category, english, hebrew, details } = req.body;
     const card = {
       category,
       english,
       hebrew,
+      details,
       statistics: { wrong: 0, correct: 0 },
       isLearned: false,
       createdAt: new Date().toISOString(),

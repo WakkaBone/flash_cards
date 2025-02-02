@@ -31,6 +31,7 @@ export const EditCardModal = ({
     formProps.setValue("category", card.category);
     formProps.setValue("english", card.english);
     formProps.setValue("hebrew", card.hebrew);
+    formProps.setValue("details", card.details);
     return () => formProps.reset();
   }, [formProps, card]);
 

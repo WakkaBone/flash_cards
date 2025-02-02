@@ -8,6 +8,7 @@ export type EditCardFormType = {
   category: Categories;
   english: string;
   hebrew: string;
+  details?: string;
 };
 
 type EditCardFormPropsType = {
@@ -30,6 +31,7 @@ export const EditCardForm = ({ formProps }: EditCardFormPropsType) => {
             <TextField
               {...field}
               fullWidth
+              required
               placeholder="English"
               error={!!errors.category}
               helperText={errors.english?.message}
@@ -44,9 +46,26 @@ export const EditCardForm = ({ formProps }: EditCardFormPropsType) => {
             <TextField
               {...field}
               fullWidth
+              required
               placeholder="Hebrew"
               error={!!errors.category}
               helperText={errors.english?.message}
+            />
+          )}
+        />
+      </Stack>
+      <Stack mb={2}>
+        <Controller
+          name="details"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Examples or details"
+              multiline
+              rows={2}
+              variant="outlined"
+              fullWidth
             />
           )}
         />

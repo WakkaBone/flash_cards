@@ -13,12 +13,20 @@ export const updateCardController = async (
   if (!isValid(req, res)) return;
   try {
     const { id } = req.params;
-    const { category, english, hebrew, isLearned, statistics, createdAt } =
-      req.body;
+    const {
+      category,
+      english,
+      hebrew,
+      details,
+      isLearned,
+      statistics,
+      createdAt,
+    } = req.body;
     const card = {
       category,
       english,
       hebrew,
+      details,
       statistics,
       isLearned,
       createdAt,
