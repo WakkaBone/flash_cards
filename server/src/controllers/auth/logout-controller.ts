@@ -6,9 +6,7 @@ export const logoutController = async (
   res: Response<ApiResponse>
 ) => {
   try {
-    const authCookie = `auth_token=; HttpOnly; Path=/; Max-Age=0; ${
-      process.env.NODE_ENV === "production" ? "Secure" : ""
-    }`;
+    const authCookie = `auth_token=; Path=/; SameSite=None; Max-Age=0; Secure`;
     res.setHeader("Set-Cookie", authCookie);
 
     res.status(200).json({ isSuccess: true });
