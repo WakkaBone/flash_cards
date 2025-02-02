@@ -1,8 +1,7 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
-import { getApiBaseUrl } from "./utils/env-util";
 
 const instance = axios.create({
-  baseURL: getApiBaseUrl(),
+  baseURL: process.env.REACT_APP_API_BASE_URL || "http://localhost:5000",
   withCredentials: true,
   headers: {
     "Content-type": "application/json",
@@ -28,7 +27,8 @@ function setupInterceptors(axiosInstance: AxiosInstance): AxiosInstance {
     },
     async (error: AxiosError) => {
       console.error(error);
-      if (error.status === 401) window.location.reload();
+      const isAuthRoute = window.location.pathname.startsWith("/login");
+      if (error.status === 401 && !isAuthRoute) window.location.reload();
       return error;
     }
   );
