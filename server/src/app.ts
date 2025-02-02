@@ -14,7 +14,7 @@ config();
 const app = express();
 
 const corsOptions = {
-  origin: [process.env.CLIENT_ORIGIN, "http://192.168.50.195:3000"],
+  origin: [process.env.CLIENT_ORIGIN],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization", "Set-Cookie"],
   credentials: true,

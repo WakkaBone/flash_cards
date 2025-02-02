@@ -28,7 +28,7 @@ export const loginController = async (
     if (username === user.username && password === user.password) {
       const payload = { username: user.username };
       const token = jwt.sign(payload, process.env.JWT_SECRET);
-      const authCookie = `auth_token=${token}; Path=/; SameSite=None; Max-Age=600; Secure`;
+      const authCookie = `auth_token=${token}; Path=/; SameSite=None; Max-Age=600; Secure; HttpOnly;`;
       res.setHeader("Set-Cookie", authCookie);
 
       res.status(200).json({ isSuccess: true });
