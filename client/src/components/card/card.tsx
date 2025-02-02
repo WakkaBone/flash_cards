@@ -127,7 +127,7 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
           <Stack direction="row">
             <Button
               {...buttonStyles}
-              loading={isLoading}
+              loading={isUpdatingStats}
               disabled={!translation || showTranslation || isLoading}
               onClick={handleCheckTranslation}
               endIcon={<QuestionMarkRounded />}
@@ -137,7 +137,7 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
             <Button
               {...buttonStyles}
               disabled={showTranslation || isLoading}
-              loading={isLoading}
+              loading={isUpdatingStats}
               onClick={handleToggleTranslation}
               endIcon={<SentimentVeryDissatisfiedRounded />}
             >
@@ -154,6 +154,7 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
     showTranslation,
     translation,
     isLoading,
+    isUpdatingStats,
   ]);
 
   const handleMarkAsLearned = useCallback(() => {
@@ -220,7 +221,7 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
           <Stack direction="row">
             <Button
               {...buttonStyles}
-              loading={isLoading}
+              loading={isLoadingCard}
               disabled={isLoading}
               onClick={() => getNextCard()}
               endIcon={<NavigateNextRounded />}
@@ -229,7 +230,7 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
             </Button>
             <Button
               {...buttonStyles}
-              loading={isLoading}
+              loading={isMarkingLearned}
               disabled={isLoading || card.isLearned}
               onClick={handleMarkAsLearned}
               endIcon={<TaskAltRounded />}
@@ -240,7 +241,6 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
           <Stack direction="row">
             <Button
               {...buttonStyles}
-              loading={isLoading}
               disabled={isLoading}
               onClick={onOpenEditModal}
               endIcon={<EditRounded />}
@@ -249,7 +249,7 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
             </Button>
             <Button
               {...buttonStyles}
-              loading={isLoading}
+              loading={isDeletingCard}
               disabled={isLoading}
               onClick={handleDeleteCard}
               endIcon={<DeleteForeverRounded />}
