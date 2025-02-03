@@ -5,9 +5,11 @@ import helmet from "helmet";
 import cors from "cors";
 import cardsApi from "./api/cards";
 import authApi from "./api/auth";
+import versionApi from "./api/version";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import { isAuth } from "./middleware";
+import { APIS } from "./constants";
 
 config();
 
@@ -28,7 +30,8 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true, limit: "30mb" }));
 app.use(cookieParser());
 
-app.use("/api/auth/", authApi);
-app.use("/api/cards/", isAuth, cardsApi);
+app.use(`/api/${APIS.auth}/`, authApi);
+app.use(`/api/${APIS.cards}/`, isAuth, cardsApi);
+app.use(`/api/${APIS.version}/`, versionApi);
 
 export default app;

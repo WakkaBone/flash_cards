@@ -1,3 +1,9 @@
+export const APIS = {
+  auth: "auth",
+  cards: "cards",
+  version: "version",
+};
+
 export const COLLECTIONS = {
   users: "users",
   cards: "cards",

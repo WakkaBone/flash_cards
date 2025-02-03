@@ -1,8 +1,9 @@
-import { Container, Paper, Typography } from "@mui/material";
+import { Box, Container, Paper, Typography } from "@mui/material";
 import { useAuthContext } from "../context/auth-context";
 import { ToastContainer } from "react-toastify";
 import { Navigate } from "react-router-dom";
 import { AuthForm } from "../components/auth-form/auth-form";
+import { VersionsInfo } from "../components/layout/versions-info";
 
 export const AuthPage = () => {
   const authContext = useAuthContext();
@@ -23,6 +24,8 @@ export const AuthPage = () => {
           Login
         </Typography>
         <AuthForm />
+        <Box mt={3} />
+        <VersionsInfo />
       </Paper>
       <ToastContainer />
     </Container>

@@ -1,4 +1,5 @@
 import { useAddCard } from "./use-add-card";
+import { useAppVersions } from "./use-app-versions";
 import { useAuth } from "./use-auth";
 import { useCardsTableFilters } from "./use-cards-table-filters";
 import { useDebounce } from "./use-debounce";
@@ -11,6 +12,7 @@ import { useUpdateCard } from "./use-update-card";
 
 export {
   useAddCard,
+  useAppVersions,
   useAuth,
   useCardsTableFilters,
   useDebounce,
