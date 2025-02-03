@@ -5,6 +5,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  SxProps,
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -24,9 +25,10 @@ type MenuItemPropsType = {
   id: string;
   label: string;
   onClick: () => void;
+  listItemStyle?: SxProps;
 };
-const MenuItem = ({ id, label, onClick }: MenuItemPropsType) => (
-  <ListItem key={id}>
+const MenuItem = ({ id, label, onClick, listItemStyle }: MenuItemPropsType) => (
+  <ListItem key={id} sx={{ ...listItemStyle }}>
     <ListItemText
       sx={{ cursor: "pointer" }}
       primary={
@@ -57,7 +59,7 @@ const MenuList = ({ closeDrawer }: { closeDrawer?: () => void }) => {
   if (!authContext) return null;
 
   return (
-    <List sx={{ p: 4 }}>
+    <List sx={{ p: 4, height: "100%", overflow: "hidden" }}>
       {menuOptions.map(({ id, path, label }) => (
         <MenuItem
           id={id}
@@ -69,6 +71,11 @@ const MenuList = ({ closeDrawer }: { closeDrawer?: () => void }) => {
         id="logout"
         label="Logout"
         onClick={() => authContext.logout()}
+        listItemStyle={{
+          position: "absolute",
+          bottom: "0",
+          marginBottom: "30px",
+        }}
       />
     </List>
   );

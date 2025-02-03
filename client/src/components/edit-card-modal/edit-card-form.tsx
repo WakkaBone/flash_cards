@@ -3,6 +3,7 @@ import { Categories } from "../../models/card";
 import { Controller, UseFormReturn } from "react-hook-form";
 import { CategorySelect } from "../category-select/category-select";
 import { ToastContainer } from "react-toastify";
+import { englishValidator, hebrewValidator } from "../../utils/validators";
 
 export type EditCardFormType = {
   category: Categories;
@@ -25,31 +26,39 @@ export const EditCardForm = ({ formProps }: EditCardFormPropsType) => {
       <Stack spacing={2} mb={2} direction={"row"} alignItems={"start"}>
         <Controller
           name="english"
-          rules={{ required: "English translation is required" }}
+          rules={{
+            required: "English translation is required",
+            validate: englishValidator,
+          }}
           control={control}
           render={({ field }) => (
             <TextField
               {...field}
               fullWidth
               required
+              label="English"
               placeholder="English"
-              error={!!errors.category}
+              error={!!errors.english}
               helperText={errors.english?.message}
             />
           )}
         />
         <Controller
           name="hebrew"
-          rules={{ required: "Hebrew translation is required" }}
+          rules={{
+            required: "Hebrew translation is required",
+            validate: hebrewValidator,
+          }}
           control={control}
           render={({ field }) => (
             <TextField
               {...field}
               fullWidth
               required
+              label="Hebrew"
               placeholder="Hebrew"
-              error={!!errors.category}
-              helperText={errors.english?.message}
+              error={!!errors.hebrew}
+              helperText={errors.hebrew?.message}
             />
           )}
         />
@@ -62,6 +71,7 @@ export const EditCardForm = ({ formProps }: EditCardFormPropsType) => {
             <TextField
               {...field}
               label="Examples or details"
+              placeholder="Examples or details"
               multiline
               rows={2}
               variant="outlined"
