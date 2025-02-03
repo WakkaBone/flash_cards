@@ -1,11 +1,8 @@
-import {
-  MutateOptions,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ApiResponse } from "../models/api";
 import { markCardLearnedMutation } from "../mutations/cards";
 import { toast } from "react-toastify";
+import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
 
 export const useMarkCardLearned = () => {
   const queryClient = useQueryClient();
@@ -15,7 +12,7 @@ export const useMarkCardLearned = () => {
   );
   const markCardLearned = (
     cardId: string,
-    options?: MutateOptions<ApiResponse, unknown, { cardId: string }, unknown>
+    options?: MutateOptionsEnhanced<ApiResponse, unknown, { cardId: string }>
   ) =>
     mutateMarkLearned(
       { cardId },

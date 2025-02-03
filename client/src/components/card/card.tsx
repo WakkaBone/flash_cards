@@ -29,6 +29,7 @@ import {
   TaskAltRounded,
   NavigateNextRounded,
 } from "@mui/icons-material";
+import { CardModel } from "../../models/card";
 
 type WordCardPropsType = {
   mode: PracticeModes;
@@ -47,11 +48,9 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
   const { markCardLearned, isPending: isMarkingLearned } = useMarkCardLearned();
   const { deleteCard, isPending: isDeletingCard } = useDeleteCard();
 
-  const [card, setCard] = useState(cardData);
+  const [card, setCard] = useState<CardModel | undefined>(cardData);
 
-  useEffect(() => {
-    cardData && setCard(cardData);
-  }, [cardData]);
+  useEffect(() => cardData && setCard(cardData), [cardData]);
 
   const [translation, setTranslation] = useState<string>("");
   const [showTranslation, setShowTranslation] = useState<boolean>(false);

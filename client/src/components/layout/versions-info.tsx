@@ -6,8 +6,11 @@ export const VersionsInfo = () => {
   if (isLoading) return <CircularProgress />;
 
   return (
-    <Typography variant="caption">
-      Client: v{clientAppVersion} | Server: v{serverAppVersion}
-    </Typography>
+    clientAppVersion &&
+    serverAppVersion && (
+      <Typography variant="caption">
+        Client: v{clientAppVersion} | Server: v{serverAppVersion}
+      </Typography>
+    )
   );
 };

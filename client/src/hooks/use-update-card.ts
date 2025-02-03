@@ -1,11 +1,8 @@
-import {
-  MutateOptions,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ApiResponse, UpdateCardPayload } from "../models/api";
 import { toast } from "react-toastify";
 import { updateCardMutation } from "../mutations/cards";
+import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
 
 export const useUpdateCard = () => {
   const queryClient = useQueryClient();
@@ -13,7 +10,7 @@ export const useUpdateCard = () => {
 
   const updateCard = (
     card: UpdateCardPayload,
-    options?: MutateOptions<ApiResponse, unknown, UpdateCardPayload, unknown>
+    options?: MutateOptionsEnhanced<ApiResponse, unknown, UpdateCardPayload>
   ) =>
     mutate(card, {
       onSuccess: (...args) => {

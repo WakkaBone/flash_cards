@@ -1,4 +1,4 @@
-import { MutateOptions, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
   checkAuthMutation,
   loginMutation,
@@ -6,6 +6,7 @@ import {
 } from "../mutations/auth";
 import { ApiResponse, LoginPayload } from "../models/api";
 import { toast } from "react-toastify";
+import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
 
 const useAuth = () => {
   const { mutate: loginMutate, ...loginRest } = useMutation(loginMutation);
@@ -15,7 +16,7 @@ const useAuth = () => {
 
   const login = (
     credentials: LoginPayload,
-    options?: MutateOptions<ApiResponse, Error, LoginPayload>
+    options?: MutateOptionsEnhanced<ApiResponse, Error, LoginPayload>
   ) => {
     loginMutate(credentials, {
       ...options,
@@ -26,7 +27,7 @@ const useAuth = () => {
     });
   };
 
-  const logout = (options?: MutateOptions<ApiResponse, Error>) => {
+  const logout = (options?: MutateOptionsEnhanced<ApiResponse, Error>) => {
     logoutMutate(undefined, {
       ...options,
       onError: (...args) => {
@@ -36,7 +37,7 @@ const useAuth = () => {
     });
   };
 
-  const checkAuth = (options?: MutateOptions<ApiResponse>) =>
+  const checkAuth = (options?: MutateOptionsEnhanced<ApiResponse>) =>
     checkAuthMutate(undefined, { ...options });
 
   return {

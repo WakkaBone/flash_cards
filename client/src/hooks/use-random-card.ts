@@ -1,4 +1,4 @@
-import { MutateOptions, useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ApiResponse, STATISTICS_ACTIONS } from "../models/api";
 import { CardModel } from "../models/card";
 import { getRandomCardQuery } from "../queries/cards";
@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { updateCardStatsMutation } from "../mutations/cards";
 import { toast } from "react-toastify";
 import deepEqual from "deep-equal";
+import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
 
 const defaultFilters = { category: 0, includeLearned: false };
 
@@ -39,12 +40,11 @@ export const useRandomCard = () => {
   );
   const updateCardStats = (
     outcome: STATISTICS_ACTIONS,
-    options?: MutateOptions<
+    options?: MutateOptionsEnhanced<
       ApiResponse,
       unknown,
-      { cardId: string; outcome: STATISTICS_ACTIONS },
-      unknown
-    > & { hideToast?: boolean } //TODO add this prop to other mutations to control toasts
+      { cardId: string; outcome: STATISTICS_ACTIONS }
+    >
   ) =>
     mutateCardStats(
       { cardId, outcome },

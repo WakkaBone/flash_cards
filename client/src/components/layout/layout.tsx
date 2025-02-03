@@ -6,18 +6,7 @@ import { VersionsInfo } from "./versions-info";
 export const Layout = () => (
   <Box sx={{ display: "flex" }}>
     <CssBaseline />
-    <Drawer
-      sx={{
-        width: "10vw",
-        flexShrink: 0,
-        "& .MuiDrawer-paper": {
-          boxSizing: "border-box",
-          position: "fixed",
-        },
-      }}
-      variant="permanent"
-      anchor="left"
-    >
+    <Drawer sx={{ width: "10vw" }} variant="permanent" anchor="left">
       <NavMenu />
     </Drawer>
     <Box
