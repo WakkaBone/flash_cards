@@ -23,7 +23,12 @@ export const AddCardForm = () => {
     reset,
     formState: { errors },
   } = useForm<AddCardFormType>({
-    defaultValues: { category: Categories.Noun, english: "", hebrew: "" },
+    defaultValues: {
+      category: Categories.Noun,
+      english: "",
+      hebrew: "",
+      details: "",
+    },
   });
 
   const onSubmit = (data: AddCardFormType) => {

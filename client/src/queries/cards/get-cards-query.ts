@@ -6,7 +6,7 @@ import { CardModel } from "../../models/card";
 export const getCardsQuery = (
   filters: GetCardsFilters
 ): DefinedInitialDataOptions<ApiResponse<CardModel[]>, Error> => ({
-  initialData: { isSuccess: false },
+  initialData: { isSuccess: false, data: [] },
   queryKey: ["cards", filters],
   queryFn: async () => await CardsService.getCards(filters),
 });

@@ -19,6 +19,7 @@ export const useRandomCard = () => {
   const {
     data,
     isLoading,
+    isFetched,
     refetch: getAnotherCard,
   } = useQuery<ApiResponse<CardModel>>(getRandomCardQuery(filters));
   const cardData = data?.data;
@@ -72,7 +73,7 @@ export const useRandomCard = () => {
 
   return {
     cardData,
-    isLoading,
+    isLoading: isLoading || !isFetched,
     getAnotherCard,
     filters,
     setFilters,

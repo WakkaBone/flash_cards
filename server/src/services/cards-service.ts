@@ -8,10 +8,13 @@ import {
   updateDoc,
   increment,
   deleteDoc,
+  orderBy,
+  limit,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
-import { CardModel } from "../models/card";
+import { CardModel, Categories } from "../models/card";
 import { COLLECTIONS, STATISTICS_ACTIONS } from "../constants";
+import { Statistics } from "../models/statistics";
 
 type GetCardsFilters = {
   category?: number;
@@ -63,5 +66,59 @@ export const CardsService = {
   deleteCard: async (id: string) => {
     const cardRef = doc(db, COLLECTIONS.cards, id);
     await deleteDoc(cardRef);
+  },
+
+  getStatistics: async () => {
+    let queryRef = query(collection(db, COLLECTIONS.cards));
+    const nounsQuery = query(
+      queryRef,
+      where("category", "==", Categories.Noun)
+    );
+    const adjectivesQuery = query(
+      queryRef,
+      where("category", "==", Categories.Adjective)
+    );
+    const verbsQuery = query(
+      queryRef,
+      where("category", "==", Categories.Verb)
+    );
+    const otherQuery = query(
+      queryRef,
+      where("category", "==", Categories.Other)
+    );
+    const allQuery = query(queryRef);
+    const learnedQuery = query(queryRef, where("isLearned", "==", true));
+    const lastAddedQuery = query(
+      collection(db, COLLECTIONS.cards),
+      orderBy("createdAt", "desc"),
+      limit(1)
+    );
+    const mostMistakesQuery = query(
+      collection(db, COLLECTIONS.cards),
+      orderBy("statistics.wrong", "desc"),
+      limit(1)
+    );
+
+    const lastAddedWordSnapshot = await getDocs(lastAddedQuery);
+    const mostMistakesSnapshot = await getDocs(mostMistakesQuery);
+    const lastAddedCard = lastAddedWordSnapshot.docs[0].data() as CardModel;
+    const mostMistakesCard = mostMistakesSnapshot.docs[0].data() as CardModel;
+
+    const statistics: Statistics = {
+      totalCards: (await getDocs(allQuery)).size,
+      totalLearnedCards: (await getDocs(learnedQuery)).size,
+      lastAdded: lastAddedCard
+        ? `${lastAddedCard.hebrew} - ${lastAddedCard.english}`
+        : "",
+      mostMistakes: mostMistakesCard
+        ? `${mostMistakesCard.hebrew} - ${mostMistakesCard.english}`
+        : "",
+      totalNouns: (await getDocs(nounsQuery)).size,
+      totalAdjectives: (await getDocs(adjectivesQuery)).size,
+      totalVerbs: (await getDocs(verbsQuery)).size,
+      totalOther: (await getDocs(otherQuery)).size,
+    };
+
+    return statistics;
   },
 };

@@ -1,9 +1,8 @@
-import { CircularProgress, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { useAppVersions } from "../../hooks";
 
 export const VersionsInfo = () => {
-  const { clientAppVersion, serverAppVersion, isLoading } = useAppVersions();
-  if (isLoading) return <CircularProgress />;
+  const { clientAppVersion, serverAppVersion } = useAppVersions();
 
   return (
     clientAppVersion &&

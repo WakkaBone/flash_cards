@@ -6,6 +6,8 @@ import {
   markLearnedController,
   updateCardController,
   updateStatisticsController,
+  getRandomCardController,
+  getStatisticsController,
 } from "../controllers/cards";
 import {
   addCardValidator,
@@ -15,7 +17,6 @@ import {
   updateCardValidator,
   updateStatisticsValidator,
 } from "../validators";
-import { getRandomCardController } from "../controllers/cards/get-random-card-controller";
 
 const router = Router();
 
@@ -30,5 +31,6 @@ router.patch(
   updateStatisticsController
 );
 router.patch("/:id/learned", markLearnedValidator, markLearnedController);
+router.get("/statistics", getStatisticsController);
 
 export default router;

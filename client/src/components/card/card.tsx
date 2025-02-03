@@ -4,7 +4,6 @@ import {
   Card,
   CardActions,
   CardContent,
-  CircularProgress,
   Stack,
   TextField,
   Typography,
@@ -30,6 +29,7 @@ import {
   NavigateNextRounded,
 } from "@mui/icons-material";
 import { CardModel } from "../../models/card";
+import { CenteredLoader } from "../loader/loader";
 
 type WordCardPropsType = {
   mode: PracticeModes;
@@ -174,7 +174,7 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
   const onOpenEditModal = () => setIsEdit(true);
   const onCloseEditModal = () => setIsEdit(false);
 
-  if (isLoadingCard) return <CircularProgress />;
+  if (isLoadingCard) return <CenteredLoader />;
   if (!card) return null;
 
   //TODO fix bug with includeLearned
@@ -207,7 +207,7 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
           <Typography
             variant="caption"
             gutterBottom
-            sx={{ display: "block" }}
+            sx={{ display: "block", whiteSpace: "pre-wrap" }}
             mt={2}
           >
             {card.details}
