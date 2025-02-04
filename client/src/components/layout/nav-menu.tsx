@@ -8,7 +8,7 @@ import {
   SxProps,
   Typography,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../context/auth-context";
 import { ROUTES } from "../../constants";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -49,6 +49,7 @@ type MenuItemPropsType = {
   onClick: () => void;
   icon: JSX.Element;
   listItemStyle?: SxProps;
+  isActive: boolean;
 };
 const MenuItem = ({
   id,
@@ -56,15 +57,16 @@ const MenuItem = ({
   onClick,
   icon,
   listItemStyle,
+  isActive,
 }: MenuItemPropsType) => (
-  <ListItem key={id} sx={{ ...listItemStyle }}>
+  <ListItem key={id} sx={{ ...listItemStyle, p: "10px 40px" }}>
     <ListItemText
       sx={{ cursor: "pointer" }}
       primary={
         <Typography
           component="a"
           sx={{
-            color: "primary.main",
+            color: isActive ? "white" : "text.primary",
             cursor: "pointer",
           }}
         >
@@ -79,6 +81,7 @@ const MenuItem = ({
 const MenuList = ({ closeDrawer }: { closeDrawer?: () => void }) => {
   const navigate = useNavigate();
   const authContext = useAuthContext();
+  const { pathname } = useLocation();
 
   const handleMenuItemClick = (path: string) => {
     navigate(path);
@@ -88,13 +91,17 @@ const MenuList = ({ closeDrawer }: { closeDrawer?: () => void }) => {
   if (!authContext) return null;
 
   return (
-    <List sx={{ p: 4, height: "100%", overflow: "hidden" }}>
+    <List sx={{ pt: 0, height: "100%", overflow: "hidden" }}>
       {menuOptions.map(({ id, path, label, icon }) => (
         <MenuItem
           id={id}
           label={label}
           onClick={() => handleMenuItemClick(path)}
           icon={icon}
+          isActive={pathname === path}
+          listItemStyle={{
+            backgroundColor: pathname === path ? "#1976d2" : "transparent",
+          }}
         />
       ))}
       <MenuItem
@@ -107,6 +114,7 @@ const MenuList = ({ closeDrawer }: { closeDrawer?: () => void }) => {
           bottom: "0",
           marginBottom: "30px",
         }}
+        isActive={false}
       />
     </List>
   );
