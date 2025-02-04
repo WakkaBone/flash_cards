@@ -57,10 +57,12 @@ export const CardsTable = () => {
     setRows(data.data.map((item) => mapCardToTableRow(item)));
   }, [data]);
 
+  //TODO implement server side pagination
   const paginationProps = useTablePagination();
 
   return (
     <>
+      <CardsTableFilters filters={filters} onChange={setFilters} />
       <DataGrid
         {...paginationProps}
         disableColumnFilter={isMobile || isTablet}
@@ -71,11 +73,6 @@ export const CardsTable = () => {
           sorting: {
             sortModel: [{ field: "createdAt", sort: "desc" }],
           },
-        }}
-        slots={{
-          toolbar: () => (
-            <CardsTableFilters filters={filters} onChange={setFilters} />
-          ),
         }}
         rows={rows}
         columns={isMobile ? columns.slice(0, 3) : columns}

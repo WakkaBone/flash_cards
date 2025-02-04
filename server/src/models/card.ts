@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export enum Categories {
   Noun = 1,
   Adjective,
@@ -17,5 +19,10 @@ export type CardModel = {
   details?: string;
   statistics: StatisticsType;
   isLearned: boolean;
+  createdAt: Timestamp;
+};
+
+export type CardModelDto = Omit<CardModel, "createdAt"> & {
+  id: string;
   createdAt: string;
 };

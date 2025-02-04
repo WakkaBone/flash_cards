@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
 import { CardsService } from "../../services/cards-service";
 import { isValid } from "../../utils/validation-util";
+import { Timestamp } from "firebase/firestore";
 
 type CreateCardBody = {
   category: number;
@@ -23,7 +24,7 @@ export const addCardController = async (
       details,
       statistics: { wrong: 0, correct: 0 },
       isLearned: false,
-      createdAt: new Date().toISOString(),
+      createdAt: Timestamp.now(),
     };
     const result = await CardsService.addCard(card);
     res.status(200).json({ isSuccess: true, data: result });

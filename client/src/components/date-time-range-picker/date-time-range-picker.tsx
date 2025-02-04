@@ -24,6 +24,8 @@ export const DateTimeRangePicker = ({
       <DateTimePicker
         sx={{ width: "50%" }}
         label="From"
+        ampm={false}
+        maxDateTime={selectedRange.to || undefined}
         onAccept={(val) => handleDateRangeChange("from", val)}
         value={selectedRange.from}
         format={DATE_INPUT_FORMAT}
@@ -31,6 +33,8 @@ export const DateTimeRangePicker = ({
       <DateTimePicker
         sx={{ width: "50%" }}
         label="To"
+        ampm={false}
+        minDateTime={selectedRange.from || undefined}
         onAccept={(val) => handleDateRangeChange("to", val)}
         value={selectedRange.to}
         format={DATE_INPUT_FORMAT}
