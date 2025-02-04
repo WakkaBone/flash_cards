@@ -5,17 +5,11 @@ import { getRandomCardQuery } from "../queries/cards";
 import { useEffect, useState } from "react";
 import { updateCardStatsMutation } from "../mutations/cards";
 import { toast } from "react-toastify";
-import deepEqual from "deep-equal";
 import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
+import { PracticeFilersType } from "../pages/practice-page";
 
-const defaultFilters = { category: 0, includeLearned: false };
-
-export const useRandomCard = () => {
+export const useRandomCard = (filters: PracticeFilersType) => {
   const [cardId, setCardId] = useState<string>("");
-  const [filters, setFilters] = useState<{
-    includeLearned: boolean;
-    category?: number;
-  }>(defaultFilters);
   const {
     data,
     isLoading,
@@ -23,13 +17,6 @@ export const useRandomCard = () => {
     refetch: getAnotherCard,
   } = useQuery<ApiResponse<CardModel>>(getRandomCardQuery(filters));
   const cardData = data?.data;
-
-  const resetFilters = () => setFilters(defaultFilters);
-
-  useEffect(() => {
-    if (deepEqual(filters, defaultFilters)) return;
-    getAnotherCard();
-  }, [filters, getAnotherCard]);
 
   useEffect(() => {
     if (!cardData) return;
@@ -75,9 +62,6 @@ export const useRandomCard = () => {
     cardData,
     isLoading: isLoading || !isFetched,
     getAnotherCard,
-    filters,
-    setFilters,
-    resetFilters,
     updateCardStats,
     updateStatsRest,
   };

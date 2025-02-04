@@ -14,20 +14,49 @@ import { ROUTES } from "../../constants";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useState } from "react";
 import { useScreenSize } from "../../hooks";
+import {
+  AddCircleOutline,
+  BackupTableOutlined,
+  Logout,
+  StyleOutlined,
+} from "@mui/icons-material";
 
+const iconStyles = { marginLeft: "5px", fontSize: ".9em" };
 const menuOptions = [
-  { id: "cards", path: "/", label: "Cards" },
-  { id: "add", path: ROUTES.addCard, label: "Add Card" },
-  { id: "practice", path: ROUTES.practice, label: "Practice" },
+  {
+    id: "cards",
+    path: "/",
+    label: "Cards",
+    icon: <BackupTableOutlined sx={iconStyles} />,
+  },
+  {
+    id: "add",
+    path: ROUTES.addCard,
+    label: "Add Card",
+    icon: <AddCircleOutline sx={iconStyles} />,
+  },
+  {
+    id: "practice",
+    path: ROUTES.practice,
+    label: "Practice",
+    icon: <StyleOutlined sx={iconStyles} />,
+  },
 ];
 
 type MenuItemPropsType = {
   id: string;
   label: string;
   onClick: () => void;
+  icon: JSX.Element;
   listItemStyle?: SxProps;
 };
-const MenuItem = ({ id, label, onClick, listItemStyle }: MenuItemPropsType) => (
+const MenuItem = ({
+  id,
+  label,
+  onClick,
+  icon,
+  listItemStyle,
+}: MenuItemPropsType) => (
   <ListItem key={id} sx={{ ...listItemStyle }}>
     <ListItemText
       sx={{ cursor: "pointer" }}
@@ -39,7 +68,7 @@ const MenuItem = ({ id, label, onClick, listItemStyle }: MenuItemPropsType) => (
             cursor: "pointer",
           }}
         >
-          {label}
+          {label} {icon}
         </Typography>
       }
       onClick={onClick}
@@ -60,17 +89,19 @@ const MenuList = ({ closeDrawer }: { closeDrawer?: () => void }) => {
 
   return (
     <List sx={{ p: 4, height: "100%", overflow: "hidden" }}>
-      {menuOptions.map(({ id, path, label }) => (
+      {menuOptions.map(({ id, path, label, icon }) => (
         <MenuItem
           id={id}
           label={label}
           onClick={() => handleMenuItemClick(path)}
+          icon={icon}
         />
       ))}
       <MenuItem
         id="logout"
         label="Logout"
         onClick={() => authContext.logout()}
+        icon={<Logout sx={iconStyles} />}
         listItemStyle={{
           position: "absolute",
           bottom: "0",

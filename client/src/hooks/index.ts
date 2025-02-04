@@ -6,6 +6,7 @@ import { useDebounce } from "./use-debounce";
 import { useDeleteCard } from "./use-delete-card";
 import { useGetCards } from "./use-get-cards";
 import { useMarkCardLearned } from "./use-mark-learned";
+import { useTablePagination } from "./use-pagination";
 import { useRandomCard } from "./use-random-card";
 import { useScreenSize } from "./use-screen-size";
 import { useUpdateCard } from "./use-update-card";
@@ -20,6 +21,7 @@ export {
   useGetCards,
   useMarkCardLearned,
   useRandomCard,
+  useTablePagination,
   useScreenSize,
   useUpdateCard,
 };

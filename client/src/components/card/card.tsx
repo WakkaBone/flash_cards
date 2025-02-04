@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { PracticeModes } from "../../pages/practice-page";
+import { PracticeFilersType, PracticeModes } from "../../pages/practice-page";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { categoryMapper } from "../../utils/mappers";
 import { STATISTICS_ACTIONS } from "../../models/api";
@@ -33,9 +33,10 @@ import { CenteredLoader } from "../loader/loader";
 
 type WordCardPropsType = {
   mode: PracticeModes;
+  filters: PracticeFilersType;
 };
 
-export const WordCard = ({ mode }: WordCardPropsType) => {
+export const WordCard = ({ mode, filters }: WordCardPropsType) => {
   const { isMobile } = useScreenSize();
 
   const {
@@ -44,7 +45,7 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
     getAnotherCard,
     updateCardStats,
     updateStatsRest: { isPending: isUpdatingStats },
-  } = useRandomCard();
+  } = useRandomCard(filters);
   const { markCardLearned, isPending: isMarkingLearned } = useMarkCardLearned();
   const { deleteCard, isPending: isDeletingCard } = useDeleteCard();
 
@@ -176,8 +177,6 @@ export const WordCard = ({ mode }: WordCardPropsType) => {
 
   if (isLoadingCard) return <CenteredLoader />;
   if (!card) return null;
-
-  //TODO fix bug with includeLearned
 
   return (
     <Card variant="outlined">

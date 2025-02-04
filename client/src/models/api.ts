@@ -10,6 +10,8 @@ export type GetCardsFilters = {
   category?: Categories;
   search?: string;
   includeLearned?: boolean;
+  from?: Date;
+  to?: Date;
 };
 
 export enum STATISTICS_ACTIONS {

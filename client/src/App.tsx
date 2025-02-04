@@ -14,47 +14,51 @@ import { AuthPage } from "./pages/auth-page";
 import { AuthProvider } from "./context/auth-context";
 import { ProtectedRoute } from "./components/protected-route/protected-route";
 import { ROUTES } from "./constants";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route
-                path="/"
-                element={
-                  <ProtectedRoute>
-                    <CardsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path={ROUTES.addCard}
-                element={
-                  <ProtectedRoute>
-                    <AddCardPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path={ROUTES.practice}
-                element={
-                  <ProtectedRoute>
-                    <PracticePage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Route>
-            <Route path={ROUTES.login} element={<AuthPage />} />
-          </Routes>
-        </Router>
-      </AuthProvider>
-    </QueryClientProvider>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <Router>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <CardsPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path={ROUTES.addCard}
+                  element={
+                    <ProtectedRoute>
+                      <AddCardPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path={ROUTES.practice}
+                  element={
+                    <ProtectedRoute>
+                      <PracticePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Route>
+              <Route path={ROUTES.login} element={<AuthPage />} />
+            </Routes>
+          </Router>
+        </AuthProvider>
+      </QueryClientProvider>
+    </LocalizationProvider>
   );
 }
 

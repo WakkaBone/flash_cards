@@ -1,6 +1,6 @@
 export const buildUrl = (
   path: string,
-  params?: Record<string, string | number | boolean>
+  params?: Record<string, string | number | boolean | Date>
 ) => {
   const safeParams = params
     ? Object.fromEntries(

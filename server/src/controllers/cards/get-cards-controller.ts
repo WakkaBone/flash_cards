@@ -14,6 +14,7 @@ export const getCardsController = async (
 ) => {
   if (!isValid(req, res)) return;
   try {
+    //TODO implement server side pagination
     const { search, category, includeLearned } = req.query;
     const filters = {
       search: search && search.toString(),

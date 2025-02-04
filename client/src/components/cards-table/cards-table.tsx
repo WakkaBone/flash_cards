@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { GetCardsFilters } from "../../models/api";
-import { useGetCards, useScreenSize } from "../../hooks";
+import { useGetCards, useScreenSize, useTablePagination } from "../../hooks";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { categoryMapper } from "../../utils/mappers";
+import { mapCardToTableRow } from "../../utils/mappers";
 import { CardsTableFilters } from "./cards-table-filters";
-import { CardModel } from "../../models/card";
 import { defaultFilters } from "../../hooks/use-cards-table-filters";
-import { ActionsCell } from "./actions-cell";
 import { ToastContainer } from "react-toastify";
 import { format } from "date-fns";
 
@@ -47,17 +45,8 @@ export type CardsTableRowType = {
   actions: JSX.Element;
 };
 
-const mapCardToTableRow = (item: CardModel): CardsTableRowType => ({
-  ...item,
-  category: categoryMapper[item.category],
-  correct: item.statistics.correct,
-  wrong: item.statistics.wrong,
-  isLearned: item.isLearned ? "Yes" : "No",
-  actions: <ActionsCell card={item} />,
-});
-
 export const CardsTable = () => {
-  const { isMobile } = useScreenSize();
+  const { isMobile, isTablet } = useScreenSize();
 
   const [filters, setFilters] = useState<GetCardsFilters>(defaultFilters);
   const { data, isLoading } = useGetCards(filters);
@@ -68,12 +57,15 @@ export const CardsTable = () => {
     setRows(data.data.map((item) => mapCardToTableRow(item)));
   }, [data]);
 
+  const paginationProps = useTablePagination();
+
   return (
     <>
       <DataGrid
-        disableColumnFilter={isMobile}
-        disableColumnSorting={isMobile}
-        disableColumnMenu={isMobile}
+        {...paginationProps}
+        disableColumnFilter={isMobile || isTablet}
+        disableColumnSorting={isMobile || isTablet}
+        disableColumnMenu={isMobile || isTablet}
         loading={isLoading}
         initialState={{
           sorting: {
