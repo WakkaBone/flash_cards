@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ApiResponse, STATISTICS_ACTIONS } from "../models/api";
 import { CardModel } from "../models/card";
 import { getRandomCardQuery } from "../queries/cards";
@@ -9,13 +9,11 @@ import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
 import { PracticeFilersType } from "../pages/practice-page";
 
 export const useRandomCard = (filters: PracticeFilersType) => {
+  const queryClient = useQueryClient();
   const [cardId, setCardId] = useState<string>("");
-  const {
-    data,
-    isLoading,
-    isFetched,
-    refetch: getAnotherCard,
-  } = useQuery<ApiResponse<CardModel>>(getRandomCardQuery(filters));
+  const { data, isLoading, isFetching } = useQuery<ApiResponse<CardModel>>(
+    getRandomCardQuery(filters)
+  );
   const cardData = data?.data;
 
   useEffect(() => {
@@ -60,8 +58,10 @@ export const useRandomCard = (filters: PracticeFilersType) => {
 
   return {
     cardData,
-    isLoading: isLoading || !isFetched,
-    getAnotherCard,
+    isLoading,
+    isFetching,
+    getAnotherCard: () =>
+      queryClient.invalidateQueries({ queryKey: ["random-card"] }),
     updateCardStats,
     updateStatsRest,
   };

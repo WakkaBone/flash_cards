@@ -49,7 +49,7 @@ export const CardsTable = () => {
   const { isMobile, isTablet } = useScreenSize();
 
   const [filters, setFilters] = useState<GetCardsFilters>(defaultFilters);
-  const { data, isLoading } = useGetCards(filters);
+  const { data, isLoading, isFetching } = useGetCards(filters);
   const [rows, setRows] = useState<CardsTableRowType[]>([]);
 
   useEffect(() => {
@@ -68,7 +68,7 @@ export const CardsTable = () => {
         disableColumnFilter={isMobile || isTablet}
         disableColumnSorting={isMobile || isTablet}
         disableColumnMenu={isMobile || isTablet}
-        loading={isLoading}
+        loading={isLoading || isFetching}
         initialState={{
           sorting: {
             sortModel: [{ field: "createdAt", sort: "desc" }],

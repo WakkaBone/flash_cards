@@ -136,7 +136,7 @@ const BurgerMenu = () => {
 };
 
 export const NavMenu = () => {
-  const { isMobile, isTablet } = useScreenSize();
-  if (isMobile || isTablet) return <BurgerMenu />;
+  const { burgerBreakpoint } = useScreenSize();
+  if (burgerBreakpoint) return <BurgerMenu />;
   return <MenuList />;
 };

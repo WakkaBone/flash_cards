@@ -29,6 +29,8 @@ import {
   NavigateNextRounded,
 } from "@mui/icons-material";
 import { CardModel } from "../../models/card";
+import { useHotkeys } from "react-hotkeys-hook";
+import { CardSkeletonLoader } from "./card-skeleton-loader";
 import { CenteredLoader } from "../loader/loader";
 
 type WordCardPropsType = {
@@ -37,11 +39,12 @@ type WordCardPropsType = {
 };
 
 export const WordCard = ({ mode, filters }: WordCardPropsType) => {
-  const { isMobile } = useScreenSize();
+  const { isMobile, isPortrait } = useScreenSize();
 
   const {
     cardData,
     isLoading: isLoadingCard,
+    isFetching: isFetchingCard,
     getAnotherCard,
     updateCardStats,
     updateStatsRest: { isPending: isUpdatingStats },
@@ -117,7 +120,11 @@ export const WordCard = ({ mode, filters }: WordCardPropsType) => {
   );
 
   const isLoading =
-    isMarkingLearned || isDeletingCard || isUpdatingStats || isLoadingCard;
+    isMarkingLearned ||
+    isDeletingCard ||
+    isUpdatingStats ||
+    isLoadingCard ||
+    isFetchingCard;
 
   const getCardActionsByMode = useCallback(() => {
     switch (mode) {
@@ -175,11 +182,25 @@ export const WordCard = ({ mode, filters }: WordCardPropsType) => {
   const onOpenEditModal = () => setIsEdit(true);
   const onCloseEditModal = () => setIsEdit(false);
 
+  useHotkeys("right", () => getNextCard(), []);
+  useHotkeys("Enter", () => handleCheckTranslation(), {
+    enableOnFormTags: true,
+  });
+
   if (isLoadingCard) return <CenteredLoader />;
   if (!card) return null;
 
   return (
-    <Card variant="outlined">
+    <Card
+      variant="outlined"
+      sx={{
+        height: isPortrait ? "50vh" : "70vh",
+        display: "flex",
+        flexDirection: "column",
+        alignContent: "space-between",
+        position: "relative",
+      }}
+    >
       <ToastContainer />
       <CardContent
         sx={
@@ -192,28 +213,45 @@ export const WordCard = ({ mode, filters }: WordCardPropsType) => {
             : {}
         }
       >
-        <Typography gutterBottom sx={{ color: "text.secondary", fontSize: 14 }}>
-          Word
-        </Typography>
-        <Typography variant="h5" component="div">
-          {mode === PracticeModes.eth ? card.english : card.hebrew}
-        </Typography>
-        <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-          {categoryMapper[card.category]}
-        </Typography>
-        {getCardBodyByMode()}
-        {(mode === PracticeModes.browse || showTranslation) && card.details && (
-          <Typography
-            variant="caption"
-            gutterBottom
-            sx={{ display: "block", whiteSpace: "pre-wrap" }}
-            mt={2}
-          >
-            {card.details}
-          </Typography>
+        {isFetchingCard ? (
+          <CardSkeletonLoader />
+        ) : (
+          <>
+            <Typography
+              gutterBottom
+              sx={{ color: "text.secondary", fontSize: 14 }}
+            >
+              Word
+            </Typography>
+            <Typography variant="h5" component="div">
+              {mode === PracticeModes.eth ? card.english : card.hebrew}
+            </Typography>
+            <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
+              {categoryMapper[card.category]}
+            </Typography>
+            {getCardBodyByMode()}
+            {(mode === PracticeModes.browse || showTranslation) &&
+              card.details && (
+                <Typography
+                  variant="caption"
+                  gutterBottom
+                  sx={{ display: "block", whiteSpace: "pre-wrap" }}
+                  mt={2}
+                >
+                  {card.details}
+                </Typography>
+              )}
+          </>
         )}
       </CardContent>
-      <CardActions sx={{ justifyContent: isMobile ? "center" : "start" }}>
+      <CardActions
+        sx={{
+          justifyContent: isMobile ? "center" : "start",
+          position: "absolute",
+          bottom: 0,
+          width: "100%",
+        }}
+      >
         <Stack direction={isMobile ? "column" : "row"}>
           {getCardActionsByMode()}
           <Stack direction="row">
