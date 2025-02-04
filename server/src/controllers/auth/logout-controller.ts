@@ -1,13 +1,17 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
+import { getExpiredAuthCookie } from "../../utils/cookie-util";
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "../../constants";
 
 export const logoutController = async (
   req: Request<null, ApiResponse>,
   res: Response<ApiResponse>
 ) => {
   try {
-    const authCookie = `auth_token=; Path=/; SameSite=None; Max-Age=0; Secure`;
-    res.setHeader("Set-Cookie", authCookie);
+    res.setHeader("Set-Cookie", [
+      getExpiredAuthCookie(ACCESS_TOKEN_KEY),
+      getExpiredAuthCookie(REFRESH_TOKEN_KEY),
+    ]);
 
     res.status(200).json({ isSuccess: true });
   } catch (error) {

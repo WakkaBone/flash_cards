@@ -1,8 +1,13 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
-import jwt from "jsonwebtoken";
+import { generateAuthCookie } from "../../utils/cookie-util";
 import { AuthService } from "../../services/auth-service";
 import { isValid } from "../../utils/validation-util";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from "../../utils/jwt-util";
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "../../constants";
 
 type LoginBody = {
   username: string;
@@ -27,9 +32,16 @@ export const loginController = async (
 
     if (username === user.username && password === user.password) {
       const payload = { username: user.username };
-      const token = jwt.sign(payload, process.env.JWT_SECRET);
-      const authCookie = `auth_token=${token}; Path=/; SameSite=None; Max-Age=600; Secure; HttpOnly;`;
-      res.setHeader("Set-Cookie", authCookie);
+      const accessToken = generateAccessToken(payload);
+      const refreshToken = generateRefreshToken(payload);
+      const accessCookie = generateAuthCookie(ACCESS_TOKEN_KEY, accessToken);
+      const refreshCookie = generateAuthCookie(
+        REFRESH_TOKEN_KEY,
+        refreshToken,
+        { maxAge: 43200 } //12 hours
+      );
+
+      res.setHeader("Set-Cookie", [accessCookie, refreshCookie]);
 
       res.status(200).json({ isSuccess: true });
     } else {

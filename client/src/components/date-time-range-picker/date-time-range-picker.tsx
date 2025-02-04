@@ -2,7 +2,7 @@ import { Stack } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { useScreenSize } from "../../hooks";
 
-const DATE_INPUT_FORMAT = "yyyy-MM-dd HH:mm";
+const DATE_INPUT_FORMAT = "dd-MM-yyyy HH:mm";
 
 type DateTimeRangePickerPropsType = {
   handleDateRangeChange: (type: "from" | "to", value: Date | null) => void;
