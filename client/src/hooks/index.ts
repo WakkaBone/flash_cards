@@ -9,6 +9,7 @@ import { useMarkCardLearned } from "./use-mark-learned";
 import { useTablePagination } from "./use-pagination";
 import { useRandomCard } from "./use-random-card";
 import { useScreenSize } from "./use-screen-size";
+import { useTimer } from "./use-timer";
 import { useUpdateCard } from "./use-update-card";
 
 export {
@@ -23,5 +24,6 @@ export {
   useRandomCard,
   useTablePagination,
   useScreenSize,
+  useTimer,
   useUpdateCard,
 };

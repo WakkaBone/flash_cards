@@ -1,20 +1,15 @@
 import { Button, Checkbox, FormControlLabel, Stack } from "@mui/material";
-import { PracticeModeSelect } from "../practice-mode-select/practice-mode-select";
+import { PracticeFilersType } from "../../pages/practice-page";
 import { CategorySelect } from "../category-select/category-select";
 import { useScreenSize } from "../../hooks";
-import { PracticeFilersType, PracticeModes } from "../../pages/practice-page";
 import { DateTimeRangePicker } from "../date-time-range-picker/date-time-range-picker";
 
 type PracticeFiltersPropsType = {
-  practiceMode: PracticeModes;
-  setPracticeMode: (mode: PracticeModes) => void;
   filters: PracticeFilersType;
   setFilters: (filters: PracticeFilersType) => void;
   resetFilters: () => void;
 };
 export const PracticeFilters = ({
-  practiceMode,
-  setPracticeMode,
   filters,
   setFilters,
   resetFilters,
@@ -29,10 +24,6 @@ export const PracticeFilters = ({
       mb={2}
     >
       <Stack direction="row" style={{ width: "100%" }} gap={1}>
-        <PracticeModeSelect
-          value={practiceMode}
-          onChange={(e) => setPracticeMode(e.target.value as PracticeModes)}
-        />
         <CategorySelect
           showAll
           value={filters.category}
