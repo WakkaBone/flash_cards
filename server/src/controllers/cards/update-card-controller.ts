@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
 import { CardsService } from "../../services/cards-service";
-import { CardModel } from "../../models/card";
+import { CardModelDto } from "../../models/card";
 import { isValid } from "../../utils/validation-util";
+import { Timestamp } from "firebase/firestore";
 
 type UpdateCardParams = { id: string };
-type UpdateCardBody = CardModel;
+type UpdateCardBody = CardModelDto;
 export const updateCardController = async (
   req: Request<UpdateCardParams, ApiResponse, UpdateCardBody>,
   res: Response<ApiResponse>
@@ -29,7 +30,7 @@ export const updateCardController = async (
       details,
       statistics,
       isLearned,
-      createdAt,
+      createdAt: Timestamp.fromDate(new Date(createdAt)),
     };
     await CardsService.updateCard(id, card);
     res.status(200).json({ isSuccess: true });
