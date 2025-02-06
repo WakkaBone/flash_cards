@@ -3,10 +3,10 @@ import { GetCardsFilters } from "../../models/api";
 import { useGetCards, useScreenSize, useTablePagination } from "../../hooks";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { mapCardToTableRow } from "../../utils/mappers";
-import { CardsTableFilters } from "./cards-table-filters";
 import { defaultFilters } from "../../hooks/use-cards-table-filters";
 import { ToastContainer } from "react-toastify";
 import { format } from "date-fns";
+import { CardsFilters } from "../cards-filters/cards-filters";
 
 const columns: GridColDef<CardsTableRowType>[] = [
   { field: "english", headerName: "English" },
@@ -62,7 +62,7 @@ export const CardsTable = () => {
 
   return (
     <>
-      <CardsTableFilters filters={filters} onChange={setFilters} />
+      <CardsFilters filters={filters} onChange={setFilters} />
       <DataGrid
         {...paginationProps}
         disableColumnFilter={isMobile || isTablet}

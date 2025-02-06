@@ -5,7 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { toast } from "react-toastify";
+import { toastError } from "../utils/error-handler";
 import { useAuth } from "../hooks";
 
 type SimpleCredentialsType = { username: string; password: string };
@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       onSettled(data) {
         const isSuccess = !!data?.isSuccess;
         if (!isSuccess) {
-          toast("Failed to log in", { type: "error" });
+          toastError(data?.error);
         } else {
           setIsAuthenticated(true);
         }
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       onSettled(data) {
         const isSuccess = !!data?.isSuccess;
         if (!isSuccess) {
-          toast("Failed to log out", { type: "error" });
+          toastError(data?.error);
         } else {
           setIsAuthenticated(false);
         }

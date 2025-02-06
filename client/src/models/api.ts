@@ -1,15 +1,22 @@
 import { CardModel, Categories } from "./card";
 
+export interface ApiError<T = any> {
+  message?: string;
+  code?: string;
+  data?: T;
+}
+
 export interface ApiResponse<T = any> {
   isSuccess: boolean;
   data?: T;
-  error?: any;
+  error?: ApiError;
 }
 
 export type GetCardsFilters = {
   category?: Categories;
   search?: string;
   includeLearned?: boolean;
+  mistakesThreshold?: number;
   from?: Date;
   to?: Date;
 };

@@ -90,7 +90,12 @@ export const WordCard = ({ mode, filters, timerProps }: WordCardPropsType) => {
     updateCardStats(
       isCorrect ? STATISTICS_ACTIONS.Correct : STATISTICS_ACTIONS.Wrong,
       {
-        onSuccess: () => isCorrect && getNextCard(),
+        onSuccess: () => {
+          if (!isCorrect) return;
+          const timeBeforeGetNextCard = 2000;
+          setShowTranslation(true);
+          setTimeout(() => getNextCard(), timeBeforeGetNextCard);
+        },
       }
     );
   }, [card, mode, translation, updateCardStats, getNextCard, isCorrectAnswer]);

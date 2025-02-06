@@ -5,8 +5,10 @@ import { CategorySelect } from "../category-select/category-select";
 import { useAddCard, useScreenSize } from "../../hooks";
 import { ToastContainer } from "react-toastify";
 import { englishValidator, hebrewValidator } from "../../utils/validators";
+import { ConfirmationModal } from "../confirmation-modal/confirmation-modal";
+import { useEffect } from "react";
 
-type AddCardFormType = {
+export type AddCardFormType = {
   category: Categories;
   english: string;
   hebrew: string;
@@ -14,7 +16,12 @@ type AddCardFormType = {
 };
 
 export const AddCardForm = () => {
-  const { addCard, isPending } = useAddCard();
+  const {
+    precheck,
+    precheckRest: { isPending: isLoadingPrecheck },
+    addRest: { isPending: isLoadingAdd, isSuccess },
+    confirmationModalProps,
+  } = useAddCard();
   const { isMobile } = useScreenSize();
 
   const {
@@ -31,11 +38,13 @@ export const AddCardForm = () => {
     },
   });
 
-  const onSubmit = (data: AddCardFormType) => {
-    addCard(data, {
-      onSuccess: () => reset(),
-    });
-  };
+  useEffect(() => {
+    isSuccess && reset();
+  }, [isSuccess, reset]);
+
+  const onSubmit = (formData: AddCardFormType) => precheck(formData);
+
+  const isLoading = isLoadingPrecheck || isLoadingAdd;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
@@ -115,7 +124,8 @@ export const AddCardForm = () => {
           )}
         />
         <Button
-          disabled={isPending}
+          disabled={isLoading}
+          loading={isLoading}
           type="submit"
           variant="contained"
           fullWidth
@@ -124,6 +134,7 @@ export const AddCardForm = () => {
         </Button>
       </Stack>
       <ToastContainer />
+      <ConfirmationModal {...confirmationModalProps} />
     </form>
   );
 };

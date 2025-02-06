@@ -3,11 +3,15 @@ import { Stack } from "@mui/material";
 
 import { WordCard } from "../components/card/card";
 import { PageTitle } from "../components/layout/page-title";
-import { PracticeFilters } from "../components/practice-filters/practice-filters";
 import { Timer } from "../components/card/timer";
 import { PracticeModeSelect } from "../components/practice-mode-select/practice-mode-select";
 
 import { useTimer, useScreenSize } from "../hooks";
+import { GetCardsFilters } from "../models/api";
+import {
+  CardsFilters,
+  FilterTypes,
+} from "../components/cards-filters/cards-filters";
 
 export enum PracticeModes {
   eth,
@@ -15,18 +19,10 @@ export enum PracticeModes {
   browse,
 }
 
-export type PracticeFilersType = {
-  includeLearned: boolean;
-  category?: number;
-  from?: Date | null;
-  to?: Date | null;
-};
+export type PracticeFilersType = Omit<GetCardsFilters, "search">;
 
 const defaultFilters = {
-  category: 0,
   includeLearned: false,
-  from: null,
-  to: null,
 };
 
 export const PracticePage = () => {
@@ -35,7 +31,6 @@ export const PracticePage = () => {
   const [practiceMode, setPracticeMode] = useState(PracticeModes.browse);
 
   const [filters, setFilters] = useState<PracticeFilersType>(defaultFilters);
-  const resetFilters = () => setFilters(defaultFilters);
 
   const timerProps = useTimer();
 
@@ -44,7 +39,7 @@ export const PracticePage = () => {
       <PageTitle>Practice</PageTitle>
       <Stack
         spacing={2}
-        alignItems="center"
+        alignItems="start"
         direction={isMobile ? "column" : "row"}
         mb={2}
       >
@@ -54,10 +49,15 @@ export const PracticePage = () => {
         />
         <Timer {...timerProps} />
       </Stack>
-      <PracticeFilters
+      <CardsFilters
         filters={filters}
-        resetFilters={resetFilters}
-        setFilters={setFilters}
+        onChange={setFilters}
+        enabledFilters={[
+          FilterTypes.DateRange,
+          FilterTypes.Category,
+          FilterTypes.IncludeLearned,
+          FilterTypes.MistakesThreshold,
+        ]}
       />
       <WordCard
         mode={practiceMode}

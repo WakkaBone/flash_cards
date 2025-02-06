@@ -8,7 +8,12 @@ export const defaultFilters = { includeLearned: false };
 export const useCardsTableFilters = (initialFilters: GetCardsFilters) => {
   const [filters, setFilters] = useState<GetCardsFilters>(initialFilters);
   const [search, setSearch] = useState<string>(initialFilters.search || "");
+  const [mistakesThreshold, setMistakesThreshold] = useState<
+    number | undefined
+  >(initialFilters.mistakesThreshold);
+
   const debouncedSearch = useDebounce(search, 500);
+  const debouncedMistakesThreshold = useDebounce(mistakesThreshold, 500);
 
   useEffect(() => {
     debouncedSearch &&
@@ -17,6 +22,14 @@ export const useCardsTableFilters = (initialFilters: GetCardsFilters) => {
         search: debouncedSearch,
       }));
   }, [debouncedSearch]);
+
+  useEffect(() => {
+    debouncedMistakesThreshold &&
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        mistakesThreshold: debouncedMistakesThreshold,
+      }));
+  }, [debouncedMistakesThreshold]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) =>
     setSearch(event.target.value);
@@ -34,15 +47,25 @@ export const useCardsTableFilters = (initialFilters: GetCardsFilters) => {
     }));
   };
 
-  const handleReset = () => setFilters(defaultFilters);
+  const handleMistakesThreshold = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => setMistakesThreshold(Number(event.target.value));
+
+  const handleReset = () => {
+    setSearch("");
+    setMistakesThreshold(0);
+    setFilters(defaultFilters);
+  };
 
   return {
     filters,
     search,
+    mistakesThreshold,
     handleSearch,
     handleCategory,
     handleIncludeLearned,
     handleDateRange,
+    handleMistakesThreshold,
     handleReset,
   };
 };

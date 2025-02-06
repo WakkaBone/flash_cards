@@ -35,6 +35,7 @@ export const DateTimeRangePicker = ({
         label="To"
         ampm={false}
         minDateTime={selectedRange.from || undefined}
+        maxDateTime={new Date()}
         onAccept={(val) => handleDateRangeChange("to", val)}
         value={selectedRange.to}
         format={DATE_INPUT_FORMAT}
