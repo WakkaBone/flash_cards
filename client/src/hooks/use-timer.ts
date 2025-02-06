@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 export const useTimer = () => {
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
+  const [isGoing, setIsGoing] = useState<boolean>(false);
   const [seconds, setSeconds] = useState<string>("");
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
@@ -17,6 +18,7 @@ export const useTimer = () => {
   const startTimer = () => {
     const parsedSeconds = parseInt(seconds, 10);
     if (isNaN(parsedSeconds) || parsedSeconds <= 0) return;
+    setIsGoing(true);
     setTimeLeft(parsedSeconds);
     const id = setInterval(() => {
       setTimeLeft((prevTime) => {
@@ -35,14 +37,10 @@ export const useTimer = () => {
     setTimeLeft(null);
   };
 
-  const restartTimer = () => {
-    resetTimer();
-    startTimer();
-  };
-
   const stopTimer = () => {
     resetTimer();
     setSeconds("");
+    setIsGoing(false);
   };
 
   useEffect(() => {
@@ -53,7 +51,7 @@ export const useTimer = () => {
 
   return {
     isEnabled,
-    isGoing: isEnabled && !!timeLeft,
+    isGoing,
     seconds,
     timeLeft,
     handleSecondsChange,
@@ -61,6 +59,5 @@ export const useTimer = () => {
     startTimer,
     resetTimer,
     stopTimer,
-    restartTimer,
   };
 };

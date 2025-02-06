@@ -65,7 +65,8 @@ export const PracticePage = () => {
         timerProps={{
           isEnabled: timerProps.isEnabled,
           timeLeft: timerProps.timeLeft,
-          restartTimer: timerProps.restartTimer,
+          stopTimer: timerProps.resetTimer,
+          startTimer: timerProps.startTimer,
         }}
       />
     </>

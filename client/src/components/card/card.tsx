@@ -41,7 +41,8 @@ type WordCardPropsType = {
   timerProps: {
     isEnabled: boolean;
     timeLeft: number | null;
-    restartTimer: () => void;
+    stopTimer: () => void;
+    startTimer: () => void;
   };
 };
 
@@ -58,7 +59,12 @@ export const WordCard = ({ mode, filters, timerProps }: WordCardPropsType) => {
   } = useRandomCard(filters);
   const { markCardLearned, isPending: isMarkingLearned } = useMarkCardLearned();
   const { deleteCard, isPending: isDeletingCard } = useDeleteCard();
-  const { isEnabled: isTimerEnabled, timeLeft, restartTimer } = timerProps;
+  const {
+    isEnabled: isTimerEnabled,
+    timeLeft,
+    stopTimer,
+    startTimer,
+  } = timerProps;
 
   const [card, setCard] = useState<CardModel | undefined>(cardData);
 
@@ -68,12 +74,13 @@ export const WordCard = ({ mode, filters, timerProps }: WordCardPropsType) => {
   const [showTranslation, setShowTranslation] = useState<boolean>(false);
 
   const getNextCard = useCallback(() => {
+    stopTimer();
     getAnotherCard().then(() => {
       setTranslation("");
       setShowTranslation(false);
-      restartTimer();
+      startTimer();
     });
-  }, [getAnotherCard, restartTimer]);
+  }, [getAnotherCard, startTimer, stopTimer]);
 
   const isCorrectAnswer = useCallback(() => {
     if (!card) return;
@@ -88,6 +95,7 @@ export const WordCard = ({ mode, filters, timerProps }: WordCardPropsType) => {
     if (!card || mode === PracticeModes.browse || !translation) return;
     const isCorrect = isCorrectAnswer();
 
+    stopTimer();
     updateCardStats(
       isCorrect ? STATISTICS_ACTIONS.Correct : STATISTICS_ACTIONS.Wrong,
       {
@@ -99,7 +107,15 @@ export const WordCard = ({ mode, filters, timerProps }: WordCardPropsType) => {
         },
       }
     );
-  }, [card, mode, translation, updateCardStats, getNextCard, isCorrectAnswer]);
+  }, [
+    card,
+    mode,
+    translation,
+    updateCardStats,
+    getNextCard,
+    isCorrectAnswer,
+    stopTimer,
+  ]);
 
   const handleToggleTranslation = useCallback(() => {
     setShowTranslation((val) => !val);
