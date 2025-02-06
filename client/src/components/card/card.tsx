@@ -33,6 +33,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { CardSkeletonLoader } from "./card-skeleton-loader";
 import { CenteredLoader } from "../loader/loader";
 import { CardsService } from "../../services/cards-service";
+import { toastError } from "../../utils/error-handler";
 
 type WordCardPropsType = {
   mode: PracticeModes;
@@ -67,11 +68,11 @@ export const WordCard = ({ mode, filters, timerProps }: WordCardPropsType) => {
   const [showTranslation, setShowTranslation] = useState<boolean>(false);
 
   const getNextCard = useCallback(() => {
-    getAnotherCard();
-    setTranslation("");
-    setShowTranslation(false);
-    //TODO restart only when the next card is loaded
-    restartTimer();
+    getAnotherCard().then(() => {
+      setTranslation("");
+      setShowTranslation(false);
+      restartTimer();
+    });
   }, [getAnotherCard, restartTimer]);
 
   const isCorrectAnswer = useCallback(() => {
@@ -166,9 +167,7 @@ export const WordCard = ({ mode, filters, timerProps }: WordCardPropsType) => {
         });
         getNextCard();
       })
-      .catch(() => {
-        toast("Something went wrong", { type: "error" });
-      });
+      .catch(() => toastError());
   }, [getNextCard, card, mode, isCorrectAnswer]);
 
   useEffect(() => {

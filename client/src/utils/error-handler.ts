@@ -33,4 +33,4 @@ export const handleError = (error: AxiosError<ApiResponse>): ApiResponse => {
 };
 
 export const toastError = (error?: ApiError) =>
-  toast(error?.message || "Something went wrong", { type: "error" });
+  toast(error?.message || GENERIC_ERROR.error.message, { type: "error" });
