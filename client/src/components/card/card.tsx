@@ -12,7 +12,7 @@ import { PracticeFilersType, PracticeModes } from "../../pages/practice-page";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { categoryMapper } from "../../utils/mappers";
 import { STATISTICS_ACTIONS } from "../../models/api";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import {
   useMarkCardLearned,
   useDeleteCard,
@@ -32,13 +32,19 @@ import { CardModel } from "../../models/card";
 import { useHotkeys } from "react-hotkeys-hook";
 import { CardSkeletonLoader } from "./card-skeleton-loader";
 import { CenteredLoader } from "../loader/loader";
+import { CardsService } from "../../services/cards-service";
 
 type WordCardPropsType = {
   mode: PracticeModes;
   filters: PracticeFilersType;
+  timerProps: {
+    isEnabled: boolean;
+    timeLeft: number | null;
+    restartTimer: () => void;
+  };
 };
 
-export const WordCard = ({ mode, filters }: WordCardPropsType) => {
+export const WordCard = ({ mode, filters, timerProps }: WordCardPropsType) => {
   const { isMobile, isPortrait } = useScreenSize();
 
   const {
@@ -51,6 +57,7 @@ export const WordCard = ({ mode, filters }: WordCardPropsType) => {
   } = useRandomCard(filters);
   const { markCardLearned, isPending: isMarkingLearned } = useMarkCardLearned();
   const { deleteCard, isPending: isDeletingCard } = useDeleteCard();
+  const { isEnabled: isTimerEnabled, timeLeft, restartTimer } = timerProps;
 
   const [card, setCard] = useState<CardModel | undefined>(cardData);
 
@@ -63,14 +70,22 @@ export const WordCard = ({ mode, filters }: WordCardPropsType) => {
     getAnotherCard();
     setTranslation("");
     setShowTranslation(false);
-  }, [getAnotherCard]);
+    //TODO restart only when the next card is loaded
+    restartTimer();
+  }, [getAnotherCard, restartTimer]);
+
+  const isCorrectAnswer = useCallback(() => {
+    if (!card) return;
+    const correctAnswer =
+      mode === PracticeModes.eth ? card.hebrew : card.english;
+    return (
+      translation.trim().toLowerCase() === correctAnswer.trim().toLowerCase()
+    );
+  }, [mode, card, translation]);
 
   const handleCheckTranslation = useCallback(() => {
     if (!card || mode === PracticeModes.browse || !translation) return;
-    const correctAnswer =
-      mode === PracticeModes.eth ? card.hebrew : card.english;
-    const isCorrect =
-      translation.trim().toLowerCase() === correctAnswer.trim().toLowerCase();
+    const isCorrect = isCorrectAnswer();
 
     updateCardStats(
       isCorrect ? STATISTICS_ACTIONS.Correct : STATISTICS_ACTIONS.Wrong,
@@ -83,7 +98,7 @@ export const WordCard = ({ mode, filters }: WordCardPropsType) => {
         },
       }
     );
-  }, [card, mode, translation, updateCardStats, getNextCard]);
+  }, [card, mode, translation, updateCardStats, getNextCard, isCorrectAnswer]);
 
   const handleToggleTranslation = useCallback(() => {
     setShowTranslation((val) => !val);
@@ -130,6 +145,36 @@ export const WordCard = ({ mode, filters }: WordCardPropsType) => {
     isUpdatingStats ||
     isLoadingCard ||
     isFetchingCard;
+
+  const handleTimeUp = useCallback(() => {
+    if (!card) return;
+    if (mode === PracticeModes.browse) {
+      getNextCard();
+      return;
+    }
+
+    //TODO investigate why cannot use hook here
+    const isCorrect = isCorrectAnswer();
+    CardsService.updateCardStats(
+      card.id,
+      isCorrect ? STATISTICS_ACTIONS.Correct : STATISTICS_ACTIONS.Wrong
+    )
+      .then(() => {
+        toast(isCorrect ? "Correct!" : "Wrong!", {
+          type: isCorrect ? "success" : "error",
+          autoClose: 500,
+        });
+        getNextCard();
+      })
+      .catch(() => {
+        toast("Something went wrong", { type: "error" });
+      });
+  }, [getNextCard, card, mode, isCorrectAnswer]);
+
+  useEffect(() => {
+    if (!isTimerEnabled) return;
+    timeLeft === 0 && handleTimeUp();
+  }, [isTimerEnabled, timeLeft, handleTimeUp]);
 
   const getCardActionsByMode = useCallback(() => {
     switch (mode) {
