@@ -17,15 +17,17 @@ import { CardModel, CardModelDto, Categories } from "../models/card";
 import { COLLECTIONS, STATISTICS_ACTIONS } from "../constants";
 import { Statistics } from "../models/statistics";
 
-type GetCardsFilters = {
+export type GetCardsFilters = {
   category?: number;
   search?: string;
   includeLearned?: boolean;
   from?: Date;
   to?: Date;
+  mistakesThreshold?: number;
   page?: number;
   pageSize?: number;
 };
+
 export const CardsService = {
   getCards: async (filters: GetCardsFilters = {}) => {
     let queryRef = query(collection(db, COLLECTIONS.cards));
@@ -46,6 +48,9 @@ export const CardsService = {
     }
     if (filters.search) {
       queries.push(where("english", "==", filters.search));
+    }
+    if (filters.mistakesThreshold) {
+      queries.push(where("statistics.wrong", ">=", filters.mistakesThreshold));
     }
 
     //pagination

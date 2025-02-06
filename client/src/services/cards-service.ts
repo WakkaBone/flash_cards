@@ -10,7 +10,6 @@ import {
 import { CardModel } from "../models/card";
 import { Statistics } from "../models/statistics";
 import { buildUrl } from "../utils/url-util";
-import { PracticeFilersType } from "../pages/practice-page";
 import { handleError } from "../utils/error-handler";
 
 const apiPostfix = "/cards";
@@ -26,13 +25,8 @@ export const CardsService = {
     return response.data;
   },
 
-  async getRandomCard(filters: PracticeFilersType) {
-    const { includeLearned, category, from, to } = filters;
-    const params: Record<string, boolean | number | Date> = { includeLearned };
-    if (category) params["category"] = category;
-    if (from) params["from"] = from;
-    if (to) params["to"] = to;
-    const url = buildUrl(`${apiPostfix}/random`, params);
+  async getRandomCard(filters: GetCardsFilters) {
+    const url = buildUrl(`${apiPostfix}/random`, filters);
     const response = await httpClient.get<
       ApiResponse<CardModel>,
       AxiosPromise<ApiResponse<CardModel>> | AxiosError<ApiResponse>

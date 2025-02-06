@@ -1,4 +1,12 @@
-import { Box, Button, Checkbox, FormControlLabel, Input } from "@mui/material";
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Input,
+  Stack,
+  TextField,
+} from "@mui/material";
 import { GetCardsFilters } from "../../models/api";
 import { useEffect } from "react";
 import deepEqual from "deep-equal";
@@ -22,10 +30,12 @@ export const CardsTableFilters = ({
   const {
     filters,
     search,
+    mistakesThreshold,
     handleSearch,
     handleCategory,
     handleIncludeLearned,
     handleDateRange,
+    handleMistakesThreshold,
     handleReset,
   } = useCardsTableFilters(initialFilters);
 
@@ -59,11 +69,26 @@ export const CardsTableFilters = ({
             to: filters.to ?? null,
           }}
         />
-        <CategorySelect
-          fullWidth
-          value={filters.category}
-          onChange={handleCategory}
-        />
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{ width: isMobile ? "100%" : "200%" }}
+        >
+          <CategorySelect
+            fullWidth
+            value={filters.category}
+            onChange={handleCategory}
+          />
+          <TextField
+            fullWidth
+            type="number"
+            label="Mistakes"
+            value={mistakesThreshold}
+            onChange={handleMistakesThreshold}
+            placeholder="Mistakes"
+          />
+        </Stack>
+
         <FormControlLabel
           control={
             <Checkbox
@@ -71,7 +96,7 @@ export const CardsTableFilters = ({
               onChange={handleIncludeLearned}
             />
           }
-          label="Include learned"
+          label="With learned"
         />
         <Button onClick={handleReset}>Reset filters</Button>
       </Box>

@@ -16,6 +16,7 @@ export type GetCardsFilters = {
   category?: Categories;
   search?: string;
   includeLearned?: boolean;
+  mistakesThreshold?: number;
   from?: Date;
   to?: Date;
 };

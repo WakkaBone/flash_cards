@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
-import { CardsService } from "../../services/cards-service";
+import { CardsService, GetCardsFilters } from "../../services/cards-service";
 import { isValid } from "../../utils/validation-util";
 import { CardModelDto } from "../../models/card";
 
@@ -10,6 +10,7 @@ type GetCardsQueryParams = {
   includeLearned?: string;
   from?: string;
   to?: string;
+  mistakesThreshold?: string;
   page?: string;
   pageSize?: string;
 };
@@ -19,17 +20,30 @@ export const getCardsController = async (
 ) => {
   if (!isValid(req, res)) return;
   try {
-    const { search, category, includeLearned, from, to, page, pageSize } =
-      req.query;
-    const filters = {
+    const {
+      search,
+      category,
+      includeLearned,
+      from,
+      to,
+      mistakesThreshold,
+      page,
+      pageSize,
+    } = req.query;
+
+    const filters: GetCardsFilters = {
       search,
       category: category ? Number(category) : undefined,
       includeLearned: includeLearned ? includeLearned === "true" : undefined,
       from: from ? new Date(from) : undefined,
       to: to ? new Date(to) : undefined,
+      mistakesThreshold: mistakesThreshold
+        ? Number(mistakesThreshold)
+        : undefined,
       page: page ? Number(page) : undefined,
       pageSize: pageSize ? Number(pageSize) : undefined,
     };
+
     const result = await CardsService.getCards(filters);
     res.status(200).json({ isSuccess: true, data: result });
   } catch (error) {

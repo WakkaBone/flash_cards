@@ -2,6 +2,7 @@ import { useState } from "react";
 import { WordCard } from "../components/card/card";
 import { PageTitle } from "../components/layout/page-title";
 import { PracticeFilters } from "../components/practice-filters/practice-filters";
+import { GetCardsFilters } from "../models/api";
 
 export enum PracticeModes {
   eth,
@@ -9,18 +10,10 @@ export enum PracticeModes {
   browse,
 }
 
-export type PracticeFilersType = {
-  includeLearned: boolean;
-  category?: number;
-  from?: Date | null;
-  to?: Date | null;
-};
+export type PracticeFilersType = Omit<GetCardsFilters, "search">;
 
 const defaultFilters = {
-  category: 0,
   includeLearned: false,
-  from: null,
-  to: null,
 };
 
 export const PracticePage = () => {
@@ -33,9 +26,9 @@ export const PracticePage = () => {
     <>
       <PageTitle>Practice</PageTitle>
       <PracticeFilters
-        filters={filters}
+        initialFilters={filters}
         resetFilters={resetFilters}
-        setFilters={setFilters}
+        onChange={setFilters}
         practiceMode={practiceMode}
         setPracticeMode={setPracticeMode}
       />
