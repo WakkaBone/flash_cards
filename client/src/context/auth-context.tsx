@@ -7,6 +7,7 @@ import {
 } from "react";
 import { toastError } from "../utils/error-handler";
 import { useAuth } from "../hooks";
+import { AuthService } from "../services/auth-service";
 
 type SimpleCredentialsType = { username: string; password: string };
 interface AuthContextType {
@@ -18,17 +19,15 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const { login: loginMutation, logout: logoutMutation, checkAuth } = useAuth();
+  const { login: loginMutation, logout: logoutMutation } = useAuth();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | undefined>(
     undefined
   );
 
   useEffect(() => {
-    //TODO check why this request is sent twice
-    checkAuth({
-      onSuccess: (data) => setIsAuthenticated(data.isSuccess),
-      onError: () => setIsAuthenticated(false),
-    });
+    AuthService.checkAuth().then((data) =>
+      setIsAuthenticated(!!data.isSuccess)
+    );
   }, []);
 
   const login = (credentials: SimpleCredentialsType) => {

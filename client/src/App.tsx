@@ -26,31 +26,17 @@ function App() {
         <AuthProvider>
           <Router>
             <Routes>
-              <Route path="/" element={<Layout />}>
-                <Route
-                  path="/"
-                  element={
-                    <ProtectedRoute>
-                      <CardsPage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path={ROUTES.addCard}
-                  element={
-                    <ProtectedRoute>
-                      <AddCardPage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path={ROUTES.practice}
-                  element={
-                    <ProtectedRoute>
-                      <PracticePage />
-                    </ProtectedRoute>
-                  }
-                />
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <Layout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route path="/" element={<CardsPage />} />
+                <Route path={ROUTES.addCard} element={<AddCardPage />} />
+                <Route path={ROUTES.practice} element={<PracticePage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Route>
               <Route path={ROUTES.login} element={<AuthPage />} />

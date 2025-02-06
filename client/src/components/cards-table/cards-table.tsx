@@ -60,6 +60,8 @@ export const CardsTable = () => {
   //TODO implement server side pagination
   const paginationProps = useTablePagination();
 
+  //TODO make grid more responsive
+
   return (
     <>
       <CardsFilters filters={filters} onChange={setFilters} />

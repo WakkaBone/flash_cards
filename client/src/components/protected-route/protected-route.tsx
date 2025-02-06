@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
 import { useAuthContext } from "../../context/auth-context";
-import { Navigate } from "react-router-dom";
 import { ROUTES } from "../../constants";
+import { FullScreenLoader } from "../loader/full-screen-loader";
 
 export const ProtectedRoute = ({ children }: PropsWithChildren) => {
   const authContext = useAuthContext();
@@ -9,8 +9,10 @@ export const ProtectedRoute = ({ children }: PropsWithChildren) => {
 
   const { isAuthenticated } = authContext;
 
-  if (isAuthenticated !== undefined && !isAuthenticated)
-    return <Navigate to={ROUTES.login} />;
+  if (isAuthenticated !== undefined && !isAuthenticated) {
+    window.location.href = ROUTES.login;
+    return <FullScreenLoader />;
+  }
 
   return <>{children}</>;
 };
