@@ -1,4 +1,4 @@
-import { AxiosPromise } from "axios";
+import { AxiosError, AxiosPromise } from "axios";
 import httpClient from "../http-client";
 import {
   AddCardPayload,
@@ -11,16 +11,19 @@ import { CardModel } from "../models/card";
 import { Statistics } from "../models/statistics";
 import { buildUrl } from "../utils/url-util";
 import { PracticeFilersType } from "../pages/practice-page";
+import { handleError } from "../utils/error-handler";
 
 const apiPostfix = "/cards";
 
 export const CardsService = {
   async getCards(filters: GetCardsFilters) {
     const url = buildUrl(apiPostfix, filters);
-    const { data: response } = await httpClient.get<ApiResponse<CardModel[]>>(
-      url
-    );
-    return response;
+    const response = await httpClient.get<
+      ApiResponse<CardModel[]>,
+      AxiosPromise<ApiResponse<CardModel[]>> | AxiosError<ApiResponse>
+    >(url);
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
   },
 
   async getRandomCard(filters: PracticeFilersType) {
@@ -30,56 +33,77 @@ export const CardsService = {
     if (from) params["from"] = from;
     if (to) params["to"] = to;
     const url = buildUrl(`${apiPostfix}/random`, params);
-    const { data: response } = await httpClient.get<ApiResponse<CardModel>>(
-      url
-    );
-    return response;
+    const response = await httpClient.get<
+      ApiResponse<CardModel>,
+      AxiosPromise<ApiResponse<CardModel>> | AxiosError<ApiResponse>
+    >(url);
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
+  },
+
+  async addCardPrecheck(card: AddCardPayload) {
+    const response = await httpClient.post<
+      ApiResponse,
+      AxiosPromise<ApiResponse> | AxiosError<ApiResponse>,
+      AddCardPayload
+    >(`${apiPostfix}/check`, card);
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
   },
 
   async addCard(card: AddCardPayload) {
-    const { data: response } = await httpClient.post<
+    const response = await httpClient.post<
       ApiResponse,
-      AxiosPromise<ApiResponse>,
+      AxiosPromise<ApiResponse> | AxiosError<ApiResponse>,
       AddCardPayload
     >(apiPostfix, card);
-    return response;
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
   },
 
   async updateCardStats(cardId: string, outcome: STATISTICS_ACTIONS) {
-    const { data: response } = await httpClient.patch<ApiResponse>(
-      `${apiPostfix}/${cardId}/statistics/${outcome}`
-    );
-    return response;
+    const response = await httpClient.patch<
+      ApiResponse,
+      AxiosPromise<ApiResponse> | AxiosError<ApiResponse>
+    >(`${apiPostfix}/${cardId}/statistics/${outcome}`);
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
   },
 
   async markLearned(cardId: string) {
-    const { data: response } = await httpClient.patch<ApiResponse>(
-      `${apiPostfix}/${cardId}/learned`
-    );
-    return response;
+    const response = await httpClient.patch<
+      ApiResponse,
+      AxiosPromise<ApiResponse> | AxiosError<ApiResponse>
+    >(`${apiPostfix}/${cardId}/learned`);
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
   },
 
   async deleteCard(cardId: string) {
-    const { data: response } = await httpClient.delete<ApiResponse>(
-      `${apiPostfix}/${cardId}`
-    );
-    return response;
+    const response = await httpClient.delete<
+      ApiResponse,
+      AxiosPromise<ApiResponse> | AxiosError<ApiResponse>
+    >(`${apiPostfix}/${cardId}`);
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
   },
 
   async updateCard(card: UpdateCardPayload) {
-    const { data: response } = await httpClient.put<
+    const response = await httpClient.put<
       ApiResponse,
-      AxiosPromise<ApiResponse>,
+      AxiosPromise<ApiResponse> | AxiosError<ApiResponse>,
       UpdateCardPayload
     >(`${apiPostfix}/${card.id}`, card);
-    return response;
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
   },
 
   async getStatistics() {
-    const { data: response } = await httpClient.get<
+    const response = await httpClient.get<
       ApiResponse<Statistics>,
-      AxiosPromise<ApiResponse<Statistics>>
+      AxiosPromise<ApiResponse<Statistics>> | AxiosError<ApiResponse>
     >(`${apiPostfix}/statistics`);
-    return response;
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
   },
 };

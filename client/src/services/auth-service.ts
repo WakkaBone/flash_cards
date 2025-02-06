@@ -1,30 +1,32 @@
-import { AxiosPromise } from "axios";
+import { AxiosError, AxiosPromise } from "axios";
 import httpClient from "../http-client";
 import { ApiResponse, LoginPayload } from "../models/api";
+import { handleError } from "../utils/error-handler";
 
 const apiPostfix = "/auth";
 
 export const AuthService = {
   async login(credentials: LoginPayload) {
-    const { data: response } = await httpClient.post<
+    const response = await httpClient.post<
       ApiResponse,
       AxiosPromise<ApiResponse>,
       LoginPayload
     >(`${apiPostfix}/login`, credentials);
-    return response;
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
   },
 
   async logout() {
-    const { data: response } = await httpClient.post<ApiResponse>(
-      `${apiPostfix}/logout`
-    );
-    return response;
+    const response = await httpClient.post<ApiResponse>(`${apiPostfix}/logout`);
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
   },
 
   async checkAuth() {
-    const { data: response } = await httpClient.post<ApiResponse>(
+    const response = await httpClient.post<ApiResponse>(
       `${apiPostfix}/check-auth`
     );
-    return response;
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
   },
 };

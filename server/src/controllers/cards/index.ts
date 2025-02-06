@@ -1,4 +1,5 @@
 import { addCardController } from "./add-card-controller";
+import { addCardPrecheckController } from "./add-card-precheck-controller";
 import { deleteCardController } from "./delete-card-controller";
 import { getCardsController } from "./get-cards-controller";
 import { getRandomCardController } from "./get-random-card-controller";
@@ -9,6 +10,7 @@ import { updateStatisticsController } from "./update-statistics-controller";
 
 export {
   addCardController,
+  addCardPrecheckController,
   deleteCardController,
   getCardsController,
   getRandomCardController,

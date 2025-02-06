@@ -3,6 +3,7 @@ import { ApiResponse, UpdateCardPayload } from "../models/api";
 import { toast } from "react-toastify";
 import { updateCardMutation } from "../mutations/cards";
 import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
+import { toastError } from "../utils/error-handler";
 
 export const useUpdateCard = () => {
   const queryClient = useQueryClient();
@@ -19,11 +20,11 @@ export const useUpdateCard = () => {
         options?.onSuccess?.(...args);
       },
       onError: (...args) => {
-        toast("Something went wrong", { type: "error" });
+        toastError(args[0]);
         options?.onError?.(...args);
       },
       onSettled(data, error, variables, context) {
-        if (!data?.isSuccess) toast("Something went wrong", { type: "error" });
+        if (!data?.isSuccess) toastError(data?.error);
         options?.onSettled?.(data, error, variables, context);
       },
     });

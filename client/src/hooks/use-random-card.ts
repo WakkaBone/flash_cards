@@ -7,6 +7,7 @@ import { updateCardStatsMutation } from "../mutations/cards";
 import { toast } from "react-toastify";
 import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
 import { PracticeFilersType } from "../pages/practice-page";
+import { toastError } from "../utils/error-handler";
 
 export const useRandomCard = (filters: PracticeFilersType) => {
   const queryClient = useQueryClient();
@@ -45,12 +46,11 @@ export const useRandomCard = (filters: PracticeFilersType) => {
           options?.onSuccess?.(data, variables, context);
         },
         onError: (...args) => {
-          toast("Something went wrong", { type: "error" });
+          toastError(args[0]);
           options?.onError?.(...args);
         },
         onSettled(data, error, variables, context) {
-          if (!data?.isSuccess)
-            toast("Something went wrong", { type: "error" });
+          if (!data?.isSuccess) toastError(data?.error);
           options?.onSettled?.(data, error, variables, context);
         },
       }

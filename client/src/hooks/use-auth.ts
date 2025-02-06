@@ -5,7 +5,7 @@ import {
   logoutMutation,
 } from "../mutations/auth";
 import { ApiResponse, LoginPayload } from "../models/api";
-import { toast } from "react-toastify";
+import { toastError } from "../utils/error-handler";
 import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
 
 const useAuth = () => {
@@ -21,7 +21,7 @@ const useAuth = () => {
     loginMutate(credentials, {
       ...options,
       onError: (...args) => {
-        toast("Failed to log in", { type: "error" });
+        toastError(args[0]);
         options?.onError?.(...args);
       },
     });
@@ -31,7 +31,7 @@ const useAuth = () => {
     logoutMutate(undefined, {
       ...options,
       onError: (...args) => {
-        toast("Failed to log out", { type: "error" });
+        toastError(args[0]);
         options?.onError?.(...args);
       },
     });

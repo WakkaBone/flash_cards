@@ -8,6 +8,7 @@ import {
   updateStatisticsController,
   getRandomCardController,
   getStatisticsController,
+  addCardPrecheckController,
 } from "../controllers/cards";
 import {
   addCardValidator,
@@ -22,6 +23,7 @@ const router = Router();
 
 router.get("/", getCardsValidator, getCardsController);
 router.get("/random", getCardsValidator, getRandomCardController);
+router.post("/check", addCardValidator, addCardPrecheckController);
 router.post("/", addCardValidator, addCardController);
 router.put("/:id", updateCardValidator, updateCardController);
 router.delete("/:id", deleteCardValidator, deleteCardController);

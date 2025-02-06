@@ -34,7 +34,10 @@ export const useCardsTableFilters = (initialFilters: GetCardsFilters) => {
     }));
   };
 
-  const handleReset = () => setFilters(defaultFilters);
+  const handleReset = () => {
+    setSearch("");
+    setFilters(defaultFilters);
+  };
 
   return {
     filters,

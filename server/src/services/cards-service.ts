@@ -27,7 +27,7 @@ type GetCardsFilters = {
   pageSize?: number;
 };
 export const CardsService = {
-  getCards: async (filters?: GetCardsFilters) => {
+  getCards: async (filters: GetCardsFilters = {}) => {
     let queryRef = query(collection(db, COLLECTIONS.cards));
     const queries = [];
 

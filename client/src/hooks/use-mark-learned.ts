@@ -3,6 +3,7 @@ import { ApiResponse } from "../models/api";
 import { markCardLearnedMutation } from "../mutations/cards";
 import { toast } from "react-toastify";
 import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
+import { toastError } from "../utils/error-handler";
 
 export const useMarkCardLearned = () => {
   const queryClient = useQueryClient();
@@ -23,12 +24,11 @@ export const useMarkCardLearned = () => {
           options?.onSuccess?.(...args);
         },
         onError: (...args) => {
-          toast("Something went wrong", { type: "error" });
+          toastError(args[0]);
           options?.onError?.(...args);
         },
         onSettled(data, error, variables, context) {
-          if (!data?.isSuccess)
-            toast("Something went wrong", { type: "error" });
+          if (!data?.isSuccess) toastError(data?.error);
           options?.onSettled?.(data, error, variables, context);
         },
       }

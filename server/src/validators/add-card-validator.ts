@@ -1,11 +1,24 @@
 import { body } from "express-validator";
+import { CardsService } from "../services/cards-service";
 
 export const addCardValidator = [
   body("category").isNumeric().withMessage("Category is required"),
   body("english")
     .isString()
     .notEmpty()
-    .withMessage("English translation is required"),
+    .withMessage("English translation is required")
+    .custom(async (english) => {
+      const sameWords = await CardsService.getCards({
+        search: english,
+      });
+
+      if (sameWords.length > 0) {
+        throw new Error("Such word already exists");
+      }
+
+      return true;
+    }),
+
   body("hebrew")
     .isString()
     .notEmpty()
