@@ -5,6 +5,7 @@ import {
   Button,
   FormControlLabel,
   Stack,
+  Tooltip,
 } from "@mui/material";
 import { Timer as TimerIcon } from "@mui/icons-material";
 
@@ -70,7 +71,11 @@ export const Timer = (props: TimerPropsType) => {
             onChange={handleTimerEnabledCheckbox}
           />
         }
-        label={<TimerIcon />}
+        label={
+          <Tooltip title="Timer">
+            <TimerIcon />
+          </Tooltip>
+        }
       />
 
       <Stack

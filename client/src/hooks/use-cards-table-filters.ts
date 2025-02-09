@@ -16,19 +16,17 @@ export const useCardsTableFilters = (initialFilters: GetCardsFilters) => {
   const debouncedMistakesThreshold = useDebounce(mistakesThreshold, 500);
 
   useEffect(() => {
-    debouncedSearch &&
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        search: debouncedSearch,
-      }));
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      search: debouncedSearch,
+    }));
   }, [debouncedSearch]);
 
   useEffect(() => {
-    debouncedMistakesThreshold &&
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        mistakesThreshold: debouncedMistakesThreshold,
-      }));
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      mistakesThreshold: debouncedMistakesThreshold,
+    }));
   }, [debouncedMistakesThreshold]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) =>

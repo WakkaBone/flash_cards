@@ -46,9 +46,6 @@ export const CardsService = {
     if (filters.category) {
       queries.push(where("category", "==", filters.category));
     }
-    if (filters.search) {
-      queries.push(where("english", "==", filters.search));
-    }
     if (filters.mistakesThreshold) {
       queries.push(where("statistics.wrong", ">=", filters.mistakesThreshold));
     }
@@ -70,6 +67,20 @@ export const CardsService = {
       };
       return cardDto;
     });
+
+    if (filters.search) {
+      return cards.filter((card) => {
+        const searchableFields = ["english", "hebrew"];
+        return searchableFields.some((field) =>
+          card[field]
+            ? card[field]
+                .trim()
+                .toLowerCase()
+                .includes(filters.search.trim().toLowerCase())
+            : false
+        );
+      });
+    }
 
     return cards;
   },
