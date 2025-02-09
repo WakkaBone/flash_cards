@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { ApiError, ApiResponse } from "../models/api";
-import { toast } from "react-toastify";
+import { toast, ToastOptions } from "react-toastify";
 
 const GENERIC_ERROR = {
   isSuccess: false,
@@ -32,5 +32,8 @@ export const handleError = (error: AxiosError<ApiResponse>): ApiResponse => {
   };
 };
 
-export const toastError = (error?: ApiError) =>
-  toast(error?.message || GENERIC_ERROR.error.message, { type: "error" });
+export const toastError = (error?: ApiError, options?: ToastOptions) =>
+  toast(error?.message || GENERIC_ERROR.error.message, {
+    type: "error",
+    ...options,
+  });

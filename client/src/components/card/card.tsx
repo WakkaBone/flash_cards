@@ -8,17 +8,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { PracticeFilersType, PracticeModes } from "../../pages/practice-page";
+import { PracticeModes } from "../../pages/practice-page";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { categoryMapper } from "../../utils/mappers";
-import { STATISTICS_ACTIONS } from "../../models/api";
-import { ToastContainer, toast } from "react-toastify";
-import {
-  useMarkCardLearned,
-  useDeleteCard,
-  useRandomCard,
-  useScreenSize,
-} from "../../hooks";
+import { ApiResponse, STATISTICS_ACTIONS } from "../../models/api";
+import { ToastContainer } from "react-toastify";
+import { useMarkCardLearned, useDeleteCard, useScreenSize } from "../../hooks";
 import { EditCardModal } from "../edit-card-modal/edit-card-modal";
 import {
   DeleteForeverRounded,
@@ -32,39 +27,57 @@ import { CardModel } from "../../models/card";
 import { useHotkeys } from "react-hotkeys-hook";
 import { CardSkeletonLoader } from "./card-skeleton-loader";
 import { CenteredLoader } from "../loader/loader";
-import { CardsService } from "../../services/cards-service";
-import { toastError } from "../../utils/error-handler";
+import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
 
 type WordCardPropsType = {
   mode: PracticeModes;
-  filters: PracticeFilersType;
   timerProps: {
-    isEnabled: boolean;
-    timeLeft: number | null;
     stopTimer: () => void;
-    startTimer: () => void;
+    resumeTimer: () => void;
+    restartTimer: () => void;
+    timerSessionActive: boolean;
+  };
+  cardProps: {
+    cardData: CardModel | undefined;
+    isLoadingCard: boolean;
+    isFetchingCard: boolean;
+    getAnotherCard: () => Promise<void>;
+    updateCardStats: (
+      outcome: STATISTICS_ACTIONS,
+      options?: MutateOptionsEnhanced<
+        ApiResponse,
+        unknown,
+        {
+          cardId: string;
+          outcome: STATISTICS_ACTIONS;
+        }
+      >
+    ) => void;
+    isUpdatingStats: boolean;
   };
 };
 
-export const WordCard = ({ mode, filters, timerProps }: WordCardPropsType) => {
+export const WordCard = ({
+  mode,
+  timerProps,
+  cardProps,
+}: WordCardPropsType) => {
   const { isMobile, isPortrait } = useScreenSize();
+
+  const { stopTimer, resumeTimer, restartTimer, timerSessionActive } =
+    timerProps;
 
   const {
     cardData,
-    isLoading: isLoadingCard,
-    isFetching: isFetchingCard,
+    isLoadingCard,
+    isFetchingCard,
     getAnotherCard,
     updateCardStats,
-    updateStatsRest: { isPending: isUpdatingStats },
-  } = useRandomCard(filters);
+    isUpdatingStats,
+  } = cardProps;
+
   const { markCardLearned, isPending: isMarkingLearned } = useMarkCardLearned();
   const { deleteCard, isPending: isDeletingCard } = useDeleteCard();
-  const {
-    isEnabled: isTimerEnabled,
-    timeLeft,
-    stopTimer,
-    startTimer,
-  } = timerProps;
 
   const [card, setCard] = useState<CardModel | undefined>(cardData);
 
@@ -73,14 +86,16 @@ export const WordCard = ({ mode, filters, timerProps }: WordCardPropsType) => {
   const [translation, setTranslation] = useState<string>("");
   const [showTranslation, setShowTranslation] = useState<boolean>(false);
 
-  const getNextCard = useCallback(() => {
-    stopTimer();
-    getAnotherCard().then(() => {
-      setTranslation("");
-      setShowTranslation(false);
-      startTimer();
-    });
-  }, [getAnotherCard, startTimer, stopTimer]);
+  useEffect(() => {
+    //cleanup on card change
+    setTranslation("");
+    setShowTranslation(false);
+  }, [cardData?.id]);
+
+  const getNextCard = useCallback(
+    () => getAnotherCard().then(() => timerSessionActive && restartTimer()),
+    [getAnotherCard, restartTimer, timerSessionActive]
+  );
 
   const isCorrectAnswer = useCallback(() => {
     if (!card) return;
@@ -163,34 +178,6 @@ export const WordCard = ({ mode, filters, timerProps }: WordCardPropsType) => {
     isLoadingCard ||
     isFetchingCard;
 
-  const handleTimeUp = useCallback(() => {
-    if (!card) return;
-    if (mode === PracticeModes.browse) {
-      getNextCard();
-      return;
-    }
-
-    //TODO investigate why cannot use hook here
-    const isCorrect = isCorrectAnswer();
-    CardsService.updateCardStats(
-      card.id,
-      isCorrect ? STATISTICS_ACTIONS.Correct : STATISTICS_ACTIONS.Wrong
-    )
-      .then(() => {
-        toast(isCorrect ? "Correct!" : "Wrong!", {
-          type: isCorrect ? "success" : "error",
-          autoClose: 500,
-        });
-        getNextCard();
-      })
-      .catch(() => toastError());
-  }, [getNextCard, card, mode, isCorrectAnswer]);
-
-  useEffect(() => {
-    if (!isTimerEnabled) return;
-    timeLeft === 0 && handleTimeUp();
-  }, [isTimerEnabled, timeLeft, handleTimeUp]);
-
   const getCardActionsByMode = useCallback(() => {
     switch (mode) {
       case PracticeModes.eth:
@@ -244,10 +231,16 @@ export const WordCard = ({ mode, filters, timerProps }: WordCardPropsType) => {
   }, [deleteCard, getNextCard, card]);
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const onOpenEditModal = () => setIsEdit(true);
-  const onCloseEditModal = () => setIsEdit(false);
+  const onOpenEditModal = () => {
+    stopTimer();
+    setIsEdit(true);
+  };
+  const onCloseEditModal = () => {
+    setIsEdit(false);
+    resumeTimer();
+  };
 
-  useHotkeys("right", () => getNextCard(), []);
+  useHotkeys("right", () => getNextCard(), [getNextCard]);
   useHotkeys("Enter", () => handleCheckTranslation(), {
     enableOnFormTags: true,
   });
@@ -324,7 +317,7 @@ export const WordCard = ({ mode, filters, timerProps }: WordCardPropsType) => {
               {...buttonStyles}
               loading={isLoadingCard}
               disabled={isLoading}
-              onClick={() => getNextCard()}
+              onClick={getNextCard}
               endIcon={<NavigateNextRounded />}
             >
               Next

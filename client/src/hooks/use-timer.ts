@@ -1,63 +1,82 @@
 import { useEffect, useState } from "react";
+import { useTimer as useTimerHook } from "react-timer-hook";
+import { addSeconds } from "../utils/date-time";
 
-export const useTimer = () => {
-  const [isEnabled, setIsEnabled] = useState<boolean>(false);
-  const [isGoing, setIsGoing] = useState<boolean>(false);
-  const [seconds, setSeconds] = useState<string>("");
-  const [timeLeft, setTimeLeft] = useState<number | null>(null);
-  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+export const useTimer = ({
+  onExpire,
+  expiryTimestamp = new Date(),
+}: {
+  onExpire: () => void;
+  expiryTimestamp?: Date;
+}) => {
+  const [isEnabled, setIsEnabled] = useState(false);
+  const [timerDuration, setTimerDuration] = useState("");
+  const [displayedCountdown, setDisplayedCountdown] = useState<
+    string | undefined
+  >();
+  const [timerSessionActive, setTimerSessionActive] = useState(false);
 
-  const handleToggleTimer = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsEnabled(event.target.checked);
-    if (!event.target.checked) resetTimer();
+  const {
+    isRunning,
+    pause,
+    resume,
+    seconds: secondsLeft,
+    minutes: minutesLeft,
+    restart,
+  } = useTimerHook({
+    autoStart: false,
+    expiryTimestamp,
+    onExpire,
+  });
+
+  const handleIsEnabled = (state: boolean) => {
+    setIsEnabled(state);
+    if (!state) {
+      setTimerDuration("");
+      setDisplayedCountdown("");
+      pause();
+    }
   };
 
-  const handleSecondsChange = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setSeconds(event.target.value);
+  const handleTimerDurationChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => setTimerDuration(event.target.value);
 
-  const startTimer = () => {
-    const parsedSeconds = parseInt(seconds, 10);
-    if (isNaN(parsedSeconds) || parsedSeconds <= 0) return;
-    setIsGoing(true);
-    setTimeLeft(parsedSeconds);
-    const id = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime && prevTime <= 1) {
-          clearInterval(id);
-          return 0;
-        }
-        return prevTime ? prevTime - 1 : 0;
-      });
-    }, 1000);
-    setIntervalId(id);
-  };
-
-  const resetTimer = () => {
-    if (intervalId) clearInterval(intervalId);
-    setTimeLeft(null);
-  };
-
-  const stopTimer = () => {
-    resetTimer();
-    setSeconds("");
-    setIsGoing(false);
-  };
+  const timeLeft = minutesLeft * 60 + secondsLeft;
 
   useEffect(() => {
-    return () => {
-      if (intervalId) clearInterval(intervalId);
-    };
-  }, [intervalId]);
+    setDisplayedCountdown(timeLeft === 0 ? undefined : timeLeft.toString());
+  }, [timeLeft]);
+
+  const restartTimer = () => {
+    if (!isEnabled) return;
+    const newExpiryStamp = addSeconds(timerDuration);
+    restart(newExpiryStamp);
+  };
+
+  const handleStartTimer = () => {
+    if (!isEnabled) return;
+    setTimerSessionActive(true);
+    restartTimer();
+  };
+
+  const handleStopTimer = () => {
+    if (!isEnabled) return;
+    setTimerSessionActive(false);
+    pause();
+  };
 
   return {
-    isEnabled,
-    isGoing,
-    seconds,
-    timeLeft,
-    handleSecondsChange,
-    handleToggleTimer,
-    startTimer,
-    resetTimer,
-    stopTimer,
+    handleIsEnabled,
+    isRunning,
+    timerDuration,
+    displayedCountdown,
+    handleTimerDurationChange,
+    restart: restartTimer,
+    timerSessionActive,
+    handleStartTimer,
+    handleStopTimer,
+    resume,
+    pause,
   };
 };

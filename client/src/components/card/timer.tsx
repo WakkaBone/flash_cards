@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Checkbox,
   TextField,
@@ -9,37 +9,50 @@ import {
 import { Timer as TimerIcon } from "@mui/icons-material";
 
 type TimerPropsType = {
-  isEnabled: boolean;
-  isGoing: boolean;
-  handleToggleTimer: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  seconds: string;
-  handleSecondsChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  startTimer: () => void;
-  timeLeft: number | null;
-  stopTimer: () => void;
+  isRunning: boolean;
+  handleIsEnabled: (state: boolean) => void;
+  timerDuration: string;
+  handleTimerDurationChange: (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => void;
+  displayedCountdown?: string;
+  handleStartTimer: () => void;
+  handleStopTimer: () => void;
+  timerSessionActive: boolean;
 };
 
 const MIN_SECONDS = 5;
 const MAX_SECONDS = 60;
 
 export const Timer = (props: TimerPropsType) => {
+  const [isTimerEnabled, setIsTimerEnabled] = useState(false);
+
   const {
-    isEnabled,
-    isGoing,
-    handleToggleTimer,
-    seconds,
-    handleSecondsChange,
-    startTimer,
-    timeLeft,
-    stopTimer,
+    isRunning,
+    timerDuration,
+    handleTimerDurationChange,
+    displayedCountdown,
+    handleStartTimer,
+    handleStopTimer,
+    timerSessionActive,
+    handleIsEnabled,
   } = props;
 
-  const invalidTimeValue = !!(
-    seconds &&
-    (parseInt(seconds) < MIN_SECONDS || parseInt(seconds) > MAX_SECONDS)
+  useEffect(
+    () => handleIsEnabled(isTimerEnabled),
+    [isTimerEnabled, handleIsEnabled]
+  );
+
+  const invalidTimerDurationValue = !!(
+    timerDuration &&
+    (parseInt(timerDuration) < MIN_SECONDS ||
+      parseInt(timerDuration) > MAX_SECONDS)
   );
 
   const buttonStyles = { marginLeft: "5px" };
+
+  const handleTimerEnabledCheckbox = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setIsTimerEnabled(e.target.checked);
 
   return (
     <Stack
@@ -50,7 +63,13 @@ export const Timer = (props: TimerPropsType) => {
       }}
     >
       <FormControlLabel
-        control={<Checkbox checked={isEnabled} onChange={handleToggleTimer} />}
+        control={
+          <Checkbox
+            checked={isTimerEnabled}
+            disabled={isRunning}
+            onChange={handleTimerEnabledCheckbox}
+          />
+        }
         label={<TimerIcon />}
       />
 
@@ -59,28 +78,28 @@ export const Timer = (props: TimerPropsType) => {
         gap={1}
         sx={{
           alignItems: "start",
-          visibility: isEnabled ? "visible" : "hidden",
+          visibility: isTimerEnabled ? "visible" : "hidden",
         }}
       >
         <TextField
           label="Enter Seconds"
           type="number"
-          disabled={isGoing}
-          value={isGoing ? timeLeft : seconds}
-          onChange={handleSecondsChange}
+          disabled={timerSessionActive}
+          value={timerSessionActive ? displayedCountdown : timerDuration}
+          onChange={handleTimerDurationChange}
           fullWidth
           size="small"
           variant="standard"
           margin="none"
-          error={!isGoing && invalidTimeValue}
-          helperText={invalidTimeValue ? "5-60 seconds" : ""}
+          error={!isRunning && invalidTimerDurationValue}
+          helperText={invalidTimerDurationValue ? "5-60 seconds" : ""}
         />
-        {isGoing ? (
+        {timerSessionActive ? (
           <Button
             variant="contained"
             color="warning"
-            disabled={!isGoing || invalidTimeValue}
-            onClick={stopTimer}
+            disabled={!isRunning || invalidTimerDurationValue}
+            onClick={handleStopTimer}
             sx={buttonStyles}
           >
             Stop
@@ -89,8 +108,8 @@ export const Timer = (props: TimerPropsType) => {
           <Button
             variant="contained"
             color="primary"
-            disabled={isGoing || invalidTimeValue || !seconds}
-            onClick={startTimer}
+            disabled={isRunning || invalidTimerDurationValue || !timerDuration}
+            onClick={handleStartTimer}
             sx={buttonStyles}
           >
             Start
