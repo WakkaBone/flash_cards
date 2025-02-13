@@ -1,9 +1,9 @@
 import { param } from "express-validator";
-import { STATISTICS_ACTIONS } from "../constants";
-import { cardIdParamValidation } from "../utils/validation-util";
+import { STATISTICS_ACTIONS } from "../../constants";
+import { idParamValidation } from "../../utils/validation-util";
 
 export const updateStatisticsValidator = [
-  cardIdParamValidation,
+  idParamValidation,
   param("action")
     .isString()
     .isIn(Object.values(STATISTICS_ACTIONS))

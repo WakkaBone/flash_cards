@@ -5,6 +5,7 @@ import helmet from "helmet";
 import cors from "cors";
 import cardsApi from "./api/cards";
 import authApi from "./api/auth";
+import categoriesApi from "./api/categories";
 import versionApi from "./api/version";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
@@ -32,6 +33,7 @@ app.use(cookieParser());
 
 app.use(`/api/${APIS.auth}/`, authApi);
 app.use(`/api/${APIS.cards}/`, isAuth, cardsApi);
+app.use(`/api/${APIS.categories}/`, isAuth, categoriesApi);
 app.use(`/api/${APIS.version}/`, versionApi);
 
 export default app;

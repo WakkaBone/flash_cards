@@ -13,13 +13,15 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
-import { CardModel, CardModelDto, Categories } from "../models/card";
-import { COLLECTIONS, STATISTICS_ACTIONS } from "../constants";
+import { CardModel, CardModelDto } from "../models/card";
+import { COLLECTIONS, MAIN_CATEGORIES, STATISTICS_ACTIONS } from "../constants";
 import { Statistics } from "../models/statistics";
+import { CategoriesService } from "./categories-service";
 
 export type GetCardsFilters = {
-  category?: number;
+  category?: string;
   search?: string;
+  searchExact?: string;
   includeLearned?: boolean;
   from?: Date;
   to?: Date;
@@ -32,6 +34,10 @@ export const CardsService = {
   getCards: async (filters: GetCardsFilters = {}) => {
     let queryRef = query(collection(db, COLLECTIONS.cards));
     const queries = [];
+
+    if (filters.searchExact) {
+      queries.push(where("english", "==", filters.searchExact));
+    }
 
     if (filters.from) {
       queries.push(where("createdAt", ">", Timestamp.fromDate(filters.from)));
@@ -50,23 +56,28 @@ export const CardsService = {
       queries.push(where("statistics.wrong", ">=", filters.mistakesThreshold));
     }
 
-    //pagination
-    //TODO finish
+    //TODO pagination
     if (filters.page && filters.pageSize) {
       queries.push(limit(filters.pageSize));
     }
 
     const { docs } = await getDocs(query(queryRef, ...queries));
 
-    const cards = docs.map((doc) => {
-      const cardData = doc.data() as CardModel;
-      const cardDto: CardModelDto = {
-        id: doc.id,
-        ...cardData,
-        createdAt: cardData.createdAt.toDate().toISOString(),
-      };
-      return cardDto;
-    });
+    const cards = await Promise.all(
+      docs.map(async (doc) => {
+        const cardData = doc.data() as CardModel;
+        const category = await CategoriesService.getCategoryById(
+          cardData.category
+        );
+        const cardDto: CardModelDto = {
+          id: doc.id,
+          ...cardData,
+          category: category.label || "---",
+          createdAt: cardData.createdAt.toDate().toISOString(),
+        };
+        return cardDto;
+      })
+    );
 
     if (filters.search) {
       return cards.filter((card) => {
@@ -118,19 +129,19 @@ export const CardsService = {
     let queryRef = query(collection(db, COLLECTIONS.cards));
     const nounsQuery = query(
       queryRef,
-      where("category", "==", Categories.Noun)
+      where("category", "==", MAIN_CATEGORIES.noun)
     );
     const adjectivesQuery = query(
       queryRef,
-      where("category", "==", Categories.Adjective)
+      where("category", "==", MAIN_CATEGORIES.adjective)
     );
     const verbsQuery = query(
       queryRef,
-      where("category", "==", Categories.Verb)
+      where("category", "==", MAIN_CATEGORIES.verb)
     );
     const otherQuery = query(
       queryRef,
-      where("category", "==", Categories.Other)
+      where("category", "==", MAIN_CATEGORIES.other)
     );
     const allQuery = query(queryRef);
     const learnedQuery = query(queryRef, where("isLearned", "==", true));

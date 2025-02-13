@@ -10,7 +10,7 @@ import {
 import { GetCardsFilters } from "../../models/api";
 import { useEffect } from "react";
 import deepEqual from "deep-equal";
-import { CategorySelect } from "../category-select/category-select";
+import { CategoryAutocomplete } from "../category-select/category-select";
 import { useCardsTableFilters, useScreenSize } from "../../hooks";
 import { DateTimeRangePicker } from "../date-time-range-picker/date-time-range-picker";
 import { FilterAlt } from "@mui/icons-material";
@@ -95,10 +95,11 @@ export const CardsFilters = ({
           sx={{ width: isMobile ? "100%" : "200%" }}
         >
           {enabledFilters.includes(FilterTypes.Category) && (
-            <CategorySelect
-              fullWidth
-              value={filters.category}
-              onChange={handleCategory}
+            <CategoryAutocomplete
+              selected={filters.category}
+              autocompleteProps={{
+                onChange: handleCategory,
+              }}
             />
           )}
           {enabledFilters.includes(FilterTypes.MistakesThreshold) && (

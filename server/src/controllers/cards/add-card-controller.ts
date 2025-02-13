@@ -5,7 +5,7 @@ import { isValid } from "../../utils/validation-util";
 import { Timestamp } from "firebase/firestore";
 
 type CreateCardBody = {
-  category: number;
+  category: string;
   english: string;
   hebrew: string;
   details?: string;

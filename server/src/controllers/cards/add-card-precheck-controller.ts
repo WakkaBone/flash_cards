@@ -31,7 +31,7 @@ function similarityCheck(str1: string, str2: string) {
 }
 
 type CreateCardBody = {
-  category: number;
+  category: string;
   english: string;
   hebrew: string;
   details?: string;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDebounce } from "./use-debounce";
 import { GetCardsFilters } from "../models/api";
-import { SelectChangeEvent } from "@mui/material";
+import { CategoryOptionType } from "../components/category-select/category-select";
 
 export const defaultFilters = { includeLearned: false };
 
@@ -32,8 +32,13 @@ export const useCardsTableFilters = (initialFilters: GetCardsFilters) => {
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) =>
     setSearch(event.target.value);
 
-  const handleCategory = (event: SelectChangeEvent<unknown>) =>
-    setFilters({ ...filters, category: Number(event.target.value) });
+  const handleCategory = (
+    _: React.SyntheticEvent,
+    value: NonNullable<string | CategoryOptionType>
+  ) => {
+    if (!value || typeof value === "string") return;
+    setFilters({ ...filters, category: value.key });
+  };
 
   const handleIncludeLearned = (event: React.ChangeEvent<HTMLInputElement>) =>
     setFilters({ ...filters, includeLearned: event.target.checked });

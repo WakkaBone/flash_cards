@@ -1,4 +1,5 @@
-import { CardModel, Categories } from "./card";
+import { CardModel } from "./card";
+import { CategoryModel } from "./category";
 
 export interface ApiError<T = any> {
   message?: string;
@@ -13,10 +14,16 @@ export interface ApiResponse<T = any> {
 }
 
 export type GetCardsFilters = {
-  category?: Categories;
+  category?: string;
   search?: string;
   includeLearned?: boolean;
   mistakesThreshold?: number;
+  from?: Date;
+  to?: Date;
+};
+
+export type GetCategoriesFilters = {
+  search?: string;
   from?: Date;
   to?: Date;
 };
@@ -27,13 +34,18 @@ export enum STATISTICS_ACTIONS {
 }
 
 export type AddCardPayload = {
-  category: Categories;
+  category: string;
   english: string;
   hebrew: string;
   details?: string;
 };
 
+export type AddCategoryPayload = {
+  label: string;
+};
+
 export type UpdateCardPayload = CardModel;
+export type UpdateCategoryPayload = CategoryModel;
 
 export type LoginPayload = {
   username: string;

@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import { PracticeModes } from "../../pages/practice-page";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { categoryMapper } from "../../utils/mappers";
 import { ApiResponse, STATISTICS_ACTIONS } from "../../models/api";
 import { ToastContainer } from "react-toastify";
 import { useMarkCardLearned, useDeleteCard, useScreenSize } from "../../hooks";
@@ -285,7 +284,7 @@ export const WordCard = ({
               {mode === PracticeModes.eth ? card.english : card.hebrew}
             </Typography>
             <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-              {categoryMapper[card.category]}
+              {card.category}
             </Typography>
             {getCardBodyByMode()}
             {(mode === PracticeModes.browse || showTranslation) &&

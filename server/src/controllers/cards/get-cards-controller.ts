@@ -33,7 +33,7 @@ export const getCardsController = async (
 
     const filters: GetCardsFilters = {
       search,
-      category: category ? Number(category) : undefined,
+      category: category ? category : undefined,
       includeLearned: includeLearned ? includeLearned === "true" : undefined,
       from: from ? new Date(from) : undefined,
       to: to ? new Date(to) : undefined,
