@@ -3,9 +3,10 @@ import { Controller, UseFormReturn } from "react-hook-form";
 import { CategoryAutocomplete } from "../category-select/category-select";
 import { ToastContainer } from "react-toastify";
 import { englishValidator, hebrewValidator } from "../../utils/validators";
+import { IdLabel } from "../../models/shared";
 
 export type EditCardFormType = {
-  category: string;
+  category: IdLabel;
   english: string;
   hebrew: string;
   details?: string;
@@ -87,12 +88,10 @@ export const EditCardForm = ({ formProps }: EditCardFormPropsType) => {
           render={({ field }) => (
             <CategoryAutocomplete
               autocompleteProps={{
-                ...field,
-                onChange: (_, value) => {
-                  if (typeof value === "string" || !value) return;
-                  field.onChange(value.key);
-                },
+                value: field.value || null,
+                onChange: (_, value) => value && field.onChange(value),
               }}
+              error={errors.category?.message}
               allowAdd
             />
           )}

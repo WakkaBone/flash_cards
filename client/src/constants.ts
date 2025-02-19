@@ -2,6 +2,7 @@ export const ROUTES = {
   login: "/login",
   addCard: "/add",
   practice: "/practice",
+  categories: "/categories",
 };
 
 export const MAIN_CATEGORIES = {

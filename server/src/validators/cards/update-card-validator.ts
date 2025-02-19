@@ -4,20 +4,11 @@ import { CardsService } from "../../services/cards-service";
 
 export const updateCardValidator = [
   idParamValidation,
-  body("category").isNumeric().withMessage("Category is required"),
+  body("category").isObject().notEmpty().withMessage("Category is required"),
   body("english")
     .isString()
     .notEmpty()
-    .withMessage("English translation is required")
-    .custom(async (english) => {
-      const sameWords = await CardsService.getCards({
-        searchExact: english,
-      });
-
-      if (sameWords.length > 0) throw new Error("Such word already exists");
-
-      return true;
-    }),
+    .withMessage("English translation is required"),
 
   body("hebrew")
     .isString()

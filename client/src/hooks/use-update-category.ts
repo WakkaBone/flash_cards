@@ -1,22 +1,22 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addCategoryMutation } from "../mutations/categories/add-category-mutation";
-import { AddCategoryPayload, ApiResponse } from "../models/api";
-import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
+import { ApiResponse, UpdateCategoryPayload } from "../models/api";
 import { toast } from "react-toastify";
+import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
 import { toastError } from "../utils/error-handler";
+import { updateCategoryMutation } from "../mutations/categories";
 
-export const useAddCategory = () => {
+export const useUpdateCategory = () => {
   const queryClient = useQueryClient();
-  const { mutate, ...rest } = useMutation(addCategoryMutation);
+  const { mutate, ...rest } = useMutation(updateCategoryMutation);
 
-  const addCategory = (
-    category: AddCategoryPayload,
-    options?: MutateOptionsEnhanced<ApiResponse, unknown, AddCategoryPayload>
+  const updateCategory = (
+    category: UpdateCategoryPayload,
+    options?: MutateOptionsEnhanced<ApiResponse, unknown, UpdateCategoryPayload>
   ) =>
     mutate(category, {
       onSuccess: (...args) => {
         args[0].isSuccess &&
-          toast("Category added successfully", { type: "success" });
+          toast("Category updated successfully", { type: "success" });
         queryClient.invalidateQueries({ queryKey: ["categories"] });
         options?.onSuccess?.(...args);
       },
@@ -29,6 +29,5 @@ export const useAddCategory = () => {
         options?.onSettled?.(data, error, variables, context);
       },
     });
-
-  return { addCategory, ...rest };
+  return { updateCategory, ...rest };
 };

@@ -16,7 +16,10 @@ const apiPostfix = "/cards";
 
 export const CardsService = {
   async getCards(filters: GetCardsFilters) {
-    const url = buildUrl(apiPostfix, filters);
+    const url = buildUrl(apiPostfix, {
+      ...filters,
+      category: filters.category?.id || "",
+    });
     const response = await httpClient.get<
       ApiResponse<CardModel[]>,
       AxiosPromise<ApiResponse<CardModel[]>> | AxiosError<ApiResponse>
@@ -26,7 +29,10 @@ export const CardsService = {
   },
 
   async getRandomCard(filters: GetCardsFilters) {
-    const url = buildUrl(`${apiPostfix}/random`, filters);
+    const url = buildUrl(`${apiPostfix}/random`, {
+      ...filters,
+      category: filters.category?.id || "",
+    });
     const response = await httpClient.get<
       ApiResponse<CardModel>,
       AxiosPromise<ApiResponse<CardModel>> | AxiosError<ApiResponse>

@@ -56,7 +56,7 @@ export const CardsService = {
       queries.push(where("statistics.wrong", ">=", filters.mistakesThreshold));
     }
 
-    //TODO pagination
+    //TODO: pagination
     if (filters.page && filters.pageSize) {
       queries.push(limit(filters.pageSize));
     }
@@ -69,10 +69,11 @@ export const CardsService = {
         const category = await CategoriesService.getCategoryById(
           cardData.category
         );
+
         const cardDto: CardModelDto = {
           id: doc.id,
           ...cardData,
-          category: category.label || "---",
+          category: { id: cardData.category, label: category.label },
           createdAt: cardData.createdAt.toDate().toISOString(),
         };
         return cardDto;

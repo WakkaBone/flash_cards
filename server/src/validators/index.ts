@@ -8,7 +8,6 @@ import { loginValidator } from "./login-validator";
 import { addCategoryValidator } from "./categories/add-category-validator";
 import { deleteCategoryValidator } from "./categories/delete-category-validator";
 import { updateCategoryValidator } from "./categories/update-category-validator";
-import { updateUpdatedAtValidator } from "./categories/update-updated-at-validator";
 
 export {
   addCardValidator,
@@ -21,5 +20,4 @@ export {
   addCategoryValidator,
   deleteCategoryValidator,
   updateCategoryValidator,
-  updateUpdatedAtValidator,
 };

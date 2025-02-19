@@ -1,5 +1,6 @@
 import { CardModel } from "./card";
 import { CategoryModel } from "./category";
+import { IdLabel } from "./shared";
 
 export interface ApiError<T = any> {
   message?: string;
@@ -14,16 +15,17 @@ export interface ApiResponse<T = any> {
 }
 
 export type GetCardsFilters = {
-  category?: string;
+  category?: IdLabel | null;
   search?: string;
   includeLearned?: boolean;
-  mistakesThreshold?: number;
+  mistakesThreshold?: string;
   from?: Date;
   to?: Date;
 };
 
 export type GetCategoriesFilters = {
   search?: string;
+  numberOfCards?: string;
   from?: Date;
   to?: Date;
 };

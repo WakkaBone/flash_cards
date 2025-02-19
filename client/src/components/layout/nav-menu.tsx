@@ -17,6 +17,7 @@ import { useScreenSize } from "../../hooks";
 import {
   AddCircleOutline,
   BackupTableOutlined,
+  CategoryOutlined,
   Logout,
   StyleOutlined,
 } from "@mui/icons-material";
@@ -40,6 +41,12 @@ const menuOptions = [
     path: ROUTES.practice,
     label: "Practice",
     icon: <StyleOutlined sx={iconStyles} />,
+  },
+  {
+    id: "categories",
+    path: ROUTES.categories,
+    label: "Categories",
+    icon: <CategoryOutlined sx={iconStyles} />,
   },
 ];
 

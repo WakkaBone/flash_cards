@@ -42,7 +42,7 @@ export const addCardPrecheckController = async (
 ) => {
   if (!isValid(req, res)) return;
   try {
-    const allCards = await CardsService.getCards();
+    const allCards = await CardsService.getCards({});
 
     const similarCards: CardModelDto[] = [];
     for (const card of allCards) {

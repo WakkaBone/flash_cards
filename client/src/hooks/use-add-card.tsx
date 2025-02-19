@@ -59,12 +59,12 @@ export const useAddCard = () => {
   const [confirmationModal, setConfirmationModal] = useState<{
     open: boolean;
     similarWords?: CardModel[];
-    formData?: AddCardFormType;
+    formData?: Omit<AddCardFormType, "category"> & { category: string };
   }>({ open: false });
 
   const handleOpenConfirmationModal = (
     similarWords: CardModel[],
-    formData: AddCardFormType
+    formData: Omit<AddCardFormType, "category"> & { category: string }
   ) => setConfirmationModal({ open: true, similarWords, formData });
 
   const handleCloseConfirmationModal = () =>
@@ -125,10 +125,6 @@ export const useAddCard = () => {
     addRest,
     precheck,
     precheckRest,
-    confirmationModal,
-    handleOpenConfirmationModal,
-    handleCloseConfirmationModal,
-    handleConfirm,
     confirmationModalProps,
   };
 };

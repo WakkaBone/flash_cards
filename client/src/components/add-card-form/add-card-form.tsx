@@ -6,9 +6,10 @@ import { ToastContainer } from "react-toastify";
 import { englishValidator, hebrewValidator } from "../../utils/validators";
 import { ConfirmationModal } from "../confirmation-modal/confirmation-modal";
 import { useEffect } from "react";
+import { IdLabel } from "../../models/shared";
 
 export type AddCardFormType = {
-  category: string;
+  category: IdLabel;
   english: string;
   hebrew: string;
   details?: string;
@@ -40,7 +41,8 @@ export const AddCardForm = () => {
     isSuccess && reset();
   }, [isSuccess, reset]);
 
-  const onSubmit = (formData: AddCardFormType) => precheck(formData);
+  const onSubmit = (formData: AddCardFormType) =>
+    precheck({ ...formData, category: formData.category.id });
 
   const isLoading = isLoadingPrecheck || isLoadingAdd;
 
@@ -120,12 +122,10 @@ export const AddCardForm = () => {
           render={({ field }) => (
             <CategoryAutocomplete
               autocompleteProps={{
-                ...field,
-                onChange: (_, value) => {
-                  if (typeof value === "string" || !value) return;
-                  field.onChange(value.key);
-                },
+                value: field.value || null,
+                onChange: (_, value) => value && field.onChange(value),
               }}
+              error={errors.category?.message}
               allowAdd
             />
           )}

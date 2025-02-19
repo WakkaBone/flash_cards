@@ -14,12 +14,14 @@ import {
 import { db } from "../config/firebase";
 import { COLLECTIONS } from "../constants";
 import { CategoryDto, CategoryModel } from "../models/category";
+import { CardsService } from "./cards-service";
 
 export type GetCategoriesFilters = {
   search?: string;
   searchExact?: string;
   from?: Date;
   to?: Date;
+  numberOfCards?: number;
   page?: number;
   pageSize?: number;
 };
@@ -40,25 +42,33 @@ export const CategoriesService = {
       queries.push(where("createdAt", "<", Timestamp.fromDate(filters.to)));
     }
 
-    //TODO pagination
+    //TODO: pagination
     if (filters.page && filters.pageSize) {
       queries.push(limit(filters.pageSize));
     }
 
     const { docs } = await getDocs(query(queryRef, ...queries));
 
-    const categories = docs.map((doc) => {
-      const categoryData = doc.data() as CategoryModel;
-      const categoryDto: CategoryDto = {
-        id: doc.id,
-        label: categoryData.label,
-        //TODO implement: count
-        numberOfCards: 0,
-        createdAt: categoryData.createdAt.toDate().toISOString(),
-        updatedAt: categoryData.createdAt.toDate().toISOString(),
-      };
-      return categoryDto;
-    });
+    let categories = await Promise.all(
+      docs.map(async (doc) => {
+        const categoryData = doc.data() as CategoryModel;
+        const cards = await CardsService.getCards({ category: doc.id });
+        const categoryDto: CategoryDto = {
+          id: doc.id,
+          label: categoryData.label,
+          numberOfCards: cards.length,
+          createdAt: categoryData.createdAt.toDate().toISOString(),
+          updatedAt: categoryData.createdAt.toDate().toISOString(),
+        };
+        return categoryDto;
+      })
+    );
+
+    if (filters.numberOfCards) {
+      categories = categories.filter(
+        ({ numberOfCards }) => numberOfCards >= filters.numberOfCards
+      );
+    }
 
     if (filters.search) {
       return categories.filter((card) => {
@@ -93,6 +103,7 @@ export const CategoriesService = {
 
   updateCategory: async (id: string, category: CategoryModel) => {
     const categoryRef = doc(db, COLLECTIONS.categories, id);
+    //FIXME: UPDATED AT IS NOT UPDATED
     await updateDoc(categoryRef, category);
   },
 

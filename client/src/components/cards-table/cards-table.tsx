@@ -8,7 +8,7 @@ import { ToastContainer } from "react-toastify";
 import { format } from "date-fns";
 import { CardsFilters } from "../cards-filters/cards-filters";
 
-const columns: GridColDef<CardsTableRowType>[] = [
+export const cardsTableColumns: GridColDef<CardsTableRowType>[] = [
   { field: "english", headerName: "English" },
   { field: "hebrew", headerName: "Hebrew" },
   { field: "category", headerName: "Category" },
@@ -57,10 +57,10 @@ export const CardsTable = () => {
     setRows(data.data.map((item) => mapCardToTableRow(item)));
   }, [data]);
 
-  //TODO implement server side pagination
+  //TODO: implement server side pagination
   const paginationProps = useTablePagination();
 
-  //TODO make grid more responsive
+  //TODO: make grid more responsive
 
   return (
     <>
@@ -77,7 +77,7 @@ export const CardsTable = () => {
           },
         }}
         rows={rows}
-        columns={isMobile ? columns.slice(0, 3) : columns}
+        columns={isMobile ? cardsTableColumns.slice(0, 3) : cardsTableColumns}
       />
       <ToastContainer />
     </>

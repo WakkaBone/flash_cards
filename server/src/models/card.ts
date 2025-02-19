@@ -15,7 +15,11 @@ export type CardModel = {
   createdAt: Timestamp;
 };
 
-export type CardModelDto = Omit<CardModel, "createdAt"> & {
+export type CardModelDto = Omit<CardModel, "createdAt" | "category"> & {
   id: string;
   createdAt: string;
+  category: {
+    id: string;
+    label: string;
+  };
 };

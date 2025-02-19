@@ -96,8 +96,8 @@ export const CardsFilters = ({
         >
           {enabledFilters.includes(FilterTypes.Category) && (
             <CategoryAutocomplete
-              selected={filters.category}
               autocompleteProps={{
+                value: filters.category || null,
                 onChange: handleCategory,
               }}
             />

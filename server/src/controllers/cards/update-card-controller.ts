@@ -24,7 +24,7 @@ export const updateCardController = async (
       createdAt,
     } = req.body;
     const card = {
-      category,
+      category: category.id,
       english,
       hebrew,
       details,

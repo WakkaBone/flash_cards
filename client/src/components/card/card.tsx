@@ -284,7 +284,7 @@ export const WordCard = ({
               {mode === PracticeModes.eth ? card.english : card.hebrew}
             </Typography>
             <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-              {card.category}
+              {card.category.label}
             </Typography>
             {getCardBodyByMode()}
             {(mode === PracticeModes.browse || showTranslation) &&

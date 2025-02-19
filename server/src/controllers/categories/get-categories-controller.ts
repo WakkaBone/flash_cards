@@ -11,6 +11,7 @@ type GetCategoriesQueryParams = {
   search?: string;
   from?: string;
   to?: string;
+  numberOfCards: string;
   page?: string;
   pageSize?: string;
 };
@@ -20,12 +21,13 @@ export const getCategoriesController = async (
 ) => {
   if (!isValid(req, res)) return;
   try {
-    const { search, from, to, page, pageSize } = req.query;
+    const { search, from, to, numberOfCards, page, pageSize } = req.query;
 
     const filters: GetCategoriesFilters = {
       search,
       from: from ? new Date(from) : undefined,
       to: to ? new Date(to) : undefined,
+      numberOfCards: numberOfCards ? Number(numberOfCards) : undefined,
       page: page ? Number(page) : undefined,
       pageSize: pageSize ? Number(pageSize) : undefined,
     };
