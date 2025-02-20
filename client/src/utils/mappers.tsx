@@ -6,6 +6,9 @@ import { ActionsCell as ActionsCellCards } from "../components/cards-table/actio
 import { CategoryModel } from "../models/category";
 import { CategoriesTableRowType } from "../components/categories-table/categories-table";
 import { ActionsCell as ActionsCellCategories } from "../components/categories-table/actions-cell";
+import { AddCardFormType } from "../components/add-card-form/add-card-form";
+import { AddCardPayload, GetCardsFilters } from "../models/api";
+import { IdLabel } from "../models/shared";
 
 export const practiceModeMapper: Record<PracticeModes, string> = {
   [PracticeModes.eth]: "English to Hebrew",
@@ -42,4 +45,18 @@ export const mapCategoryToTableRow = (
   updatedAt: item.updatedAt,
   numberOfCards: item.numberOfCards.toString(),
   actions: <ActionsCellCategories category={item} />,
+});
+
+export const mapAddCardFormToPayload = (
+  formData: AddCardFormType
+): AddCardPayload => ({ ...formData, category: formData.category.id });
+
+export const mapCategoryToSelectOption = ({
+  id,
+  label,
+}: CategoryModel): IdLabel => ({ id, label });
+
+export const compileGetCardsFilters = (filters: GetCardsFilters) => ({
+  ...filters,
+  category: filters.category?.id || "",
 });

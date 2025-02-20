@@ -11,15 +11,13 @@ import { CardModel } from "../models/card";
 import { Statistics } from "../models/statistics";
 import { buildUrl } from "../utils/url-util";
 import { handleError } from "../utils/error-handler";
+import { compileGetCardsFilters } from "../utils/mappers";
 
 const apiPostfix = "/cards";
 
 export const CardsService = {
   async getCards(filters: GetCardsFilters) {
-    const url = buildUrl(apiPostfix, {
-      ...filters,
-      category: filters.category?.id || "",
-    });
+    const url = buildUrl(apiPostfix, compileGetCardsFilters(filters));
     const response = await httpClient.get<
       ApiResponse<CardModel[]>,
       AxiosPromise<ApiResponse<CardModel[]>> | AxiosError<ApiResponse>
@@ -29,10 +27,10 @@ export const CardsService = {
   },
 
   async getRandomCard(filters: GetCardsFilters) {
-    const url = buildUrl(`${apiPostfix}/random`, {
-      ...filters,
-      category: filters.category?.id || "",
-    });
+    const url = buildUrl(
+      `${apiPostfix}/random`,
+      compileGetCardsFilters(filters)
+    );
     const response = await httpClient.get<
       ApiResponse<CardModel>,
       AxiosPromise<ApiResponse<CardModel>> | AxiosError<ApiResponse>

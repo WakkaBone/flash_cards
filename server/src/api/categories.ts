@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   addCategoryValidator,
   deleteCategoryValidator,
+  getCategoriesValidator,
   updateCategoryValidator,
 } from "../validators";
 import {
@@ -13,7 +14,7 @@ import {
 
 const router = Router();
 
-router.get("/", getCategoriesController);
+router.get("/", getCategoriesValidator, getCategoriesController);
 router.post("/", addCategoryValidator, addCategoryController);
 router.put("/:id", updateCategoryValidator, updateCategoryController);
 router.delete("/:id", deleteCategoryValidator, deleteCategoryController);

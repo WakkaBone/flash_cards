@@ -59,13 +59,13 @@ export const useAddCard = () => {
   const [confirmationModal, setConfirmationModal] = useState<{
     open: boolean;
     similarWords?: CardModel[];
-    formData?: Omit<AddCardFormType, "category"> & { category: string };
+    formData?: AddCardPayload;
   }>({ open: false });
 
   const handleOpenConfirmationModal = (
     similarWords: CardModel[],
-    formData: Omit<AddCardFormType, "category"> & { category: string }
-  ) => setConfirmationModal({ open: true, similarWords, formData });
+    payload: AddCardPayload
+  ) => setConfirmationModal({ open: true, similarWords, formData: payload });
 
   const handleCloseConfirmationModal = () =>
     setConfirmationModal({ open: false });

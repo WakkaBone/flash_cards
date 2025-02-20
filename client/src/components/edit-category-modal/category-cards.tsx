@@ -1,12 +1,10 @@
 import { DataGrid } from "@mui/x-data-grid";
 import { useGetCards, useScreenSize } from "../../hooks";
 import { useEffect, useState } from "react";
-import {
-  cardsTableColumns,
-  CardsTableRowType,
-} from "../cards-table/cards-table";
+import { CardsTableRowType } from "../cards-table/cards-table";
 import { mapCardToTableRow } from "../../utils/mappers";
 import { IdLabel } from "../../models/shared";
+import { cardsTableColumns } from "../cards-table/columns";
 
 type CategoryCardsPropsType = {
   category: IdLabel;

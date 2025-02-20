@@ -8,7 +8,7 @@ import { deleteCategoryMutation } from "../mutations/categories";
 export const useDeleteCategory = () => {
   const queryClient = useQueryClient();
 
-  const { mutate: mutateDeleteCategory, isPending } = useMutation(
+  const { mutate: mutateDeleteCategory, ...rest } = useMutation(
     deleteCategoryMutation
   );
   const deleteCategory = (
@@ -38,5 +38,5 @@ export const useDeleteCategory = () => {
       }
     );
 
-  return { deleteCategory, isPending };
+  return { deleteCategory, ...rest };
 };

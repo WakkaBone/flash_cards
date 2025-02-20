@@ -7,6 +7,7 @@ import { englishValidator, hebrewValidator } from "../../utils/validators";
 import { ConfirmationModal } from "../confirmation-modal/confirmation-modal";
 import { useEffect } from "react";
 import { IdLabel } from "../../models/shared";
+import { mapAddCardFormToPayload } from "../../utils/mappers";
 
 export type AddCardFormType = {
   category: IdLabel;
@@ -42,7 +43,7 @@ export const AddCardForm = () => {
   }, [isSuccess, reset]);
 
   const onSubmit = (formData: AddCardFormType) =>
-    precheck({ ...formData, category: formData.category.id });
+    precheck(mapAddCardFormToPayload(formData));
 
   const isLoading = isLoadingPrecheck || isLoadingAdd;
 

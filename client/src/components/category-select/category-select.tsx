@@ -16,6 +16,7 @@ import { useScreenSize } from "../../hooks";
 import { useGetCategories } from "../../hooks/use-get-categories";
 import { useAddCategory } from "../../hooks/use-add-category";
 import { IdLabel } from "../../models/shared";
+import { mapCategoryToSelectOption } from "../../utils/mappers";
 
 export type CategoryOptionType = IdLabel;
 
@@ -25,7 +26,9 @@ export const CategorySelect = (props: SelectProps & { showAll?: boolean }) => {
   const { data } = useGetCategories({});
   useEffect(() => {
     if (!data.data) return;
-    setCategories(data.data.map(({ id, label }) => ({ id, label })));
+    setCategories(
+      data.data.map((category) => mapCategoryToSelectOption(category))
+    );
   }, [data]);
 
   return (
@@ -85,7 +88,9 @@ export const CategoryAutocomplete = ({
 
   useEffect(() => {
     if (!data.data) return;
-    setOptions(data.data.map(({ id, label }) => ({ id, label })));
+    setOptions(
+      data.data.map((category) => mapCategoryToSelectOption(category))
+    );
   }, [data]);
 
   const isNewCategory = !options.some(
