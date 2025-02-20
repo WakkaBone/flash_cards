@@ -1,5 +1,5 @@
-import { addCardMutation } from "../cards";
+import { addCategoryMutation } from "./add-category-mutation";
 import { deleteCategoryMutation } from "./delete-category-mutation";
 import { updateCategoryMutation } from "./update-category-mutation";
 
-export { addCardMutation, deleteCategoryMutation, updateCategoryMutation };
+export { addCategoryMutation, deleteCategoryMutation, updateCategoryMutation };
