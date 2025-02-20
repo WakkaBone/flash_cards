@@ -21,13 +21,17 @@ export type GetCardsFilters = {
   mistakesThreshold?: string;
   from?: Date;
   to?: Date;
+  page?: number;
+  pageSize?: number;
 };
 
 export type GetCategoriesFilters = {
   search?: string;
-  numberOfCards?: string;
   from?: Date;
   to?: Date;
+  numberOfCards?: string;
+  page?: number;
+  pageSize?: number;
 };
 
 export enum STATISTICS_ACTIONS {

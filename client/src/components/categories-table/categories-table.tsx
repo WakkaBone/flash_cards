@@ -6,10 +6,11 @@ import { mapCategoryToTableRow } from "../../utils/mappers";
 import { ToastContainer } from "react-toastify";
 import { format } from "date-fns";
 import { useGetCategories } from "../../hooks/use-get-categories";
+import { CategoriesFilters } from "./categories-filters";
 
 const columns: GridColDef<CategoriesTableRowType>[] = [
   { field: "name", headerName: "Name", flex: 1 },
-  { field: "numberOfCards", headerName: "Number of cards", flex: 1 },
+  { field: "numberOfCards", headerName: "Cards", flex: 1 },
   {
     field: "updatedAt",
     valueGetter: (value) => new Date(value),
@@ -50,8 +51,8 @@ export type CategoriesTableRowType = {
 export const CategoriesTable = () => {
   const { isMobile, isTablet } = useScreenSize();
 
-  const [filters, setFilters] = useState<GetCategoriesFilters>();
-  const { data, isLoading, isFetching } = useGetCategories({});
+  const [filters, setFilters] = useState<GetCategoriesFilters>({});
+  const { data, isLoading, isFetching } = useGetCategories(filters);
   const [rows, setRows] = useState<CategoriesTableRowType[]>([]);
 
   useEffect(() => {
@@ -66,7 +67,7 @@ export const CategoriesTable = () => {
 
   return (
     <>
-      {/* TODO: add filters */}
+      <CategoriesFilters filters={filters} onChange={setFilters} />
       <DataGrid
         {...paginationProps}
         disableColumnFilter={isMobile || isTablet}

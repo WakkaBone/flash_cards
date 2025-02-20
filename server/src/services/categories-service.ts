@@ -37,10 +37,10 @@ export const CategoriesService = {
     }
 
     if (filters.from) {
-      queries.push(where("createdAt", ">", Timestamp.fromDate(filters.from)));
+      queries.push(where("updatedAt", ">", Timestamp.fromDate(filters.from)));
     }
     if (filters.to) {
-      queries.push(where("createdAt", "<", Timestamp.fromDate(filters.to)));
+      queries.push(where("updatedAt", "<", Timestamp.fromDate(filters.to)));
     }
 
     //TODO: pagination
