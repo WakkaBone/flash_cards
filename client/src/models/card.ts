@@ -1,9 +1,4 @@
-export enum Categories {
-  Noun = 1,
-  Adjective,
-  Verb,
-  Other,
-}
+import { IdLabel } from "./shared";
 
 type StatisticsType = {
   correct: number;
@@ -14,7 +9,7 @@ export type CardModel = {
   id: string;
   hebrew: string;
   english: string;
-  category: Categories;
+  category: IdLabel;
   details?: string;
   statistics: StatisticsType;
   createdAt: string;

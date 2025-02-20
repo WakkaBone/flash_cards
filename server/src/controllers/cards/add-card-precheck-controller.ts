@@ -31,7 +31,7 @@ function similarityCheck(str1: string, str2: string) {
 }
 
 type CreateCardBody = {
-  category: number;
+  category: string;
   english: string;
   hebrew: string;
   details?: string;
@@ -42,7 +42,7 @@ export const addCardPrecheckController = async (
 ) => {
   if (!isValid(req, res)) return;
   try {
-    const allCards = await CardsService.getCards();
+    const allCards = await CardsService.getCards({});
 
     const similarCards: CardModelDto[] = [];
     for (const card of allCards) {

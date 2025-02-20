@@ -3,9 +3,10 @@ import { ApiResponse } from "../../models/api-response";
 import { CardsService } from "../../services/cards-service";
 import { isValid } from "../../utils/validation-util";
 import { Timestamp } from "firebase/firestore";
+import { CategoriesService } from "../../services/categories-service";
 
 type CreateCardBody = {
-  category: number;
+  category: string;
   english: string;
   hebrew: string;
   details?: string;
@@ -27,6 +28,9 @@ export const addCardController = async (
       createdAt: Timestamp.now(),
     };
     const result = await CardsService.addCard(card);
+
+    await CategoriesService.updateUpdatedAt(category);
+
     res.status(200).json({ isSuccess: true, data: result });
   } catch (error) {
     res.status(500).json({

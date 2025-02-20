@@ -1,37 +1,12 @@
 import { useEffect, useState } from "react";
 import { GetCardsFilters } from "../../models/api";
 import { useGetCards, useScreenSize, useTablePagination } from "../../hooks";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { mapCardToTableRow } from "../../utils/mappers";
 import { defaultFilters } from "../../hooks/use-cards-table-filters";
 import { ToastContainer } from "react-toastify";
-import { format } from "date-fns";
 import { CardsFilters } from "../cards-filters/cards-filters";
-
-const columns: GridColDef<CardsTableRowType>[] = [
-  { field: "english", headerName: "English" },
-  { field: "hebrew", headerName: "Hebrew" },
-  { field: "category", headerName: "Category" },
-  { field: "correct", headerName: "Correct" },
-  { field: "wrong", headerName: "Wrong" },
-  { field: "isLearned", headerName: "Is Learned" },
-  {
-    field: "createdAt",
-    valueGetter: (value) => new Date(value),
-    headerName: "Added At",
-    type: "dateTime",
-    flex: 1,
-    sortComparator: (v1, v2) => v1 - v2,
-    renderCell: ({ row }) =>
-      row.createdAt ? format(new Date(row.createdAt), "dd/MM/yyyy HH:mm") : "",
-  },
-  {
-    field: "actions",
-    headerName: "",
-    flex: 1,
-    renderCell: (params) => params.value,
-  },
-];
+import { cardsTableColumns } from "./columns";
 
 export type CardsTableRowType = {
   id: string;
@@ -57,10 +32,10 @@ export const CardsTable = () => {
     setRows(data.data.map((item) => mapCardToTableRow(item)));
   }, [data]);
 
-  //TODO implement server side pagination
+  //TODO: implement server side pagination
   const paginationProps = useTablePagination();
 
-  //TODO make grid more responsive
+  //TODO: make grid more responsive
 
   return (
     <>
@@ -77,7 +52,7 @@ export const CardsTable = () => {
           },
         }}
         rows={rows}
-        columns={isMobile ? columns.slice(0, 3) : columns}
+        columns={isMobile ? cardsTableColumns.slice(0, 3) : cardsTableColumns}
       />
       <ToastContainer />
     </>

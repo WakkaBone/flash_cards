@@ -1,15 +1,16 @@
 import { Button, Stack, TextField } from "@mui/material";
-import { Categories } from "../../models/card";
 import { useForm, Controller } from "react-hook-form";
-import { CategorySelect } from "../category-select/category-select";
+import { CategoryAutocomplete } from "../category-select/category-select";
 import { useAddCard, useScreenSize } from "../../hooks";
 import { ToastContainer } from "react-toastify";
 import { englishValidator, hebrewValidator } from "../../utils/validators";
 import { ConfirmationModal } from "../confirmation-modal/confirmation-modal";
 import { useEffect } from "react";
+import { IdLabel } from "../../models/shared";
+import { mapAddCardFormToPayload } from "../../utils/mappers";
 
 export type AddCardFormType = {
-  category: Categories;
+  category: IdLabel;
   english: string;
   hebrew: string;
   details?: string;
@@ -31,7 +32,6 @@ export const AddCardForm = () => {
     formState: { errors },
   } = useForm<AddCardFormType>({
     defaultValues: {
-      category: Categories.Noun,
       english: "",
       hebrew: "",
       details: "",
@@ -42,7 +42,8 @@ export const AddCardForm = () => {
     isSuccess && reset();
   }, [isSuccess, reset]);
 
-  const onSubmit = (formData: AddCardFormType) => precheck(formData);
+  const onSubmit = (formData: AddCardFormType) =>
+    precheck(mapAddCardFormToPayload(formData));
 
   const isLoading = isLoadingPrecheck || isLoadingAdd;
 
@@ -120,7 +121,14 @@ export const AddCardForm = () => {
           rules={{ required: "Category is required" }}
           control={control}
           render={({ field }) => (
-            <CategorySelect {...field} fullWidth error={!!errors.category} />
+            <CategoryAutocomplete
+              autocompleteProps={{
+                value: field.value || null,
+                onChange: (_, value) => value && field.onChange(value),
+              }}
+              error={errors.category?.message}
+              allowAdd
+            />
           )}
         />
         <Button

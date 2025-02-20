@@ -22,7 +22,7 @@ export const getRandomCardController = async (
     const { category, includeLearned, mistakesThreshold, from, to } = req.query;
 
     const filters = {
-      category: category ? Number(category) : undefined,
+      category: category ? category : undefined,
       includeLearned: includeLearned ? includeLearned === "true" : undefined,
       mistakesThreshold: mistakesThreshold
         ? Number(mistakesThreshold)

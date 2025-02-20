@@ -1,12 +1,12 @@
 import { Stack, TextField } from "@mui/material";
-import { Categories } from "../../models/card";
 import { Controller, UseFormReturn } from "react-hook-form";
-import { CategorySelect } from "../category-select/category-select";
+import { CategoryAutocomplete } from "../category-select/category-select";
 import { ToastContainer } from "react-toastify";
 import { englishValidator, hebrewValidator } from "../../utils/validators";
+import { IdLabel } from "../../models/shared";
 
 export type EditCardFormType = {
-  category: Categories;
+  category: IdLabel;
   english: string;
   hebrew: string;
   details?: string;
@@ -86,7 +86,14 @@ export const EditCardForm = ({ formProps }: EditCardFormPropsType) => {
           rules={{ required: "Category is required" }}
           control={control}
           render={({ field }) => (
-            <CategorySelect {...field} fullWidth error={!!errors.category} />
+            <CategoryAutocomplete
+              autocompleteProps={{
+                value: field.value || null,
+                onChange: (_, value) => value && field.onChange(value),
+              }}
+              error={errors.category?.message}
+              allowAdd
+            />
           )}
         />
       </Stack>

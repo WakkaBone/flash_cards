@@ -1,10 +1,14 @@
-import { addCardValidator } from "./add-card-validator";
-import { updateCardValidator } from "./update-card-validator";
-import { updateStatisticsValidator } from "./update-statistics-validator";
-import { deleteCardValidator } from "./delete-card-validator";
-import { markLearnedValidator } from "./mark-learned-validator";
-import { getCardsValidator } from "./get-cards-validator";
+import { addCardValidator } from "./cards/add-card-validator";
+import { updateCardValidator } from "./cards/update-card-validator";
+import { updateStatisticsValidator } from "./cards/update-statistics-validator";
+import { deleteCardValidator } from "./cards/delete-card-validator";
+import { markLearnedValidator } from "./cards/mark-learned-validator";
+import { getCardsValidator } from "./cards/get-cards-validator";
 import { loginValidator } from "./login-validator";
+import { addCategoryValidator } from "./categories/add-category-validator";
+import { deleteCategoryValidator } from "./categories/delete-category-validator";
+import { updateCategoryValidator } from "./categories/update-category-validator";
+import { getCategoriesValidator } from "./categories/get-categories-validator";
 
 export {
   addCardValidator,
@@ -14,4 +18,8 @@ export {
   markLearnedValidator,
   getCardsValidator,
   loginValidator,
+  getCategoriesValidator,
+  addCategoryValidator,
+  deleteCategoryValidator,
+  updateCategoryValidator,
 };
