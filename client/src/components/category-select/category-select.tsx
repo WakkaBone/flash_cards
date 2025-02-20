@@ -96,15 +96,10 @@ export const CategoryAutocomplete = ({
     autocompleteProps.value
   );
   useEffect(() => {
-    if (autocompleteProps.value) {
-      setValue(autocompleteProps.value);
-      setCustomInput(autocompleteProps.value.label);
-      return;
-    }
-    setCustomInput("");
-    setValue(null);
+    setValue(autocompleteProps?.value || null);
+    setCustomInput(autocompleteProps?.value?.label || "");
   }, [autocompleteProps]);
-  console.log(value);
+
   return (
     <FormControl fullWidth>
       <Autocomplete<CategoryOptionType>

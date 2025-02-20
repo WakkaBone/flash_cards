@@ -1,9 +1,9 @@
-import { Timestamp } from "firebase/firestore";
+import { FieldValue, Timestamp } from "firebase/firestore";
 
 export type CategoryModel = {
   label: string;
   createdAt: Timestamp;
-  updatedAt: Timestamp;
+  updatedAt: FieldValue;
 };
 
 export type CategoryDto = {

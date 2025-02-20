@@ -10,6 +10,7 @@ import {
   limit,
   Timestamp,
   doc,
+  serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { COLLECTIONS } from "../constants";
@@ -58,7 +59,9 @@ export const CategoriesService = {
           label: categoryData.label,
           numberOfCards: cards.length,
           createdAt: categoryData.createdAt.toDate().toISOString(),
-          updatedAt: categoryData.createdAt.toDate().toISOString(),
+          updatedAt: (categoryData.updatedAt as Timestamp)
+            .toDate()
+            .toISOString(),
         };
         return categoryDto;
       })
@@ -103,13 +106,12 @@ export const CategoriesService = {
 
   updateCategory: async (id: string, category: CategoryModel) => {
     const categoryRef = doc(db, COLLECTIONS.categories, id);
-    //FIXME: UPDATED AT IS NOT UPDATED
     await updateDoc(categoryRef, category);
   },
 
   updateUpdatedAt: async (id: string) => {
     const categoryRef = doc(db, COLLECTIONS.categories, id);
-    await updateDoc(categoryRef, { updatedAt: Timestamp.now() });
+    await updateDoc(categoryRef, { updatedAt: serverTimestamp() });
   },
 
   deleteCategory: async (id: string) => {

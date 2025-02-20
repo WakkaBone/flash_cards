@@ -4,6 +4,7 @@ import { CardsService } from "../../services/cards-service";
 import { CardModelDto } from "../../models/card";
 import { isValid } from "../../utils/validation-util";
 import { Timestamp } from "firebase/firestore";
+import { CategoriesService } from "../../services/categories-service";
 
 type UpdateCardParams = { id: string };
 type UpdateCardBody = CardModelDto;
@@ -32,7 +33,12 @@ export const updateCardController = async (
       isLearned,
       createdAt: Timestamp.fromDate(new Date(createdAt)),
     };
+    const cardBeforeUpdate = await CardsService.getCardById(id);
     await CardsService.updateCard(id, card);
+
+    const categoryChanged = cardBeforeUpdate.category !== card.category;
+    if (categoryChanged) await CategoriesService.updateUpdatedAt(card.category);
+
     res.status(200).json({ isSuccess: true });
   } catch (error) {
     res.status(500).json({

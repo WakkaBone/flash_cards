@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
 import { isValid } from "../../utils/validation-util";
-import { Timestamp } from "firebase/firestore";
+import { Timestamp, serverTimestamp } from "firebase/firestore";
 import { CategoryDto } from "../../models/category";
 import { CategoriesService } from "../../services/categories-service";
 
@@ -14,11 +14,10 @@ export const updateCategoryController = async (
   if (!isValid(req, res)) return;
   try {
     const { id } = req.params;
-    const { label, createdAt, numberOfCards } = req.body;
+    const { label, createdAt } = req.body;
     const category = {
       label,
-      numberOfCards,
-      updatedAt: Timestamp.now(),
+      updatedAt: serverTimestamp(),
       createdAt: Timestamp.fromDate(new Date(createdAt)),
     };
     await CategoriesService.updateCategory(id, category);

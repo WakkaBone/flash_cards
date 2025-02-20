@@ -11,6 +11,7 @@ import {
   orderBy,
   limit,
   Timestamp,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { CardModel, CardModelDto } from "../models/card";
@@ -95,6 +96,12 @@ export const CardsService = {
     }
 
     return cards;
+  },
+
+  getCardById: async (id: string) => {
+    const cardRef = doc(db, COLLECTIONS.cards, id);
+    const card = await getDoc(cardRef);
+    return card.data() as CardModel;
   },
 
   addCard: async (card: CardModel) => {
