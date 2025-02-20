@@ -9,6 +9,7 @@ import {
   SelectProps,
   Button,
   Tooltip,
+  TextFieldProps,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { AddCircleOutline } from "@mui/icons-material";
@@ -51,12 +52,14 @@ type CategoryAutocompletePropsType = {
     AutocompleteProps<CategoryOptionType, false, false, false>,
     "renderInput" | "options" | "value"
   > & { value: CategoryOptionType | null };
+  inputProps?: TextFieldProps;
   showAll?: boolean;
   allowAdd?: boolean;
   error?: string;
 };
 export const CategoryAutocomplete = ({
   autocompleteProps,
+  inputProps,
   allowAdd,
   error,
 }: CategoryAutocompletePropsType) => {
@@ -139,6 +142,7 @@ export const CategoryAutocomplete = ({
             label="Select a category"
             value={customInput}
             onChange={(e) => setCustomInput(e.target.value)}
+            {...inputProps}
             error={!!error}
             helperText={error}
           />

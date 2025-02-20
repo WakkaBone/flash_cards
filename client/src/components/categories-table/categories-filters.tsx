@@ -69,10 +69,10 @@ export const CategoriesFilters = ({
           <TextField
             fullWidth
             type="number"
-            label="Number of Cards"
+            label="Cards"
             value={numberOfCards}
             onChange={handleNumberOfCards}
-            placeholder="Number of Cards"
+            placeholder="Cards"
           />
         )}
         <Stack

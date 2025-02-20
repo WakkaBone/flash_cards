@@ -41,7 +41,7 @@ export const CardsFilters = ({
     FilterTypes.MistakesThreshold,
   ],
 }: CardsTableFiltersPropsType) => {
-  const { isMobile } = useScreenSize();
+  const { isMobile, isTablet } = useScreenSize();
 
   const {
     filters,
@@ -66,40 +66,41 @@ export const CardsFilters = ({
     >
       <Box
         sx={{
-          flexDirection: isMobile ? "column" : "row",
+          flexDirection: isMobile || isTablet ? "column" : "row",
           display: "flex",
           gap: 2,
           padding: 2,
         }}
       >
-        {enabledFilters.includes(FilterTypes.Search) && (
-          <Input
-            fullWidth
-            value={search}
-            placeholder="Search"
-            onChange={handleSearch}
-          />
-        )}
-        {enabledFilters.includes(FilterTypes.DateRange) && (
-          <DateTimeRangePicker
-            handleDateRangeChange={handleDateRange}
-            selectedRange={{
-              from: filters.from ?? null,
-              to: filters.to ?? null,
-            }}
-          />
-        )}
-        <Stack
-          direction="row"
-          spacing={1}
-          sx={{ width: isMobile ? "100%" : "200%" }}
-        >
+        <Stack direction="row" spacing={1} sx={{ width: "100%" }}>
+          {enabledFilters.includes(FilterTypes.Search) && (
+            <Input
+              fullWidth
+              value={search}
+              placeholder="Search"
+              onChange={handleSearch}
+            />
+          )}
+        </Stack>
+        <Stack direction="row" spacing={1} sx={{ width: "100%" }}>
+          {enabledFilters.includes(FilterTypes.DateRange) && (
+            <DateTimeRangePicker
+              handleDateRangeChange={handleDateRange}
+              selectedRange={{
+                from: filters.from ?? null,
+                to: filters.to ?? null,
+              }}
+            />
+          )}
+        </Stack>
+        <Stack direction="row" spacing={1} sx={{ width: "100%" }}>
           {enabledFilters.includes(FilterTypes.Category) && (
             <CategoryAutocomplete
               autocompleteProps={{
                 value: filters.category || null,
                 onChange: handleCategory,
               }}
+              inputProps={{ label: "Category", placeholder: "Category" }}
             />
           )}
           {enabledFilters.includes(FilterTypes.MistakesThreshold) && (
