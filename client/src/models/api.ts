@@ -53,6 +53,9 @@ export type AddCategoryPayload = {
 export type UpdateCardPayload = CardModel;
 export type UpdateCategoryPayload = CategoryModel;
 
+export type BulkDeleteCardsPayload = { ids: string[] };
+export type BulkMarkLearnedPayload = { ids: string[] };
+
 export type LoginPayload = {
   username: string;
   password: string;

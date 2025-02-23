@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
 import { CardsService } from "../../services/cards-service";
 import { isValid } from "../../utils/validation-util";
+import { CategoriesService } from "../../services/categories-service";
 
 type MarkLearnedParams = { id: string };
 export const markLearnedController = async (
@@ -11,7 +12,10 @@ export const markLearnedController = async (
   if (!isValid(req, res)) return;
   try {
     const { id } = req.params;
+    const card = await CardsService.getCardById(id);
     await CardsService.markLearned(id);
+    await CategoriesService.updateUpdatedAt(card.category);
+
     res.status(200).json({ isSuccess: true });
   } catch (error) {
     res.status(500).json({

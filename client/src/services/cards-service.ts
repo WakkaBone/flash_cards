@@ -3,6 +3,8 @@ import httpClient from "../http-client";
 import {
   AddCardPayload,
   ApiResponse,
+  BulkDeleteCardsPayload,
+  BulkMarkLearnedPayload,
   GetCardsFilters,
   STATISTICS_ACTIONS,
   UpdateCardPayload,
@@ -77,11 +79,31 @@ export const CardsService = {
     return response.data;
   },
 
+  async bulkMarkLearned(ids: string[]) {
+    const response = await httpClient.patch<
+      ApiResponse,
+      AxiosPromise<ApiResponse> | AxiosError<ApiResponse>,
+      BulkMarkLearnedPayload
+    >(`${apiPostfix}/bulk/learned`, { ids });
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
+  },
+
   async deleteCard(cardId: string) {
     const response = await httpClient.delete<
       ApiResponse,
       AxiosPromise<ApiResponse> | AxiosError<ApiResponse>
     >(`${apiPostfix}/${cardId}`);
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
+  },
+
+  async bulkDeleteCards(ids: string[]) {
+    const response = await httpClient.delete<
+      ApiResponse,
+      AxiosPromise<ApiResponse> | AxiosError<ApiResponse>,
+      BulkDeleteCardsPayload
+    >(`${apiPostfix}/bulk/delete`, { data: { ids } });
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
   },
