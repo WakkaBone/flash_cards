@@ -19,10 +19,9 @@ export const practiceModeMapper: Record<PracticeModes, string> = {
 export const statisticsLabelsMapper: Record<StatisticsCounters, string> = {
   [StatisticsCounters.totalCards]: "Total Cards",
   [StatisticsCounters.totalLearnedCards]: "Learned Cards",
-  [StatisticsCounters.totalNouns]: "Nouns",
-  [StatisticsCounters.totalAdjectives]: "Adjectives",
-  [StatisticsCounters.totalVerbs]: "Verbs",
-  [StatisticsCounters.totalOther]: "Other",
+  [StatisticsCounters.currentStreak]: "Current Streak",
+  [StatisticsCounters.lastPractice]: "Last Practice",
+  [StatisticsCounters.longestStreak]: "Longest Streak",
   [StatisticsCounters.lastAdded]: "Last Added",
   [StatisticsCounters.mostMistakes]: "Most Mistakes",
 };

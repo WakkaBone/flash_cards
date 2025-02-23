@@ -3,6 +3,7 @@ import { ApiResponse } from "../../models/api-response";
 import { CardsService } from "../../services/cards-service";
 import { isValid } from "../../utils/validation-util";
 import { CardModelDto } from "../../models/card";
+import { UsersService } from "../../services/users-service";
 
 type GetRandomCardQueryParams = {
   category?: string;
@@ -49,6 +50,10 @@ export const getRandomCardController = async (
       }
     }
     prevCardId = randomCard.id;
+
+    const currentUser = UsersService.getCurrentUser(req);
+    currentUser && (await UsersService.updateLastPractice(currentUser));
+
     res.status(200).json({ isSuccess: true, data: randomCard });
   } catch (error) {
     res.status(500).json({
