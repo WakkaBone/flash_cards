@@ -25,21 +25,20 @@ export const EditCardModal = ({
 }: EditCardModalPropsType) => {
   const { updateCard, isPending } = useUpdateCard();
 
-  const formProps = useForm<EditCardFormType>();
-
-  useEffect(() => {
-    formProps.setValue("category", card.category);
-    formProps.setValue("english", card.english);
-    formProps.setValue("hebrew", card.hebrew);
-    formProps.setValue("details", card.details);
-    return () => formProps.reset();
-  }, [formProps, card]);
+  const formProps = useForm<EditCardFormType>({
+    defaultValues: {
+      category: card.category,
+      english: card.english,
+      hebrew: card.hebrew,
+      details: card.details,
+    },
+  });
 
   const onSave = async (formValues: EditCardFormType) => {
     const payload = { ...card, ...formValues };
     updateCard(payload, {
       onSuccess: () => {
-        formProps.reset();
+        formProps.reset(formValues);
         onClose();
         onSuccess?.(payload);
       },

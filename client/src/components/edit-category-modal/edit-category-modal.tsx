@@ -26,19 +26,16 @@ export const EditCategoryModal = ({
 }: EditCategoryModalPropsType) => {
   const { updateCategory, isPending } = useUpdateCategory();
 
-  const formProps = useForm<EditCategoryFormType>();
-
-  useEffect(() => {
-    formProps.setValue("label", category.label);
-    return () => formProps.reset();
-  }, [formProps, category]);
+  const formProps = useForm<EditCategoryFormType>({
+    defaultValues: { label: category.label },
+  });
 
   const onSave = async (formValues: EditCategoryFormType) => {
     const payload = { ...category, ...formValues };
     updateCategory(payload, {
       onSuccess: (data) => {
         if (!data.isSuccess) return;
-        formProps.reset();
+        formProps.reset(formValues);
         onClose();
         onSuccess?.(payload);
       },
