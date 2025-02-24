@@ -34,7 +34,18 @@ export const UsersService = {
     const currentStreak = user.currentStreak;
     const updates: any = { lastPractice: serverTimestamp() };
 
-    const lastPractice = (user.lastPractice as Timestamp).toDate();
+    const lastPractice = user.lastPractice
+      ? (user.lastPractice as Timestamp).toDate()
+      : null;
+
+    //handle the scenario when user hasnt practiced before
+    if (!lastPractice) {
+      updates.currentStreak = 1;
+      updates.longestStreak = 1;
+      await updateDoc(userRef, updates);
+      return;
+    }
+
     const daysSinceLastPractice = calculateDaysDiff(new Date(), lastPractice);
 
     let newStreakValue = currentStreak;
