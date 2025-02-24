@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { GetCardsFilters } from "../../models/api";
 import { useGetCards, useScreenSize, useTablePagination } from "../../hooks";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 import { mapCardToTableRow } from "../../utils/mappers";
 import { defaultFilters } from "../../hooks/use-cards-table-filters";
 import { ToastContainer } from "react-toastify";
 import { CardsFilters } from "../cards-filters/cards-filters";
 import { cardsTableColumns } from "./columns";
+import { BulkActions } from "./bulk-actions";
 
 export type CardsTableRowType = {
   id: string;
@@ -37,11 +38,21 @@ export const CardsTable = () => {
 
   //TODO: make grid more responsive
 
+  const [rowsSelected, setRowsSelected] = useState<GridRowSelectionModel>([]);
+
   return (
     <>
       <CardsFilters filters={filters} onChange={setFilters} />
+      {rowsSelected.length > 0 && (
+        <BulkActions
+          rowsSelected={rowsSelected}
+          setRowsSelected={setRowsSelected}
+        />
+      )}
       <DataGrid
         {...paginationProps}
+        onRowSelectionModelChange={(e) => setRowsSelected(e)}
+        checkboxSelection={!isMobile && !isTablet}
         disableColumnFilter={isMobile || isTablet}
         disableColumnSorting={isMobile || isTablet}
         disableColumnMenu={isMobile || isTablet}

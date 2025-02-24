@@ -4,23 +4,25 @@ import { CardsService } from "../../services/cards-service";
 import { isValid } from "../../utils/validation-util";
 import { CategoriesService } from "../../services/categories-service";
 
-type MarkLearnedParams = { id: string };
-export const markLearnedController = async (
-  req: Request<MarkLearnedParams, ApiResponse>,
+type BulkDeleteBody = { ids: string[] };
+export const bulkDeleteCategoriesController = async (
+  req: Request<{}, ApiResponse, BulkDeleteBody>,
   res: Response<ApiResponse>
 ) => {
   if (!isValid(req, res)) return;
   try {
-    const { id } = req.params;
-    const card = await CardsService.getCardById(id);
-    await CardsService.markLearned(id);
-    await CategoriesService.updateUpdatedAt(card.category);
+    const { ids } = req.body;
+
+    ids.forEach(async (id) => {
+      await CardsService.moveCardsToOtherCategory(id);
+      await CategoriesService.deleteCategory(id);
+    });
 
     res.status(200).json({ isSuccess: true });
   } catch (error) {
     res.status(500).json({
       isSuccess: false,
-      error: { message: "Failed to mark the card as learned", data: error },
+      error: { message: "Failed to bulk delete the categories", data: error },
     });
   }
 };

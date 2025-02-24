@@ -1,10 +1,15 @@
 import { Request, Response } from "express";
-import { param, validationResult } from "express-validator";
+import { body, param, validationResult } from "express-validator";
 
 export const idParamValidation = param("id")
   .isString()
   .notEmpty()
   .withMessage("ID is required");
+
+export const bulkActionValidation = body("ids")
+  .isArray()
+  .custom((value) => Array.isArray(value) && value.length > 0)
+  .withMessage("IDs are required");
 
 export const isValid = (req: Request, res: Response) => {
   const result = validationResult(req);

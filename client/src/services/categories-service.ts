@@ -3,6 +3,7 @@ import httpClient from "../http-client";
 import {
   AddCategoryPayload,
   ApiResponse,
+  BulkDeleteCategoriesPayload,
   GetCategoriesFilters,
   UpdateCategoryPayload,
 } from "../models/api";
@@ -47,6 +48,16 @@ export const CategoriesService = {
       ApiResponse,
       AxiosPromise<ApiResponse> | AxiosError<ApiResponse>
     >(`${apiPostfix}/${categoryId}`);
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
+  },
+
+  async bulkDeleteCategories(ids: string[]) {
+    const response = await httpClient.delete<
+      ApiResponse,
+      AxiosPromise<ApiResponse> | AxiosError<ApiResponse>,
+      BulkDeleteCategoriesPayload
+    >(`${apiPostfix}/bulk/delete`, { data: { ids } });
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
   },

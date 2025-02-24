@@ -9,7 +9,10 @@ import { EditCategoryModal } from "../edit-category-modal/edit-category-modal";
 export const ActionsCell = ({ category }: { category: CategoryModel }) => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
-  const { deleteCategory, isPending: isDeletePending } = useDeleteCategory();
+  const {
+    deleteCategory,
+    deleteCategoryRest: { isPending: isDeletePending },
+  } = useDeleteCategory();
   const handleDeleteCategory = useCallback(
     () => deleteCategory(category.id),
     [deleteCategory, category]
@@ -32,12 +35,7 @@ export const ActionsCell = ({ category }: { category: CategoryModel }) => {
           <DeleteForeverRounded />
         </Tooltip>
       </Button>
-      <Button
-        disabled={isReadonly}
-        onClick={onOpenEditModal}
-        size="small"
-        title="Edit"
-      >
+      <Button onClick={onOpenEditModal} size="small" title="Edit">
         <Tooltip title="Edit category">
           <EditRounded />
         </Tooltip>
@@ -47,6 +45,7 @@ export const ActionsCell = ({ category }: { category: CategoryModel }) => {
         category={category}
         onClose={onCloseEditModal}
         onSuccess={onCloseEditModal}
+        isReadonly={isReadonly}
       />
     </>
   );

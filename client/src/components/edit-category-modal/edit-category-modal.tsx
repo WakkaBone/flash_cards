@@ -6,7 +6,6 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
 import { CategoryModel } from "../../models/category";
 import { useUpdateCategory } from "../../hooks/use-update-category";
 import { EditCategoryForm, EditCategoryFormType } from "./edit-category-form";
@@ -17,28 +16,28 @@ type EditCategoryModalPropsType = {
   category: CategoryModel;
   onClose: () => void;
   onSuccess?: (updatedData: CategoryModel) => void;
+  isReadonly: boolean;
 };
 export const EditCategoryModal = ({
   open,
   category,
   onClose,
   onSuccess,
+  isReadonly,
 }: EditCategoryModalPropsType) => {
   const { updateCategory, isPending } = useUpdateCategory();
 
-  const formProps = useForm<EditCategoryFormType>();
-
-  useEffect(() => {
-    formProps.setValue("label", category.label);
-    return () => formProps.reset();
-  }, [formProps, category]);
+  const formProps = useForm<EditCategoryFormType>({
+    defaultValues: { label: category.label },
+    disabled: isReadonly,
+  });
 
   const onSave = async (formValues: EditCategoryFormType) => {
     const payload = { ...category, ...formValues };
     updateCategory(payload, {
       onSuccess: (data) => {
         if (!data.isSuccess) return;
-        formProps.reset();
+        formProps.reset(formValues);
         onClose();
         onSuccess?.(payload);
       },

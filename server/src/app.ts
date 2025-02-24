@@ -11,6 +11,7 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import { isAuth } from "./middleware";
 import { APIS } from "./constants";
+import { patchDbController } from "./controllers/patch-db-controller";
 
 config();
 
@@ -35,5 +36,7 @@ app.use(`/api/${APIS.auth}/`, authApi);
 app.use(`/api/${APIS.cards}/`, isAuth, cardsApi);
 app.use(`/api/${APIS.categories}/`, isAuth, categoriesApi);
 app.use(`/api/${APIS.version}/`, versionApi);
+
+app.patch("/patch", isAuth, patchDbController);
 
 export default app;

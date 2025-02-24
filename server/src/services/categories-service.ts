@@ -28,7 +28,9 @@ export type GetCategoriesFilters = {
 };
 
 export const CategoriesService = {
-  getCategories: async (filters: GetCategoriesFilters) => {
+  getCategories: async (
+    filters: GetCategoriesFilters
+  ): Promise<CategoryDto[]> => {
     let queryRef = query(collection(db, COLLECTIONS.categories));
     const queries = [];
 
@@ -90,31 +92,30 @@ export const CategoriesService = {
     return categories;
   },
 
-  getCategoryById: async (id: string) => {
+  getCategoryById: async (id: string): Promise<CategoryModel> => {
     const categoryRef = doc(db, COLLECTIONS.categories, id);
     const response = (await getDoc(categoryRef)).data();
     return response as CategoryModel;
   },
 
-  addCategory: async (category: CategoryModel) => {
-    const response = await addDoc(
-      collection(db, COLLECTIONS.categories),
-      category
-    );
-    return response;
+  addCategory: async (category: CategoryModel): Promise<void> => {
+    await addDoc(collection(db, COLLECTIONS.categories), category);
   },
 
-  updateCategory: async (id: string, category: CategoryModel) => {
+  updateCategory: async (
+    id: string,
+    category: CategoryModel
+  ): Promise<void> => {
     const categoryRef = doc(db, COLLECTIONS.categories, id);
     await updateDoc(categoryRef, category);
   },
 
-  updateUpdatedAt: async (id: string) => {
+  updateUpdatedAt: async (id: string): Promise<void> => {
     const categoryRef = doc(db, COLLECTIONS.categories, id);
     await updateDoc(categoryRef, { updatedAt: serverTimestamp() });
   },
 
-  deleteCategory: async (id: string) => {
+  deleteCategory: async (id: string): Promise<void> => {
     const categoryRef = doc(db, COLLECTIONS.categories, id);
     await deleteDoc(categoryRef);
   },

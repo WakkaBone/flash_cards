@@ -27,11 +27,11 @@ export const addCardController = async (
       isLearned: false,
       createdAt: Timestamp.now(),
     };
-    const result = await CardsService.addCard(card);
+    await CardsService.addCard(card);
 
     await CategoriesService.updateUpdatedAt(category);
 
-    res.status(200).json({ isSuccess: true, data: result });
+    res.status(200).json({ isSuccess: true });
   } catch (error) {
     res.status(500).json({
       isSuccess: false,
