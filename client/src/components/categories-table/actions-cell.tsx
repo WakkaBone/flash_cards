@@ -35,12 +35,7 @@ export const ActionsCell = ({ category }: { category: CategoryModel }) => {
           <DeleteForeverRounded />
         </Tooltip>
       </Button>
-      <Button
-        disabled={isReadonly}
-        onClick={onOpenEditModal}
-        size="small"
-        title="Edit"
-      >
+      <Button onClick={onOpenEditModal} size="small" title="Edit">
         <Tooltip title="Edit category">
           <EditRounded />
         </Tooltip>
@@ -50,6 +45,7 @@ export const ActionsCell = ({ category }: { category: CategoryModel }) => {
         category={category}
         onClose={onCloseEditModal}
         onSuccess={onCloseEditModal}
+        isReadonly={isReadonly}
       />
     </>
   );

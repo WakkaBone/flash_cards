@@ -16,17 +16,20 @@ type EditCategoryModalPropsType = {
   category: CategoryModel;
   onClose: () => void;
   onSuccess?: (updatedData: CategoryModel) => void;
+  isReadonly: boolean;
 };
 export const EditCategoryModal = ({
   open,
   category,
   onClose,
   onSuccess,
+  isReadonly,
 }: EditCategoryModalPropsType) => {
   const { updateCategory, isPending } = useUpdateCategory();
 
   const formProps = useForm<EditCategoryFormType>({
     defaultValues: { label: category.label },
+    disabled: isReadonly,
   });
 
   const onSave = async (formValues: EditCategoryFormType) => {
