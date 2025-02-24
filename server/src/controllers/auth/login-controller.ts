@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
 import { generateAuthCookie } from "../../utils/cookie-util";
-import { AuthService } from "../../services/auth-service";
 import { isValid } from "../../utils/validation-util";
 import {
   generateAccessToken,
   generateRefreshToken,
 } from "../../utils/jwt-util";
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "../../constants";
+import { UsersService } from "../../services/users-service";
 
 type LoginBody = {
   username: string;
@@ -21,7 +21,7 @@ export const loginController = async (
   try {
     const { username, password } = req.body;
 
-    const user = await AuthService.getUserByUsername(username);
+    const user = await UsersService.getUserByUsername(username);
     if (!user) {
       res.status(400).json({
         isSuccess: false,

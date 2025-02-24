@@ -18,6 +18,7 @@ import { CardModel, CardModelDto } from "../models/card";
 import { COLLECTIONS, MAIN_CATEGORIES, STATISTICS_ACTIONS } from "../constants";
 import { Statistics } from "../models/statistics";
 import { CategoriesService } from "./categories-service";
+import { UsersService } from "./users-service";
 
 export type GetCardsFilters = {
   category?: string;
@@ -135,7 +136,7 @@ export const CardsService = {
     await deleteDoc(cardRef);
   },
 
-  getStatistics: async (): Promise<Statistics> => {
+  getStatistics: async (username: string) => {
     let queryRef = query(collection(db, COLLECTIONS.cards));
     const nounsQuery = query(
       queryRef,
@@ -171,6 +172,9 @@ export const CardsService = {
     const lastAddedCard = lastAddedWordSnapshot.docs[0].data() as CardModel;
     const mostMistakesCard = mostMistakesSnapshot.docs[0].data() as CardModel;
 
+    const { currentStreak, lastPractice, longestStreak } =
+      await UsersService.getStreakData(username);
+
     const statistics: Statistics = {
       totalCards: (await getDocs(allQuery)).size,
       totalLearnedCards: (await getDocs(learnedQuery)).size,
@@ -180,10 +184,9 @@ export const CardsService = {
       mostMistakes: mostMistakesCard
         ? `${mostMistakesCard.hebrew} - ${mostMistakesCard.english}`
         : "",
-      totalNouns: (await getDocs(nounsQuery)).size,
-      totalAdjectives: (await getDocs(adjectivesQuery)).size,
-      totalVerbs: (await getDocs(verbsQuery)).size,
-      totalOther: (await getDocs(otherQuery)).size,
+      currentStreak,
+      longestStreak,
+      lastPractice: lastPractice ? lastPractice.toISOString() : "",
     };
 
     return statistics;

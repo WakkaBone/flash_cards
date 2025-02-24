@@ -1,10 +1,9 @@
 export enum StatisticsCounters {
   totalCards = "totalCards",
   totalLearnedCards = "totalLearnedCards",
-  totalNouns = "totalNouns",
-  totalAdjectives = "totalAdjectives",
-  totalVerbs = "totalVerbs",
-  totalOther = "totalOther",
+  currentStreak = "currentStreak",
+  longestStreak = "longestStreak",
+  lastPractice = "lastPractice",
   lastAdded = "lastAdded",
   mostMistakes = "mostMistakes",
 }
@@ -12,10 +11,9 @@ export enum StatisticsCounters {
 export type Statistics = {
   totalCards: number;
   totalLearnedCards: number;
-  totalNouns: number;
-  totalAdjectives: number;
-  totalVerbs: number;
-  totalOther: number;
   lastAdded: string;
   mostMistakes: string;
+  currentStreak: number;
+  longestStreak: number;
+  lastPractice: string;
 };
