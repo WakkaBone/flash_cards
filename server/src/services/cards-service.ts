@@ -32,7 +32,7 @@ export type GetCardsFilters = {
 };
 
 export const CardsService = {
-  getCards: async (filters: GetCardsFilters = {}) => {
+  getCards: async (filters: GetCardsFilters = {}): Promise<CardModelDto[]> => {
     let queryRef = query(collection(db, COLLECTIONS.cards));
     const queries = [];
 
@@ -98,23 +98,25 @@ export const CardsService = {
     return cards;
   },
 
-  getCardById: async (id: string) => {
+  getCardById: async (id: string): Promise<CardModel> => {
     const cardRef = doc(db, COLLECTIONS.cards, id);
     const card = await getDoc(cardRef);
     return card.data() as CardModel;
   },
 
-  addCard: async (card: CardModel) => {
-    const response = await addDoc(collection(db, COLLECTIONS.cards), card);
-    return response;
+  addCard: async (card: CardModel): Promise<void> => {
+    await addDoc(collection(db, COLLECTIONS.cards), card);
   },
 
-  updateCard: async (id: string, card: CardModel) => {
+  updateCard: async (id: string, card: CardModel): Promise<void> => {
     const cardRef = doc(db, COLLECTIONS.cards, id);
     await updateDoc(cardRef, card);
   },
 
-  updateStatistics: async (id: string, action: STATISTICS_ACTIONS) => {
+  updateStatistics: async (
+    id: string,
+    action: STATISTICS_ACTIONS
+  ): Promise<void> => {
     const cardRef = doc(db, COLLECTIONS.cards, id);
     await updateDoc(cardRef, {
       [`statistics.${
@@ -123,17 +125,17 @@ export const CardsService = {
     });
   },
 
-  markLearned: async (id: string) => {
+  markLearned: async (id: string): Promise<void> => {
     const cardRef = doc(db, COLLECTIONS.cards, id);
     await updateDoc(cardRef, { isLearned: true });
   },
 
-  deleteCard: async (id: string) => {
+  deleteCard: async (id: string): Promise<void> => {
     const cardRef = doc(db, COLLECTIONS.cards, id);
     await deleteDoc(cardRef);
   },
 
-  getStatistics: async () => {
+  getStatistics: async (): Promise<Statistics> => {
     let queryRef = query(collection(db, COLLECTIONS.cards));
     const nounsQuery = query(
       queryRef,
@@ -185,5 +187,18 @@ export const CardsService = {
     };
 
     return statistics;
+  },
+
+  moveCardsToOtherCategory: async function (categoryId: string): Promise<void> {
+    const allCardsWithCategory = await this.getCards({
+      category: categoryId,
+    });
+    allCardsWithCategory.forEach(async (card: CardModelDto) => {
+      await CardsService.updateCard(card.id, {
+        ...card,
+        createdAt: Timestamp.fromDate(new Date(card.createdAt)),
+        category: MAIN_CATEGORIES.other,
+      });
+    });
   },
 };

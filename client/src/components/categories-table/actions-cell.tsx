@@ -9,7 +9,10 @@ import { EditCategoryModal } from "../edit-category-modal/edit-category-modal";
 export const ActionsCell = ({ category }: { category: CategoryModel }) => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
-  const { deleteCategory, isPending: isDeletePending } = useDeleteCategory();
+  const {
+    deleteCategory,
+    deleteCategoryRest: { isPending: isDeletePending },
+  } = useDeleteCategory();
   const handleDeleteCategory = useCallback(
     () => deleteCategory(category.id),
     [deleteCategory, category]

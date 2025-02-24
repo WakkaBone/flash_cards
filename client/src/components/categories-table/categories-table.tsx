@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { GetCategoriesFilters } from "../../models/api";
 import { useScreenSize, useTablePagination } from "../../hooks";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
 import { mapCategoryToTableRow } from "../../utils/mappers";
 import { ToastContainer } from "react-toastify";
 import { format } from "date-fns";
 import { useGetCategories } from "../../hooks/use-get-categories";
 import { CategoriesFilters } from "./categories-filters";
+import { BulkActions } from "./bulk-actionts";
 
 const columns: GridColDef<CategoriesTableRowType>[] = [
   { field: "name", headerName: "Name", flex: 1 },
@@ -65,11 +66,21 @@ export const CategoriesTable = () => {
 
   //TODO: make grid more responsive
 
+  const [rowsSelected, setRowsSelected] = useState<GridRowSelectionModel>([]);
+
   return (
     <>
       <CategoriesFilters filters={filters} onChange={setFilters} />
+      {rowsSelected.length > 0 && (
+        <BulkActions
+          rowsSelected={rowsSelected}
+          setRowsSelected={setRowsSelected}
+        />
+      )}
       <DataGrid
         {...paginationProps}
+        checkboxSelection={!isMobile && !isTablet}
+        onRowSelectionModelChange={(e) => setRowsSelected(e)}
         disableColumnFilter={isMobile || isTablet}
         disableColumnSorting={isMobile || isTablet}
         disableColumnMenu={isMobile || isTablet}

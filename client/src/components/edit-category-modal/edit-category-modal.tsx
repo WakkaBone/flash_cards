@@ -6,7 +6,6 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
 import { CategoryModel } from "../../models/category";
 import { useUpdateCategory } from "../../hooks/use-update-category";
 import { EditCategoryForm, EditCategoryFormType } from "./edit-category-form";

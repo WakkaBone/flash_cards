@@ -19,8 +19,10 @@ export const addCategoryController = async (
       createdAt: Timestamp.now(),
       updatedAt: serverTimestamp(),
     };
-    const result = await CategoriesService.addCategory(category);
-    res.status(200).json({ isSuccess: true, data: result });
+
+    await CategoriesService.addCategory(category);
+
+    res.status(200).json({ isSuccess: true });
   } catch (error) {
     res.status(500).json({
       isSuccess: false,

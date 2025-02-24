@@ -11,11 +11,13 @@ import { updateCategoryValidator } from "./categories/update-category-validator"
 import { getCategoriesValidator } from "./categories/get-categories-validator";
 import { bulkDeleteCardsValidator } from "./cards/bulk-delete-cards-validator";
 import { bulkMarkLearnedValidator } from "./cards/bulk-mark-learned-validator";
+import { bulkDeleteCategoriesValidator } from "./categories/bulk-delete-categories-validator";
 
 export {
   addCardValidator,
   bulkDeleteCardsValidator,
   bulkMarkLearnedValidator,
+  bulkDeleteCategoriesValidator,
   updateCardValidator,
   updateStatisticsValidator,
   deleteCardValidator,

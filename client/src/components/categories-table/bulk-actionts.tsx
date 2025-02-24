@@ -1,8 +1,9 @@
 import { Button, Stack } from "@mui/material";
 import { GridRowSelectionModel } from "@mui/x-data-grid";
-import { useBulkActions, usePopoverConfirmation } from "../../hooks";
-import { DeleteForeverRounded, TaskAltRounded } from "@mui/icons-material";
+import { usePopoverConfirmation } from "../../hooks";
+import { DeleteForeverRounded } from "@mui/icons-material";
 import { PopoverConfirmation } from "../popover-confirmation/popover-confirmation";
+import { useDeleteCategory } from "../../hooks/use-delete-category";
 import { BulkActionsContainer } from "../bulk-actions/bulk-actions-container";
 
 type BulkActionsPropsType = {
@@ -13,16 +14,15 @@ export const BulkActions = ({
   rowsSelected,
   setRowsSelected,
 }: BulkActionsPropsType) => {
-  const { bulkDelete, bulkMarkLearned, isLoading } = useBulkActions();
+  const {
+    bulkDeleteCategories,
+    bulkDeleteCategoriesRest: { isPending: isLoading },
+  } = useDeleteCategory();
 
   const clearRowSelection = () => setRowsSelected([]);
 
   const handleBulkDelete = () =>
-    bulkDelete(rowsSelected as string[], {
-      onSuccess: () => clearRowSelection(),
-    });
-  const handleBulkMarkLearned = () =>
-    bulkMarkLearned(rowsSelected as string[], {
+    bulkDeleteCategories(rowsSelected as string[], {
       onSuccess: () => clearRowSelection(),
     });
 
@@ -32,20 +32,6 @@ export const BulkActions = ({
   return (
     <BulkActionsContainer numberOfItems={rowsSelected.length}>
       <Button
-        loading={isLoading}
-        disabled={isLoading}
-        onClick={(e) =>
-          handleOpen(
-            e,
-            handleBulkMarkLearned,
-            "Are you sure you want to mark the selected cards as learned?"
-          )
-        }
-        endIcon={<TaskAltRounded />}
-      >
-        Bulk Mark As Learned
-      </Button>
-      <Button
         color="error"
         loading={isLoading}
         disabled={isLoading}
@@ -53,7 +39,7 @@ export const BulkActions = ({
           handleOpen(
             e,
             handleBulkDelete,
-            "Are you sure you want to delete the selected cards?"
+            "Are you sure you want to delete the selected categories?"
           )
         }
         endIcon={<DeleteForeverRounded />}
