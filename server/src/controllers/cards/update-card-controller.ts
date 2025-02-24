@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
 import { CardsService } from "../../services/cards-service";
-import { CardModelDto } from "../../models/card";
+import { CardModel, CardModelDto } from "../../models/card";
 import { isValid } from "../../utils/validation-util";
-import { Timestamp } from "firebase/firestore";
+import { serverTimestamp } from "firebase/firestore";
 import { CategoriesService } from "../../services/categories-service";
 
 type UpdateCardParams = { id: string };
@@ -15,25 +15,25 @@ export const updateCardController = async (
   if (!isValid(req, res)) return;
   try {
     const { id } = req.params;
-    const {
-      category,
-      english,
-      hebrew,
-      details,
-      isLearned,
-      statistics,
-      createdAt,
-    } = req.body;
-    const card = {
+    const { category, english, hebrew, details, isLearned, statistics } =
+      req.body;
+
+    const cardBeforeUpdate = await CardsService.getCardById(id);
+
+    const card: CardModel = {
       category: category.id,
       english,
       hebrew,
       details,
       statistics,
       isLearned,
-      createdAt: Timestamp.fromDate(new Date(createdAt)),
+      createdAt: cardBeforeUpdate.createdAt,
+      easinessFactor: cardBeforeUpdate.easinessFactor,
+      interval: cardBeforeUpdate.interval,
+      repetitions: cardBeforeUpdate.repetitions,
+      lastReviewDate: serverTimestamp(),
     };
-    const cardBeforeUpdate = await CardsService.getCardById(id);
+
     await CardsService.updateCard(id, card);
 
     const categoryChanged = cardBeforeUpdate.category !== card.category;

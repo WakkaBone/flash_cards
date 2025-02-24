@@ -5,7 +5,7 @@ import { CategoriesService } from "../../services/categories-service";
 
 export const getCategoriesQuery = (
   filters: GetCategoriesFilters
-): DefinedInitialDataOptions<ApiResponse<CategoryModel[]>, Error> => ({
+): DefinedInitialDataOptions<ApiResponse<CategoryModel[]>> => ({
   initialData: { isSuccess: false, data: [] },
   queryKey: ["categories", filters],
   queryFn: async () => await CategoriesService.getCategories(filters),

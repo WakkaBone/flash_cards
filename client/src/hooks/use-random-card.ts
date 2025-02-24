@@ -12,14 +12,14 @@ import { toastError } from "../utils/error-handler";
 export const useRandomCard = (filters: PracticeFilersType) => {
   const queryClient = useQueryClient();
   const [cardId, setCardId] = useState<string>("");
-  const { data, isLoading, isFetching } = useQuery<ApiResponse<CardModel>>(
-    getRandomCardQuery(filters)
-  );
+  const { data, isLoading, isFetching } = useQuery<
+    ApiResponse<CardModel | null>
+  >(getRandomCardQuery(filters));
+
   const cardData = data?.data;
 
   useEffect(() => {
-    if (!cardData) return;
-    setCardId(cardData.id);
+    cardData && setCardId(cardData.id);
   }, [cardData]);
 
   const { mutate: mutateCardStats, ...updateStatsRest } = useMutation(

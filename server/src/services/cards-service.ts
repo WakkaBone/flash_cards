@@ -12,13 +12,21 @@ import {
   limit,
   Timestamp,
   getDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { CardModel, CardModelDto } from "../models/card";
-import { COLLECTIONS, MAIN_CATEGORIES, STATISTICS_ACTIONS } from "../constants";
+import {
+  COLLECTIONS,
+  MAIN_CATEGORIES,
+  MAX_EASE_COEFFICIENT,
+  MIN_EASE_COEFFICIENT,
+  STATISTICS_ACTIONS,
+} from "../constants";
 import { Statistics } from "../models/statistics";
 import { CategoriesService } from "./categories-service";
 import { UsersService } from "./users-service";
+import { getNextReviewDate } from "../utils/date-time";
 
 export type GetCardsFilters = {
   category?: string;
@@ -119,11 +127,38 @@ export const CardsService = {
     action: STATISTICS_ACTIONS
   ): Promise<void> => {
     const cardRef = doc(db, COLLECTIONS.cards, id);
-    await updateDoc(cardRef, {
-      [`statistics.${
-        action === STATISTICS_ACTIONS.Correct ? "correct" : "wrong"
-      }`]: increment(1),
-    });
+    const card = await CardsService.getCardById(id);
+
+    const isCorrect = action === STATISTICS_ACTIONS.Correct;
+
+    const updates: Partial<CardModel> = {
+      [`statistics.${isCorrect ? "correct" : "wrong"}`]: increment(1),
+      lastReviewDate: serverTimestamp(),
+      interval: isCorrect
+        ? card.repetitions === 1
+          ? 1
+          : Math.round(card.interval * card.easinessFactor)
+        : 1,
+      repetitions: isCorrect ? card.repetitions + 1 : 1,
+      easinessFactor: Math.max(
+        MIN_EASE_COEFFICIENT,
+        Math.min(
+          MAX_EASE_COEFFICIENT,
+          card.easinessFactor + 0.1 - (5 - (isCorrect ? 4 : 0))
+        )
+      ),
+    };
+    updates.nextReviewDate = getNextReviewDate(
+      updates.lastReviewDate as Timestamp,
+      updates.interval
+    );
+
+    await updateDoc(cardRef, updates);
+  },
+
+  updateLastReviewedDate: async (id: string): Promise<void> => {
+    const cardRef = doc(db, COLLECTIONS.cards, id);
+    await updateDoc(cardRef, { lastReviewDate: serverTimestamp() });
   },
 
   markLearned: async (id: string): Promise<void> => {
@@ -138,22 +173,6 @@ export const CardsService = {
 
   getStatistics: async (username: string) => {
     let queryRef = query(collection(db, COLLECTIONS.cards));
-    const nounsQuery = query(
-      queryRef,
-      where("category", "==", MAIN_CATEGORIES.noun)
-    );
-    const adjectivesQuery = query(
-      queryRef,
-      where("category", "==", MAIN_CATEGORIES.adjective)
-    );
-    const verbsQuery = query(
-      queryRef,
-      where("category", "==", MAIN_CATEGORIES.verb)
-    );
-    const otherQuery = query(
-      queryRef,
-      where("category", "==", MAIN_CATEGORIES.other)
-    );
     const allQuery = query(queryRef);
     const learnedQuery = query(queryRef, where("isLearned", "==", true));
     const lastAddedQuery = query(
@@ -202,6 +221,32 @@ export const CardsService = {
         createdAt: Timestamp.fromDate(new Date(card.createdAt)),
         category: MAIN_CATEGORIES.other,
       });
+    });
+  },
+
+  sortBySRS: (cards: CardModelDto[]): CardModelDto[] => {
+    return cards.sort((a, b) => {
+      const nextReviewA = getNextReviewDate(
+        a.lastReviewDate as Timestamp,
+        a.interval
+      );
+      const nextReviewB = getNextReviewDate(
+        b.lastReviewDate as Timestamp,
+        b.interval
+      );
+
+      // First, prioritize cards that have a shorter interval (soonest nextReviewDate)
+      if (nextReviewA < nextReviewB) return -1; // Card A needs to be reviewed sooner
+      if (nextReviewA > nextReviewB) return 1; // Card B needs to be reviewed sooner
+
+      // If intervals are the same, prioritize based on repetitions (fewest repetitions first)
+      if (a.repetitions < b.repetitions) return -1; // Fewer repetitions means more troublesome
+      if (a.repetitions > b.repetitions) return 1; // More repetitions means less troublesome
+
+      // If repetitions are also the same, we can consider the easiness factor
+      if (a.easinessFactor < b.easinessFactor) return -1; // Easier cards are less troublesome
+      if (a.easinessFactor > b.easinessFactor) return 1; // Harder cards are more troublesome
+      return 0;
     });
   },
 };

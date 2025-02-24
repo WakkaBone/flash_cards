@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
 import { CardsService } from "../../services/cards-service";
 import { isValid } from "../../utils/validation-util";
-import { Timestamp } from "firebase/firestore";
+import { serverTimestamp, Timestamp } from "firebase/firestore";
 import { CategoriesService } from "../../services/categories-service";
 
 type CreateCardBody = {
@@ -18,6 +18,14 @@ export const addCardController = async (
   if (!isValid(req, res)) return;
   try {
     const { category, english, hebrew, details } = req.body;
+
+    const initialSrsValues = {
+      easinessFactor: 2.5,
+      interval: 1,
+      repetitions: 1,
+      lastReviewDate: serverTimestamp(),
+    };
+
     const card = {
       category,
       english,
@@ -26,6 +34,7 @@ export const addCardController = async (
       statistics: { wrong: 0, correct: 0 },
       isLearned: false,
       createdAt: Timestamp.now(),
+      ...initialSrsValues,
     };
     await CardsService.addCard(card);
 

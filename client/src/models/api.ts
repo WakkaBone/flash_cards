@@ -8,10 +8,10 @@ export interface ApiError<T = any> {
   data?: T;
 }
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = any, E = any> {
   isSuccess: boolean;
   data?: T;
-  error?: ApiError;
+  error?: ApiError<E>;
 }
 
 export type GetCardsFilters = {

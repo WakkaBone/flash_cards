@@ -37,7 +37,7 @@ type WordCardPropsType = {
     timerSessionActive: boolean;
   };
   cardProps: {
-    cardData: CardModel | undefined;
+    cardData?: CardModel | null;
     isLoadingCard: boolean;
     isFetchingCard: boolean;
     getAnotherCard: () => Promise<void>;
@@ -78,9 +78,11 @@ export const WordCard = ({
   const { markCardLearned, isPending: isMarkingLearned } = useMarkCardLearned();
   const { deleteCard, isPending: isDeletingCard } = useDeleteCard();
 
-  const [card, setCard] = useState<CardModel | undefined>(cardData);
+  const [card, setCard] = useState<CardModel | undefined | null>(cardData);
 
-  useEffect(() => cardData && setCard(cardData), [cardData]);
+  useEffect(() => {
+    cardData && setCard(cardData);
+  }, [cardData]);
 
   const [translation, setTranslation] = useState<string>("");
   const [showTranslation, setShowTranslation] = useState<boolean>(false);
@@ -244,8 +246,14 @@ export const WordCard = ({
     enableOnFormTags: true,
   });
 
-  if (isLoadingCard) return <CenteredLoader />;
-  if (!card) return null;
+  if (card === undefined || isLoadingCard) return <CenteredLoader />;
+
+  if (card === null)
+    return (
+      <Typography mt={3} variant="h3">
+        No cards were found
+      </Typography>
+    );
 
   return (
     <Card

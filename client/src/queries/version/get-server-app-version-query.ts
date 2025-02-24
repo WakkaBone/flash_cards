@@ -3,8 +3,7 @@ import { ApiResponse } from "../../models/api";
 import { VersionsService } from "../../services/version-service";
 
 export const getServerAppVersionQuery = (): DefinedInitialDataOptions<
-  ApiResponse<string>,
-  Error
+  ApiResponse<string>
 > => ({
   initialData: { isSuccess: false },
   queryKey: ["server-app-version"],

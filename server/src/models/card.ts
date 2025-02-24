@@ -1,4 +1,4 @@
-import { Timestamp } from "firebase/firestore";
+import { FieldValue, Timestamp } from "firebase/firestore";
 
 type StatisticsType = {
   correct: number;
@@ -13,6 +13,11 @@ export type CardModel = {
   statistics: StatisticsType;
   isLearned: boolean;
   createdAt: Timestamp;
+  easinessFactor: number;
+  interval: number;
+  repetitions: number;
+  lastReviewDate?: FieldValue;
+  nextReviewDate?: FieldValue;
 };
 
 export type CardModelDto = Omit<CardModel, "createdAt" | "category"> & {

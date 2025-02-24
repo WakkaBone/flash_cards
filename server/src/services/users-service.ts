@@ -32,7 +32,7 @@ export const UsersService = {
     const userRef = doc(db, COLLECTIONS.users, user.id);
 
     const currentStreak = user.currentStreak;
-    const updates: any = { lastPractice: serverTimestamp() };
+    const updates: Partial<UserModel> = { lastPractice: serverTimestamp() };
 
     const lastPractice = user.lastPractice
       ? (user.lastPractice as Timestamp).toDate()

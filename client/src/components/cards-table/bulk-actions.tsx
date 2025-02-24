@@ -1,4 +1,4 @@
-import { Button, Stack } from "@mui/material";
+import { Button } from "@mui/material";
 import { GridRowSelectionModel } from "@mui/x-data-grid";
 import { useBulkActions, usePopoverConfirmation } from "../../hooks";
 import { DeleteForeverRounded, TaskAltRounded } from "@mui/icons-material";

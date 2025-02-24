@@ -4,8 +4,7 @@ import { CardsService } from "../../services/cards-service";
 import { Statistics } from "../../models/statistics";
 
 export const getStatisticsQuery = (): DefinedInitialDataOptions<
-  ApiResponse<Statistics | undefined>,
-  Error
+  ApiResponse<Statistics>
 > => ({
   initialData: {
     isSuccess: false,

@@ -37,6 +37,6 @@ app.use(`/api/${APIS.cards}/`, isAuth, cardsApi);
 app.use(`/api/${APIS.categories}/`, isAuth, categoriesApi);
 app.use(`/api/${APIS.version}/`, versionApi);
 
-app.patch("/patch", isAuth, patchDbController);
+app.patch("/api/patch", isAuth, patchDbController);
 
 export default app;

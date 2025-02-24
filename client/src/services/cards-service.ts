@@ -34,8 +34,8 @@ export const CardsService = {
       compileGetCardsFilters(filters)
     );
     const response = await httpClient.get<
-      ApiResponse<CardModel>,
-      AxiosPromise<ApiResponse<CardModel>> | AxiosError<ApiResponse>
+      ApiResponse<CardModel | null>,
+      AxiosPromise<ApiResponse<CardModel | null>> | AxiosError<ApiResponse>
     >(url);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;

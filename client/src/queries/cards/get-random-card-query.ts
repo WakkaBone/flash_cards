@@ -6,7 +6,7 @@ import { PracticeFilersType } from "../../pages/practice-page";
 
 export const getRandomCardQuery = (
   filters: PracticeFilersType
-): DefinedInitialDataOptions<ApiResponse<CardModel>, Error> => ({
+): DefinedInitialDataOptions<ApiResponse<CardModel | null>> => ({
   initialData: { isSuccess: false },
   queryKey: ["random-card"],
   queryFn: async () => await CardsService.getRandomCard(filters),
