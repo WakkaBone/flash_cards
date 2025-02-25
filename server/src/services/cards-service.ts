@@ -149,7 +149,7 @@ export const CardsService = {
       ),
     };
     updates.nextReviewDate = getNextReviewDate(
-      updates.lastReviewDate as Timestamp,
+      Timestamp.now(),
       updates.interval
     );
 
