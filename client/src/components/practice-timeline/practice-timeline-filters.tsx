@@ -5,12 +5,10 @@ import { useScreenSize, usePracticeTimelineFilters } from "../../hooks";
 import { DateTimeRangePicker } from "../date-time-range-picker/date-time-range-picker";
 import { FilterAlt } from "@mui/icons-material";
 import { CollapsibleSection } from "../collapsible/collapsible-section";
-import { StatisticsActionsSelect } from "../statistic-action-select/statistic-action-select";
 import { GetPracticeTimelineFilters } from "../../hooks/use-practice-timeline-filters";
 
 export enum FilterTypes {
   DateRange = "dateRange",
-  Action = "action",
 }
 
 type CategoriesTableFiltersPropsType = {
@@ -22,11 +20,11 @@ type CategoriesTableFiltersPropsType = {
 export const PracticeTimelineFilters = ({
   onChange,
   filters: initialFilters,
-  enabledFilters = [FilterTypes.Action, FilterTypes.DateRange],
+  enabledFilters = [FilterTypes.DateRange],
 }: CategoriesTableFiltersPropsType) => {
   const { isMobile } = useScreenSize();
 
-  const { filters, handleActionType, handleDateRange, handleReset } =
+  const { filters, handleDateRange, handleReset } =
     usePracticeTimelineFilters(initialFilters);
 
   useEffect(() => {
@@ -46,18 +44,6 @@ export const PracticeTimelineFilters = ({
           padding: 2,
         }}
       >
-        <Stack
-          direction="row"
-          spacing={1}
-          sx={{ width: isMobile ? "100%" : "200%" }}
-        >
-          {enabledFilters.includes(FilterTypes.Action) && (
-            <StatisticsActionsSelect
-              value={filters.action}
-              onChange={handleActionType}
-            />
-          )}
-        </Stack>
         <Stack
           direction="row"
           spacing={1}
