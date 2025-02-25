@@ -9,7 +9,7 @@ type PriorityCellPropsType = {
 const getChipStyle = (priority: Priorities) => {
   switch (priority) {
     case Priorities.Low:
-      return "success";
+      return "default";
     case Priorities.Medium:
       return "info";
     case Priorities.High:
