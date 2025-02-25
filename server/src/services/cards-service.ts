@@ -15,7 +15,7 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
-import { CardModel, CardModelDto } from "../models/card";
+import { CardModel, CardModelDto, Priorities } from "../models/card";
 import {
   COLLECTIONS,
   MAIN_CATEGORIES,
@@ -36,6 +36,7 @@ export type GetCardsFilters = {
   from?: Date;
   to?: Date;
   mistakesThreshold?: number;
+  priority?: Priorities;
   page?: number;
   pageSize?: number;
 };
@@ -64,6 +65,9 @@ export const CardsService = {
     }
     if (filters.mistakesThreshold) {
       queries.push(where("statistics.wrong", ">=", filters.mistakesThreshold));
+    }
+    if (filters.priority) {
+      queries.push(where("priority", "==", filters.priority));
     }
 
     //TODO: pagination
@@ -117,7 +121,7 @@ export const CardsService = {
     await addDoc(collection(db, COLLECTIONS.cards), card);
   },
 
-  updateCard: async (id: string, card: CardModel): Promise<void> => {
+  updateCard: async (id: string, card: Partial<CardModel>): Promise<void> => {
     const cardRef = doc(db, COLLECTIONS.cards, id);
     await updateDoc(cardRef, card);
   },
@@ -246,6 +250,11 @@ export const CardsService = {
       // If repetitions are also the same, we can consider the easiness factor
       if (a.easinessFactor < b.easinessFactor) return -1; // Easier cards are less troublesome
       if (a.easinessFactor > b.easinessFactor) return 1; // Harder cards are more troublesome
+
+      // Finally, prioritize based on the priority (higher value means higher priority)
+      if (a.priority < b.priority) return -1; // Lower priority, comes later
+      if (a.priority > b.priority) return 1; // Higher priority, comes sooner
+
       return 0;
     });
   },

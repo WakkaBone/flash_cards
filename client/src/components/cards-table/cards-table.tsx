@@ -14,6 +14,7 @@ export type CardsTableRowType = {
   english: string;
   hebrew: string;
   category: string;
+  priority: JSX.Element;
   correct: number;
   wrong: number;
   isLearned: string;
@@ -64,6 +65,7 @@ export const CardsTable = () => {
         }}
         rows={rows}
         columns={isMobile ? cardsTableColumns.slice(0, 3) : cardsTableColumns}
+        disableRowSelectionOnClick
       />
       <ToastContainer />
     </>

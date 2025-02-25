@@ -30,6 +30,7 @@ export const EditCardModal = ({
       english: card.english,
       hebrew: card.hebrew,
       details: card.details,
+      priority: card.priority,
     },
   });
 

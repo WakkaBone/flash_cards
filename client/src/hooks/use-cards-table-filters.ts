@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import { useDebounce } from "./use-debounce";
-import { GetCardsFilters } from "../models/api";
+import { GetCardsFilters, PrioritiesExtended } from "../models/api";
 import { CategoryOptionType } from "../components/category-select/category-select";
+import { SelectChangeEvent } from "@mui/material";
 
-export const defaultFilters = { includeLearned: false };
+export const defaultFilters: Partial<GetCardsFilters> = {
+  includeLearned: false,
+  priority: 0,
+};
 
 export const useCardsTableFilters = (initialFilters: GetCardsFilters) => {
   const [filters, setFilters] = useState<GetCardsFilters>(initialFilters);
@@ -40,12 +44,17 @@ export const useCardsTableFilters = (initialFilters: GetCardsFilters) => {
   const handleIncludeLearned = (event: React.ChangeEvent<HTMLInputElement>) =>
     setFilters({ ...filters, includeLearned: event.target.checked });
 
-  const handleDateRange = (type: "from" | "to", value: Date | null) => {
+  const handleDateRange = (type: "from" | "to", value: Date | null) =>
     setFilters((prevFilters) => ({
       ...prevFilters,
       [type]: value,
     }));
-  };
+
+  const handlePriority = (e: SelectChangeEvent<PrioritiesExtended>) =>
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      priority: e.target.value as PrioritiesExtended,
+    }));
 
   const handleMistakesThreshold = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -66,6 +75,7 @@ export const useCardsTableFilters = (initialFilters: GetCardsFilters) => {
     handleIncludeLearned,
     handleDateRange,
     handleMistakesThreshold,
+    handlePriority,
     handleReset,
   };
 };

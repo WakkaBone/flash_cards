@@ -1,4 +1,4 @@
-import { CardModel } from "./card";
+import { CardModel, Priorities } from "./card";
 import { CategoryModel } from "./category";
 import { IdLabel } from "./shared";
 
@@ -14,6 +14,11 @@ export interface ApiResponse<T = any, E = any> {
   error?: ApiError<E>;
 }
 
+enum AllOption {
+  All = 0,
+}
+export type PrioritiesExtended = Priorities | AllOption;
+
 export type GetCardsFilters = {
   category?: IdLabel | null;
   search?: string;
@@ -21,6 +26,7 @@ export type GetCardsFilters = {
   mistakesThreshold?: string;
   from?: Date;
   to?: Date;
+  priority?: PrioritiesExtended;
   page?: number;
   pageSize?: number;
 };

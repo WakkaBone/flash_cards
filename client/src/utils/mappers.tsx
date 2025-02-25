@@ -1,5 +1,5 @@
 import { CardsTableRowType } from "../components/cards-table/cards-table";
-import { CardModel } from "../models/card";
+import { CardModel, Priorities } from "../models/card";
 import { StatisticsCounters } from "../models/statistics";
 import { PracticeModes } from "../pages/practice-page";
 import { ActionsCell as ActionsCellCards } from "../components/cards-table/actions-cell";
@@ -9,6 +9,7 @@ import { ActionsCell as ActionsCellCategories } from "../components/categories-t
 import { AddCardFormType } from "../components/add-card-form/add-card-form";
 import { AddCardPayload, GetCardsFilters } from "../models/api";
 import { IdLabel } from "../models/shared";
+import { PriorityCell } from "../components/cards-table/priority-cell";
 
 export const practiceModeMapper: Record<PracticeModes, string> = {
   [PracticeModes.eth]: "English to Hebrew",
@@ -26,9 +27,16 @@ export const statisticsLabelsMapper: Record<StatisticsCounters, string> = {
   [StatisticsCounters.mostMistakes]: "Most Mistakes",
 };
 
+export const priorityMapper: Record<Priorities, string> = {
+  [Priorities.Low]: "Low",
+  [Priorities.Medium]: "Medium",
+  [Priorities.High]: "High",
+};
+
 export const mapCardToTableRow = (item: CardModel): CardsTableRowType => ({
   ...item,
   category: item.category.label,
+  priority: <PriorityCell priority={item.priority} />,
   correct: item.statistics.correct,
   wrong: item.statistics.wrong,
   isLearned: item.isLearned ? "Yes" : "No",

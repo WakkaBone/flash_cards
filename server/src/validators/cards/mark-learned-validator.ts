@@ -1,3 +1,3 @@
-import { idParamValidation } from "../../utils/validation-util";
+import { idParamValidation } from "../shared";
 
 export const markLearnedValidator = [idParamValidation];

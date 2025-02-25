@@ -10,11 +10,12 @@ import {
 import { GetCardsFilters } from "../../models/api";
 import { useEffect } from "react";
 import deepEqual from "deep-equal";
-import { CategoryAutocomplete } from "../category-select/category-select";
+import { CategoryAutocomplete } from "../category-select/category-autocomplete";
 import { useCardsTableFilters, useScreenSize } from "../../hooks";
 import { DateTimeRangePicker } from "../date-time-range-picker/date-time-range-picker";
 import { FilterAlt } from "@mui/icons-material";
 import { CollapsibleSection } from "../collapsible/collapsible-section";
+import { PrioritySelect } from "../priority-select/priority-select";
 
 export enum FilterTypes {
   Search = "search",
@@ -22,6 +23,7 @@ export enum FilterTypes {
   IncludeLearned = "includeLearned",
   DateRange = "dateRange",
   MistakesThreshold = "mistakesThreshold",
+  Priority = "priority",
 }
 
 type CardsTableFiltersPropsType = {
@@ -39,6 +41,7 @@ export const CardsFilters = ({
     FilterTypes.Category,
     FilterTypes.IncludeLearned,
     FilterTypes.MistakesThreshold,
+    FilterTypes.Priority,
   ],
 }: CardsTableFiltersPropsType) => {
   const { isMobile, isTablet } = useScreenSize();
@@ -52,6 +55,7 @@ export const CardsFilters = ({
     handleIncludeLearned,
     handleDateRange,
     handleMistakesThreshold,
+    handlePriority,
     handleReset,
   } = useCardsTableFilters(initialFilters);
 
@@ -101,6 +105,15 @@ export const CardsFilters = ({
                 onChange: handleCategory,
               }}
               inputProps={{ label: "Category", placeholder: "Category" }}
+            />
+          )}
+        </Stack>
+        <Stack direction="row" spacing={1} sx={{ width: "100%" }}>
+          {enabledFilters.includes(FilterTypes.Priority) && (
+            <PrioritySelect
+              showAll
+              value={filters.priority}
+              onChange={handlePriority}
             />
           )}
           {enabledFilters.includes(FilterTypes.MistakesThreshold) && (
