@@ -14,6 +14,7 @@ export type CardsTableRowType = {
   english: string;
   hebrew: string;
   category: string;
+  priority: JSX.Element;
   correct: number;
   wrong: number;
   isLearned: string;

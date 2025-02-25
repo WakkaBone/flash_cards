@@ -5,6 +5,11 @@ import { format } from "date-fns";
 export const cardsTableColumns: GridColDef<CardsTableRowType>[] = [
   { field: "english", headerName: "English" },
   { field: "hebrew", headerName: "Hebrew" },
+  {
+    field: "priority",
+    headerName: "Priority",
+    renderCell: (params) => params.value,
+  },
   { field: "category", headerName: "Category" },
   { field: "correct", headerName: "Correct" },
   { field: "wrong", headerName: "Wrong" },
