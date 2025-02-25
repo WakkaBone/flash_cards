@@ -92,6 +92,7 @@ export const CategoriesTable = () => {
         }}
         rows={rows}
         columns={isMobile ? columns.slice(0, 3) : columns}
+        disableRowSelectionOnClick
       />
       <ToastContainer />
     </>

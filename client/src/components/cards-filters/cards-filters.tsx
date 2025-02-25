@@ -10,7 +10,7 @@ import {
 import { GetCardsFilters } from "../../models/api";
 import { useEffect } from "react";
 import deepEqual from "deep-equal";
-import { CategoryAutocomplete } from "../category-select/category-select";
+import { CategoryAutocomplete } from "../category-select/category-autocomplete";
 import { useCardsTableFilters, useScreenSize } from "../../hooks";
 import { DateTimeRangePicker } from "../date-time-range-picker/date-time-range-picker";
 import { FilterAlt } from "@mui/icons-material";

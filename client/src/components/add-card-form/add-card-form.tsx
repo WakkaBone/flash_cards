@@ -1,6 +1,6 @@
 import { Button, Stack, TextField } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
-import { CategoryAutocomplete } from "../category-select/category-select";
+import { CategoryAutocomplete } from "../category-select/category-autocomplete";
 import { useAddCard, useScreenSize } from "../../hooks";
 import { ToastContainer } from "react-toastify";
 import { englishValidator, hebrewValidator } from "../../utils/validators";
@@ -8,12 +8,15 @@ import { ConfirmationModal } from "../confirmation-modal/confirmation-modal";
 import { useEffect } from "react";
 import { IdLabel } from "../../models/shared";
 import { mapAddCardFormToPayload } from "../../utils/mappers";
+import { PrioritySelect } from "../priority-select/priority-select";
+import { Priorities } from "../../models/card";
 
 export type AddCardFormType = {
   category: IdLabel;
   english: string;
   hebrew: string;
   details?: string;
+  priority: Priorities;
 };
 
 export const AddCardForm = () => {
@@ -35,6 +38,7 @@ export const AddCardForm = () => {
       english: "",
       hebrew: "",
       details: "",
+      priority: Priorities.Medium,
     },
   });
 
@@ -129,6 +133,14 @@ export const AddCardForm = () => {
               error={errors.category?.message}
               allowAdd
             />
+          )}
+        />
+        <Controller
+          name="priority"
+          rules={{ required: "Priority is required" }}
+          control={control}
+          render={({ field }) => (
+            <PrioritySelect {...field} error={!!errors.priority} />
           )}
         />
         <Button

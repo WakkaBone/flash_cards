@@ -1,5 +1,5 @@
 import {
-  categoryValidation,
+  categoryIdValidation,
   englishValidation,
   hebrewValidation,
   priorityValidation,
@@ -7,7 +7,7 @@ import {
 } from "./validations";
 
 export const addCardValidator = [
-  categoryValidation,
+  categoryIdValidation,
   priorityValidation,
   englishValidation,
   hebrewValidation,

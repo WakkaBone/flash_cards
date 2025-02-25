@@ -65,6 +65,7 @@ export const CardsTable = () => {
         }}
         rows={rows}
         columns={isMobile ? cardsTableColumns.slice(0, 3) : cardsTableColumns}
+        disableRowSelectionOnClick
       />
       <ToastContainer />
     </>

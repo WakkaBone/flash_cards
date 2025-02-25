@@ -15,6 +15,12 @@ export const hebrewValidation = body("hebrew")
 
 export const isLearnedValidation = body("isLearned").isBoolean();
 
+export const categoryIdValidation = body("category")
+  //TODO: check if such category exists and object shape
+  .isString()
+  .notEmpty()
+  .withMessage("Invalid category");
+
 export const categoryValidation = body("category")
   //TODO: check if such category exists and object shape
   .isObject()

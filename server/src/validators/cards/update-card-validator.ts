@@ -6,7 +6,6 @@ import {
   isLearnedValidation,
   priorityValidation,
   statisticsValidation,
-  uniqueWordValidation,
 } from "./validations";
 
 export const updateCardValidator = [
@@ -17,5 +16,4 @@ export const updateCardValidator = [
   isLearnedValidation,
   englishValidation,
   statisticsValidation,
-  uniqueWordValidation,
 ];

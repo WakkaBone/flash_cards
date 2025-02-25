@@ -1,15 +1,18 @@
 import { Stack, TextField } from "@mui/material";
 import { Controller, UseFormReturn } from "react-hook-form";
-import { CategoryAutocomplete } from "../category-select/category-select";
+import { CategoryAutocomplete } from "../category-select/category-autocomplete";
 import { ToastContainer } from "react-toastify";
 import { englishValidator, hebrewValidator } from "../../utils/validators";
 import { IdLabel } from "../../models/shared";
+import { Priorities } from "../../models/card";
+import { PrioritySelect } from "../priority-select/priority-select";
 
 export type EditCardFormType = {
   category: IdLabel;
   english: string;
   hebrew: string;
   details?: string;
+  priority: Priorities;
 };
 
 type EditCardFormPropsType = {
@@ -94,6 +97,14 @@ export const EditCardForm = ({ formProps }: EditCardFormPropsType) => {
               error={errors.category?.message}
               allowAdd
             />
+          )}
+        />
+        <Controller
+          name="priority"
+          rules={{ required: "Priority is required" }}
+          control={control}
+          render={({ field }) => (
+            <PrioritySelect {...field} error={!!errors.priority} />
           )}
         />
       </Stack>

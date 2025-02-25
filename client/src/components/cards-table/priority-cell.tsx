@@ -21,6 +21,7 @@ const getChipStyle = (priority: Priorities) => {
 
 export const PriorityCell = ({ priority }: PriorityCellPropsType) => (
   <Chip
+    style={{ width: "100%" }}
     component={"span"}
     color={getChipStyle(priority)}
     label={priorityMapper[priority] || "N/A"}
