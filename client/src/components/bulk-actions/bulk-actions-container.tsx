@@ -14,7 +14,9 @@ export const BulkActionsContainer = ({
     alignItems={"center"}
     sx={{ m: "15px 10px 5px 10px" }}
   >
-    <Box>{numberOfItems} items selected</Box>
+    <Box>
+      {numberOfItems} item{numberOfItems > 1 ? "s" : ""} selected
+    </Box>
     <Stack direction={"row"} spacing={2}>
       {children}
     </Stack>
