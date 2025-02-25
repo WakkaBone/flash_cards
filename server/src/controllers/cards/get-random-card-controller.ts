@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
-import { CardsService } from "../../services/cards-service";
+import { CardsService, GetCardsFilters } from "../../services/cards-service";
 import { isValid } from "../../utils/validation-util";
 import { CardModelDto } from "../../models/card";
 import { UsersService } from "../../services/users-service";
@@ -9,6 +9,7 @@ type GetRandomCardQueryParams = {
   category?: string;
   includeLearned?: string;
   mistakesThreshold?: string;
+  priority?: string;
   from?: string;
   to?: string;
 };
@@ -19,14 +20,16 @@ export const getRandomCardController = async (
 ) => {
   if (!isValid(req, res)) return;
   try {
-    const { category, includeLearned, mistakesThreshold, from, to } = req.query;
+    const { category, includeLearned, mistakesThreshold, priority, from, to } =
+      req.query;
 
-    const filters = {
+    const filters: GetCardsFilters = {
       category: category ? category : undefined,
       includeLearned: includeLearned ? includeLearned === "true" : undefined,
       mistakesThreshold: mistakesThreshold
         ? Number(mistakesThreshold)
         : undefined,
+      priority: priority ? Number(priority) : undefined,
       from: from ? new Date(from) : undefined,
       to: to ? new Date(to) : undefined,
     };

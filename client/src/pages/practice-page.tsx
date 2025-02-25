@@ -111,6 +111,7 @@ export const PracticePage = () => {
           FilterTypes.Category,
           FilterTypes.IncludeLearned,
           FilterTypes.MistakesThreshold,
+          FilterTypes.Priority,
         ]}
       />
       <WordCard

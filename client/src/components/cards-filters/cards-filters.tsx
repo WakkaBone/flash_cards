@@ -76,16 +76,16 @@ export const CardsFilters = ({
           padding: 2,
         }}
       >
-        <Stack direction="row" spacing={1} sx={{ width: "100%" }}>
-          {enabledFilters.includes(FilterTypes.Search) && (
+        {enabledFilters.includes(FilterTypes.Search) && (
+          <Stack direction="row" spacing={1} sx={{ width: "100%" }}>
             <Input
               fullWidth
               value={search}
               placeholder="Search"
               onChange={handleSearch}
             />
-          )}
-        </Stack>
+          </Stack>
+        )}
         <Stack direction="row" spacing={1} sx={{ width: "100%" }}>
           {enabledFilters.includes(FilterTypes.DateRange) && (
             <DateTimeRangePicker
