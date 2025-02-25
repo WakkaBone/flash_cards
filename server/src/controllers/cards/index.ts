@@ -6,6 +6,7 @@ import { deleteCardController } from "./delete-card-controller";
 import { getCardsController } from "./get-cards-controller";
 import { getRandomCardController } from "./get-random-card-controller";
 import { getStatisticsController } from "./get-statistics-controller";
+import { getTimelineController } from "./get-timeline-controller";
 import { markLearnedController } from "./mark-learned-controller";
 import { updateCardController } from "./update-card-controller";
 import { updateStatisticsController } from "./update-statistics-controller";
@@ -19,6 +20,7 @@ export {
   getCardsController,
   getRandomCardController,
   getStatisticsController,
+  getTimelineController,
   markLearnedController,
   updateCardController,
   updateStatisticsController,

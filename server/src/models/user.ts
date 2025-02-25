@@ -7,6 +7,10 @@ export type TimelinePoint = {
   action: STATISTICS_ACTIONS;
 };
 
+export type TimelinePointDto = Omit<TimelinePoint, "dateTime"> & {
+  dateTime: string;
+};
+
 export type UserModel = {
   id: string;
   username: string;

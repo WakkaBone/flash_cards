@@ -27,6 +27,7 @@ import { Statistics } from "../models/statistics";
 import { CategoriesService } from "./categories-service";
 import { UsersService } from "./users-service";
 import { getNextReviewDate } from "../utils/date-time";
+import { TimelinePointDto } from "../models/user";
 
 export type GetCardsFilters = {
   category?: string;
@@ -39,6 +40,12 @@ export type GetCardsFilters = {
   priority?: Priorities;
   page?: number;
   pageSize?: number;
+};
+
+export type GetPracticeTimelineFilters = {
+  from?: Date;
+  to?: Date;
+  action?: STATISTICS_ACTIONS;
 };
 
 export const CardsService = {
@@ -173,6 +180,36 @@ export const CardsService = {
   deleteCard: async (id: string): Promise<void> => {
     const cardRef = doc(db, COLLECTIONS.cards, id);
     await deleteDoc(cardRef);
+  },
+
+  getPracticeTimeline: async (
+    username: string,
+    filters?: GetPracticeTimelineFilters
+  ): Promise<TimelinePointDto[]> => {
+    let practiceTimeline = (await UsersService.getUserByUsername(username))
+      .practiceTimeline;
+
+    if (filters.action) {
+      practiceTimeline = practiceTimeline.filter(
+        ({ action }) => action === filters.action
+      );
+    }
+
+    if (filters.from) {
+      practiceTimeline = practiceTimeline.filter(
+        ({ dateTime }) => dateTime.toDate() >= filters.from
+      );
+    }
+    if (filters.to) {
+      practiceTimeline = practiceTimeline.filter(
+        ({ dateTime }) => dateTime.toDate() <= filters.to
+      );
+    }
+
+    return practiceTimeline.map((point) => ({
+      ...point,
+      dateTime: point.dateTime.toDate().toISOString(),
+    }));
   },
 
   getStatistics: async (username: string) => {
