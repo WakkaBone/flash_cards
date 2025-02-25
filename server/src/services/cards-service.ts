@@ -250,6 +250,11 @@ export const CardsService = {
       // If repetitions are also the same, we can consider the easiness factor
       if (a.easinessFactor < b.easinessFactor) return -1; // Easier cards are less troublesome
       if (a.easinessFactor > b.easinessFactor) return 1; // Harder cards are more troublesome
+
+      // Finally, prioritize based on the priority (higher value means higher priority)
+      if (a.priority < b.priority) return -1; // Lower priority, comes later
+      if (a.priority > b.priority) return 1; // Higher priority, comes sooner
+
       return 0;
     });
   },
