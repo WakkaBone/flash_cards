@@ -67,7 +67,9 @@ const sharedDatasetStyles = {
   pointRadius: 5,
 };
 
-export const usePracticeTimeline = (filters: GetPracticeTimelineFilters) => {
+export const usePracticeTimelineChart = (
+  filters: GetPracticeTimelineFilters
+) => {
   const { data } = useQuery<ApiResponse<TimelinePoint[]>>(
     getPracticeTimelineQuery(filters)
   );

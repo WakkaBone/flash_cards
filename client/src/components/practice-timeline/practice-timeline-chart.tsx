@@ -1,4 +1,4 @@
-import { usePracticeTimeline } from "../../hooks";
+import { usePracticeTimelineChart } from "../../hooks";
 import { GetPracticeTimelineFilters } from "../../hooks/use-practice-timeline-filters";
 import { Line } from "react-chartjs-2";
 import {
@@ -28,7 +28,7 @@ type PracticeTimelineChartPropsType = {
 export const PracticeTimelineChart = ({
   filters,
 }: PracticeTimelineChartPropsType) => {
-  const { chartData, chartOptions } = usePracticeTimeline(filters);
+  const { chartData, chartOptions } = usePracticeTimelineChart(filters);
 
   return <Line data={chartData} options={chartOptions} />;
 };
