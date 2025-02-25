@@ -10,6 +10,8 @@ import { useGetCards } from "./use-get-cards";
 import { useMarkCardLearned } from "./use-mark-learned";
 import { useTablePagination } from "./use-pagination";
 import { usePopoverConfirmation } from "./use-popover-confirmation";
+import { usePracticeTimeline } from "./use-practice-timeline";
+import { usePracticeTimelineFilters } from "./use-practice-timeline-filters";
 import { useRandomCard } from "./use-random-card";
 import { useScreenSize } from "./use-screen-size";
 import { useTimer } from "./use-timer";
@@ -27,6 +29,8 @@ export {
   useGetCards,
   useMarkCardLearned,
   usePopoverConfirmation,
+  usePracticeTimeline,
+  usePracticeTimelineFilters,
   useRandomCard,
   useTablePagination,
   useScreenSize,

@@ -4,7 +4,10 @@ export const buildUrl = (
 ) => {
   const safeParams = params
     ? Object.fromEntries(
-        Object.entries(params).map(([key, value]) => [key, String(value)])
+        Object.entries(params).map(([key, value]) => [
+          key,
+          String(value).trim(),
+        ])
       )
     : {};
   const url = new URL(

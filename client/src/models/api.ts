@@ -40,6 +40,12 @@ export type GetCategoriesFilters = {
   pageSize?: number;
 };
 
+export type GetPracticeTimelineFilters = {
+  action?: STATISTICS_ACTIONS;
+  from?: Date;
+  to?: Date;
+};
+
 export enum STATISTICS_ACTIONS {
   Correct = "correct",
   Wrong = "wrong",
