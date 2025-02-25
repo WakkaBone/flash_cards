@@ -15,7 +15,7 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
-import { CardModel, CardModelDto } from "../models/card";
+import { CardModel, CardModelDto, Priorities } from "../models/card";
 import {
   COLLECTIONS,
   MAIN_CATEGORIES,
@@ -117,7 +117,7 @@ export const CardsService = {
     await addDoc(collection(db, COLLECTIONS.cards), card);
   },
 
-  updateCard: async (id: string, card: CardModel): Promise<void> => {
+  updateCard: async (id: string, card: Partial<CardModel>): Promise<void> => {
     const cardRef = doc(db, COLLECTIONS.cards, id);
     await updateDoc(cardRef, card);
   },

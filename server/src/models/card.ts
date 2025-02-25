@@ -5,6 +5,12 @@ type StatisticsType = {
   wrong: number;
 };
 
+export enum Priorities {
+  Low = 1,
+  Medium,
+  High,
+}
+
 export type CardModel = {
   hebrew: string;
   english: string;
@@ -18,6 +24,7 @@ export type CardModel = {
   repetitions: number;
   lastReviewDate?: FieldValue;
   nextReviewDate?: FieldValue;
+  priority: Priorities;
 };
 
 export type CardModelDto = Omit<CardModel, "createdAt" | "category"> & {

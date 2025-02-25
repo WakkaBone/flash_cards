@@ -5,6 +5,12 @@ type StatisticsType = {
   wrong: number;
 };
 
+export enum Priorities {
+  Low = 1,
+  Medium,
+  High,
+}
+
 export type CardModel = {
   id: string;
   hebrew: string;
@@ -14,4 +20,5 @@ export type CardModel = {
   statistics: StatisticsType;
   createdAt: string;
   isLearned: boolean;
+  priority: Priorities;
 };

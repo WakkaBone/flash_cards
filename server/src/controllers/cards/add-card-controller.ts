@@ -4,12 +4,14 @@ import { CardsService } from "../../services/cards-service";
 import { isValid } from "../../utils/validation-util";
 import { serverTimestamp, Timestamp } from "firebase/firestore";
 import { CategoriesService } from "../../services/categories-service";
+import { CardModel, Priorities } from "../../models/card";
 
 type CreateCardBody = {
   category: string;
   english: string;
   hebrew: string;
   details?: string;
+  priority: Priorities;
 };
 export const addCardController = async (
   req: Request<null, ApiResponse, CreateCardBody>,
@@ -17,7 +19,7 @@ export const addCardController = async (
 ) => {
   if (!isValid(req, res)) return;
   try {
-    const { category, english, hebrew, details } = req.body;
+    const { category, english, hebrew, details, priority } = req.body;
 
     const initialSrsValues = {
       easinessFactor: 2.5,
@@ -26,11 +28,12 @@ export const addCardController = async (
       lastReviewDate: serverTimestamp(),
     };
 
-    const card = {
+    const card: CardModel = {
       category,
       english,
       hebrew,
       details,
+      priority,
       statistics: { wrong: 0, correct: 0 },
       isLearned: false,
       createdAt: Timestamp.now(),

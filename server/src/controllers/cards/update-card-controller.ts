@@ -15,8 +15,15 @@ export const updateCardController = async (
   if (!isValid(req, res)) return;
   try {
     const { id } = req.params;
-    const { category, english, hebrew, details, isLearned, statistics } =
-      req.body;
+    const {
+      category,
+      english,
+      hebrew,
+      details,
+      isLearned,
+      statistics,
+      priority,
+    } = req.body;
 
     const cardBeforeUpdate = await CardsService.getCardById(id);
 
@@ -27,6 +34,7 @@ export const updateCardController = async (
       details,
       statistics,
       isLearned,
+      priority,
       createdAt: cardBeforeUpdate.createdAt,
       easinessFactor: cardBeforeUpdate.easinessFactor,
       interval: cardBeforeUpdate.interval,
