@@ -7,10 +7,11 @@ import {
   doc,
   serverTimestamp,
   updateDoc,
+  arrayUnion,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { ACCESS_TOKEN_KEY, COLLECTIONS } from "../constants";
-import { UserModel } from "../models/user";
+import { TimelinePoint, UserModel } from "../models/user";
 import { Request } from "express";
 import { decodeToken, JwtPayload } from "../utils/jwt-util";
 import { calculateDaysDiff } from "../utils/date-time";
@@ -63,10 +64,16 @@ export const UsersService = {
     await updateDoc(userRef, updates);
   },
 
-  updateCurrentStreak: async function (username: string, streak: number) {
+  updateUser: async function (username: string, data: Partial<UserModel>) {
     const user: UserModel = await this.getUserByUsername(username);
     const userRef = doc(db, COLLECTIONS.users, user.id);
-    await updateDoc(userRef, { currentStreak: streak });
+    await updateDoc(userRef, data);
+  },
+
+  addTimelinePoint: async function (username: string, newPoint: TimelinePoint) {
+    const user: UserModel = await this.getUserByUsername(username);
+    const userRef = doc(db, COLLECTIONS.users, user.id);
+    await updateDoc(userRef, { practiceTimeline: arrayUnion(newPoint) });
   },
 
   getCurrentUser: (req: Request) => {
@@ -85,7 +92,7 @@ export const UsersService = {
     const daysSinceLastPractice = calculateDaysDiff(new Date(), lastPractice);
 
     const streakExpired = daysSinceLastPractice > 1;
-    if (streakExpired) await this.updateCurrentStreak(username, 0);
+    if (streakExpired) await this.updateUser(username, { streak: 0 });
 
     return {
       longestStreak: user.longestStreak,
