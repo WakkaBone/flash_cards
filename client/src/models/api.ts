@@ -1,4 +1,4 @@
-import { CardModel } from "./card";
+import { CardModel, Priorities } from "./card";
 import { CategoryModel } from "./category";
 import { IdLabel } from "./shared";
 
@@ -21,6 +21,7 @@ export type GetCardsFilters = {
   mistakesThreshold?: string;
   from?: Date;
   to?: Date;
+  priority?: Priorities;
   page?: number;
   pageSize?: number;
 };
