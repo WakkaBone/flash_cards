@@ -7,9 +7,10 @@ import {
 } from "@mui/material";
 import { priorityMapper } from "../../utils/mappers";
 import { Priorities } from "../../models/card";
+import { PrioritiesExtended } from "../../models/api";
 
 export const PrioritySelect = (
-  props: SelectProps<Priorities> & { showAll?: boolean }
+  props: SelectProps<PrioritiesExtended> & { showAll?: boolean }
 ) => {
   const priorities = Object.values(Priorities).filter(
     (key) => !isNaN(Number(key))
@@ -18,7 +19,7 @@ export const PrioritySelect = (
   return (
     <FormControl fullWidth>
       <InputLabel id="priority-select-label">Priority</InputLabel>
-      <Select<Priorities>
+      <Select<PrioritiesExtended>
         labelId="priority-select-label"
         id="priority-select"
         {...props}

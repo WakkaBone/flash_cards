@@ -36,6 +36,7 @@ export type GetCardsFilters = {
   from?: Date;
   to?: Date;
   mistakesThreshold?: number;
+  priority?: Priorities;
   page?: number;
   pageSize?: number;
 };
@@ -64,6 +65,9 @@ export const CardsService = {
     }
     if (filters.mistakesThreshold) {
       queries.push(where("statistics.wrong", ">=", filters.mistakesThreshold));
+    }
+    if (filters.priority) {
+      queries.push(where("priority", "==", filters.priority));
     }
 
     //TODO: pagination

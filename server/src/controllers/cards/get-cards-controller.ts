@@ -11,6 +11,7 @@ type GetCardsQueryParams = {
   from?: string;
   to?: string;
   mistakesThreshold?: string;
+  priority?: string;
   page?: string;
   pageSize?: string;
 };
@@ -27,6 +28,7 @@ export const getCardsController = async (
       from,
       to,
       mistakesThreshold,
+      priority,
       page,
       pageSize,
     } = req.query;
@@ -40,6 +42,7 @@ export const getCardsController = async (
       mistakesThreshold: mistakesThreshold
         ? Number(mistakesThreshold)
         : undefined,
+      priority: priority ? Number(priority) : undefined,
       page: page ? Number(page) : undefined,
       pageSize: pageSize ? Number(pageSize) : undefined,
     };

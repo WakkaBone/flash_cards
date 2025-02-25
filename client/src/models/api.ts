@@ -14,6 +14,11 @@ export interface ApiResponse<T = any, E = any> {
   error?: ApiError<E>;
 }
 
+enum AllOption {
+  All = 0,
+}
+export type PrioritiesExtended = Priorities | AllOption;
+
 export type GetCardsFilters = {
   category?: IdLabel | null;
   search?: string;
@@ -21,7 +26,7 @@ export type GetCardsFilters = {
   mistakesThreshold?: string;
   from?: Date;
   to?: Date;
-  priority?: Priorities;
+  priority?: PrioritiesExtended;
   page?: number;
   pageSize?: number;
 };
