@@ -1,3 +1,5 @@
+import { STATISTICS_ACTIONS } from "./api";
+
 export enum StatisticsCounters {
   totalCards = "totalCards",
   totalLearnedCards = "totalLearnedCards",
@@ -16,4 +18,10 @@ export type Statistics = {
   currentStreak: number;
   longestStreak: number;
   lastPractice: string;
+};
+
+export type TimelinePoint = {
+  dateTime: string;
+  cardId: string;
+  action: STATISTICS_ACTIONS;
 };

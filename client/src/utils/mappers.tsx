@@ -7,7 +7,11 @@ import { CategoryModel } from "../models/category";
 import { CategoriesTableRowType } from "../components/categories-table/categories-table";
 import { ActionsCell as ActionsCellCategories } from "../components/categories-table/actions-cell";
 import { AddCardFormType } from "../components/add-card-form/add-card-form";
-import { AddCardPayload, GetCardsFilters } from "../models/api";
+import {
+  AddCardPayload,
+  GetCardsFilters,
+  STATISTICS_ACTIONS,
+} from "../models/api";
 import { IdLabel } from "../models/shared";
 import { PriorityCell } from "../components/cards-table/priority-cell";
 
@@ -31,6 +35,11 @@ export const priorityMapper: Record<Priorities, string> = {
   [Priorities.Low]: "Low",
   [Priorities.Medium]: "Medium",
   [Priorities.High]: "High",
+};
+
+export const statisticsActionMapper: Record<STATISTICS_ACTIONS, string> = {
+  [STATISTICS_ACTIONS.Correct]: "Correct",
+  [STATISTICS_ACTIONS.Wrong]: "Wrong",
 };
 
 export const mapCardToTableRow = (item: CardModel): CardsTableRowType => ({

@@ -17,6 +17,7 @@ import { useScreenSize } from "../../hooks";
 import {
   AddCircleOutline,
   BackupTableOutlined,
+  BarChartRounded,
   CategoryOutlined,
   Logout,
   StyleOutlined,
@@ -47,6 +48,12 @@ const menuOptions = [
     path: ROUTES.categories,
     label: "Categories",
     icon: <CategoryOutlined sx={iconStyles} />,
+  },
+  {
+    id: "statistics",
+    path: ROUTES.statistics,
+    label: "Statistics",
+    icon: <BarChartRounded sx={iconStyles} />,
   },
 ];
 

@@ -17,6 +17,7 @@ import { ROUTES } from "./constants";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { CategoriesPage } from "./pages/categories-page";
+import { StatisticsPage } from "./pages/statistics-page";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ function App() {
                 <Route path={ROUTES.addCard} element={<AddCardPage />} />
                 <Route path={ROUTES.practice} element={<PracticePage />} />
                 <Route path={ROUTES.categories} element={<CategoriesPage />} />
+                <Route path={ROUTES.statistics} element={<StatisticsPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Route>
               <Route path={ROUTES.login} element={<AuthPage />} />

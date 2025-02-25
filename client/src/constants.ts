@@ -3,6 +3,7 @@ export const ROUTES = {
   addCard: "/add",
   practice: "/practice",
   categories: "/categories",
+  statistics: "/statistics",
 };
 
 export const MAIN_CATEGORIES = {

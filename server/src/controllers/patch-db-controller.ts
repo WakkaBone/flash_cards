@@ -5,7 +5,9 @@ export const patchDbController = async (req: Request, res: Response) => {
   try {
     //await PatchService.resetSrsProps()
 
-    await PatchService.resetPriority();
+    // await PatchService.resetPriority();
+
+    // await PatchService.resetUserTimeline(req);
 
     res.status(200).json({ isSuccess: true });
   } catch (error) {

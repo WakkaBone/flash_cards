@@ -1,4 +1,15 @@
-import { FieldValue } from "firebase/firestore";
+import { FieldValue, Timestamp } from "firebase/firestore";
+import { STATISTICS_ACTIONS } from "../constants";
+
+export type TimelinePoint = {
+  dateTime: Timestamp;
+  cardId: string;
+  action: STATISTICS_ACTIONS;
+};
+
+export type TimelinePointDto = Omit<TimelinePoint, "dateTime"> & {
+  dateTime: string;
+};
 
 export type UserModel = {
   id: string;
@@ -7,4 +18,5 @@ export type UserModel = {
   lastPractice: FieldValue;
   currentStreak: number;
   longestStreak: number;
+  practiceTimeline: TimelinePoint[];
 };

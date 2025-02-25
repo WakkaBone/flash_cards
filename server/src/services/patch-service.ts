@@ -1,6 +1,10 @@
 import { serverTimestamp, Timestamp } from "firebase/firestore";
 import { CardsService } from "./cards-service";
 import { CardModel, Priorities } from "../models/card";
+import { UsersService } from "./users-service";
+import { Request } from "express";
+import { TimelinePoint } from "../models/user";
+import { STATISTICS_ACTIONS } from "../constants";
 
 export const PatchService = {
   resetSrsProps: async function () {
@@ -34,7 +38,7 @@ export const PatchService = {
 
         await CardsService.updateCard(card.id, updatedCard);
       } catch (error) {
-        console.error("Failed to update the card", card, error);
+        throw new Error("Failed to update the card");
       }
     });
   },
@@ -46,8 +50,25 @@ export const PatchService = {
       try {
         await CardsService.updateCard(card.id, { priority: Priorities.Medium });
       } catch (error) {
-        console.error("Failed to update the card", card, error);
+        throw new Error("Failed to update the card");
       }
     });
+  },
+
+  resetUserTimeline: async function (req: Request) {
+    try {
+      const username = UsersService.getCurrentUser(req);
+      const cards = await CardsService.getCards({});
+      const practiceTimeline: TimelinePoint[] = [
+        {
+          dateTime: Timestamp.now(),
+          cardId: cards[0].id || "",
+          action: STATISTICS_ACTIONS.Correct,
+        },
+      ];
+      await UsersService.updateUser(username, { practiceTimeline });
+    } catch (error) {
+      throw new Error("Failed to update the user");
+    }
   },
 };

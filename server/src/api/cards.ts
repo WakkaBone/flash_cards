@@ -3,6 +3,7 @@ import {
   addCardController,
   deleteCardController,
   getCardsController,
+  getTimelineController,
   markLearnedController,
   updateCardController,
   updateStatisticsController,
@@ -49,5 +50,6 @@ router.patch(
 );
 router.patch("/:id/learned", markLearnedValidator, markLearnedController);
 router.get("/statistics", getStatisticsController);
+router.get("/timeline", getTimelineController);
 
 export default router;
