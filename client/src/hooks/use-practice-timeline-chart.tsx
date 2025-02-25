@@ -61,6 +61,11 @@ const prepareChartData = (
   return { labels, correctValues, wrongValues };
 };
 
+const getTooltipLabel = (number: number, isCorrect: boolean) =>
+  `${number} card${number === 1 ? " was" : "s were"} guessed ${
+    isCorrect ? "correctly" : "wrong"
+  }`;
+
 const sharedDatasetStyles = {
   fill: false,
   tension: 0.1,
@@ -126,16 +131,7 @@ export const usePracticeTimelineChart = (
         callbacks: {
           label: function (tooltipItem) {
             const { datasetIndex, raw } = tooltipItem;
-            switch (datasetIndex) {
-              case 0:
-                return `${raw} card${
-                  raw === 1 ? " was" : "s were"
-                } guessed correctly`;
-              case 1:
-                return `${raw} card${
-                  raw === 1 ? " was" : "s were"
-                } guessed wrong on`;
-            }
+            return getTooltipLabel(raw as number, datasetIndex === 0);
           },
         },
       },

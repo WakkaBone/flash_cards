@@ -5,10 +5,12 @@ import { useScreenSize, usePracticeTimelineFilters } from "../../hooks";
 import { DateTimeRangePicker } from "../date-time-range-picker/date-time-range-picker";
 import { FilterAlt } from "@mui/icons-material";
 import { CollapsibleSection } from "../collapsible/collapsible-section";
+import { StatisticsActionsSelect } from "../statistic-action-select/statistic-action-select";
 import { GetPracticeTimelineFilters } from "../../hooks/use-practice-timeline-filters";
 
 export enum FilterTypes {
   DateRange = "dateRange",
+  Action = "action",
 }
 
 type CategoriesTableFiltersPropsType = {
@@ -20,11 +22,11 @@ type CategoriesTableFiltersPropsType = {
 export const PracticeTimelineFilters = ({
   onChange,
   filters: initialFilters,
-  enabledFilters = [FilterTypes.DateRange],
+  enabledFilters = [FilterTypes.Action, FilterTypes.DateRange],
 }: CategoriesTableFiltersPropsType) => {
   const { isMobile } = useScreenSize();
 
-  const { filters, handleDateRange, handleReset } =
+  const { filters, handleActionType, handleDateRange, handleReset } =
     usePracticeTimelineFilters(initialFilters);
 
   useEffect(() => {
@@ -44,12 +46,24 @@ export const PracticeTimelineFilters = ({
           padding: 2,
         }}
       >
-        <Stack
-          direction="row"
-          spacing={1}
-          sx={{ width: isMobile ? "100%" : "200%" }}
-        >
-          {enabledFilters.includes(FilterTypes.DateRange) && (
+        {enabledFilters.includes(FilterTypes.Action) && (
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{ width: isMobile ? "100%" : "200%" }}
+          >
+            <StatisticsActionsSelect
+              value={filters.action}
+              onChange={handleActionType}
+            />
+          </Stack>
+        )}
+        {enabledFilters.includes(FilterTypes.DateRange) && (
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{ width: isMobile ? "100%" : "200%" }}
+          >
             <DateTimeRangePicker
               handleDateRangeChange={handleDateRange}
               selectedRange={{
@@ -57,8 +71,8 @@ export const PracticeTimelineFilters = ({
                 to: filters.to ?? null,
               }}
             />
-          )}
-        </Stack>
+          </Stack>
+        )}
         <Button onClick={handleReset}>Reset filters</Button>
       </Box>
     </CollapsibleSection>

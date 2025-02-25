@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { PracticeTimelineChart } from "./practice-timeline-chart";
-import { PracticeTimelineFilters } from "./practice-timeline-filters";
+import {
+  FilterTypes,
+  PracticeTimelineFilters,
+} from "./practice-timeline-filters";
 import {
   getInitialPracticeTimelineFilters,
   GetPracticeTimelineFilters,
@@ -18,7 +21,11 @@ export const PracticeTimeline = () => {
       buttonText="Practice Timeline"
       buttonProps={{ startIcon: <TimelineOutlined /> }}
     >
-      <PracticeTimelineFilters filters={filters} onChange={setFilters} />
+      <PracticeTimelineFilters
+        filters={filters}
+        onChange={setFilters}
+        enabledFilters={[FilterTypes.DateRange]}
+      />
       <PracticeTimelineChart filters={filters} />
     </CollapsibleSection>
   );
