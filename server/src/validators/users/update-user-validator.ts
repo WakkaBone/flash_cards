@@ -1,13 +1,11 @@
 import {
   usernameValidation,
-  passwordValidation,
   roleValidation,
   uniqueUsernameValidation,
 } from "./validations";
 
-export const addUserValidator = [
+export const updateUserValidator = [
   usernameValidation,
-  passwordValidation,
   roleValidation,
   uniqueUsernameValidation,
 ];

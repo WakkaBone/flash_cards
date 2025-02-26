@@ -1,6 +1,7 @@
 import { body } from "express-validator";
 import { Roles } from "../../models/user";
 import { PASSWORD_RULES } from "../../constants";
+import { UsersService } from "../../services/users-service";
 
 export const usernameValidation = body("username")
   .isString()
@@ -19,3 +20,16 @@ export const passwordValidation = body("password")
 export const roleValidation = body("role")
   .isIn(Object.values(Roles))
   .withMessage("Invalid role");
+
+export const uniqueUsernameValidation = body("username").custom(
+  async (username) => {
+    const sameUsernames = await UsersService.getUsers({
+      searchExact: username,
+    });
+
+    if (sameUsernames.length > 0)
+      throw new Error("Such username already exists");
+
+    return true;
+  }
+);
