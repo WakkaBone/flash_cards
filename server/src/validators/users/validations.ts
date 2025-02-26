@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import { Roles } from "../../models/user";
 import { PASSWORD_RULES } from "../../constants";
 import { UsersService } from "../../services/users-service";
@@ -30,6 +30,24 @@ export const uniqueUsernameValidation = body("username").custom(
     if (sameUsernames.length > 0)
       throw new Error("Such username already exists");
 
+    return true;
+  }
+);
+
+export const deleteYourselfValidation = param("id").custom(
+  async (userId, { req }) => {
+    //TODO: fix type
+    const user = UsersService.getUserFromToken(req as any);
+    if (user.id !== userId) throw new Error("You can't delete yourself");
+    return true;
+  }
+);
+
+export const bulkDeleteYourselfValidation = body("ids").custom(
+  async (ids, { req }) => {
+    //TODO: fix type
+    const user = UsersService.getUserFromToken(req as any);
+    if (ids.includes(user.id)) throw new Error("You can't delete yourself");
     return true;
   }
 );

@@ -16,11 +16,13 @@ import { getUsersValidator } from "./users/get-users-validator";
 import { addUserValidator } from "./users/add-user-validator";
 import { deleteUserValidator } from "./users/delete-user-validator";
 import { updateUserValidator } from "./users/update-user-validator";
+import { bulkDeleteUsersValidator } from "./users/bulk-delete-users-validator";
 
 export {
   addCardValidator,
   addUserValidator,
   bulkDeleteCardsValidator,
+  bulkDeleteUsersValidator,
   bulkMarkLearnedValidator,
   bulkDeleteCategoriesValidator,
   updateCardValidator,

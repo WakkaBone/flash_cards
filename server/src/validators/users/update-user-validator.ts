@@ -1,3 +1,4 @@
+import { isAdminValidation } from "../shared";
 import {
   usernameValidation,
   roleValidation,
@@ -8,4 +9,5 @@ export const updateUserValidator = [
   usernameValidation,
   roleValidation,
   uniqueUsernameValidation,
+  isAdminValidation,
 ];
