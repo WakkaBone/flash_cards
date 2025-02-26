@@ -17,7 +17,6 @@ export enum Roles {
 }
 
 export type UserModel = {
-  id: string;
   username: string;
   password: string;
   lastPractice: FieldValue;
@@ -31,6 +30,7 @@ export type UserModelDto = Omit<
   UserModel,
   "password" | "practiceTimeline" | "lastPractice"
 > & {
+  id: string;
   numberOfCards: number;
   lastPractice: string;
 };

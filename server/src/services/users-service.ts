@@ -11,6 +11,7 @@ import {
   getDoc,
   limit,
   QueryDocumentSnapshot,
+  addDoc,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { ACCESS_TOKEN_KEY, COLLECTIONS } from "../constants";
@@ -45,10 +46,10 @@ const mapUserToUserDto = async (
 ): Promise<UserModelDto> => {
   const userData = docRef.data() as UserModel;
 
-  const userCards = await CardsService.getCards({ ownerId: userData.id });
+  const userCards = await CardsService.getCards({ ownerId: docRef.id });
 
   return {
-    id: userData.id,
+    id: docRef.id,
     username: userData.username,
     numberOfCards: userCards.length,
     lastPractice: (userData.lastPractice as Timestamp).toDate().toISOString(),
@@ -110,6 +111,10 @@ export const UsersService = {
     }
 
     return users;
+  },
+
+  addUser: async function (user: UserModel): Promise<void> {
+    await addDoc(collection(db, COLLECTIONS.users), user);
   },
 
   getUserById: async (id: string) => {
