@@ -48,6 +48,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
           toastError(data?.error);
         } else {
           setIsAuthenticated(true);
+          data.data && setUser(data.data);
         }
       },
     });
@@ -61,6 +62,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
           toastError(data?.error);
         } else {
           setIsAuthenticated(false);
+          setUser(null);
         }
       },
     });

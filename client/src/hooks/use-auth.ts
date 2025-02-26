@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { loginMutation, logoutMutation } from "../mutations/auth";
-import { ApiResponse, LoginPayload } from "../models/api";
+import { ApiResponse, AuthUserModel, LoginPayload } from "../models/api";
 import { toastError } from "../utils/error-handler";
 import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
 
@@ -10,7 +10,11 @@ const useAuth = () => {
 
   const login = (
     credentials: LoginPayload,
-    options?: MutateOptionsEnhanced<ApiResponse, Error, LoginPayload>
+    options?: MutateOptionsEnhanced<
+      ApiResponse<AuthUserModel>,
+      Error,
+      LoginPayload
+    >
   ) => {
     loginMutate(credentials, {
       ...options,

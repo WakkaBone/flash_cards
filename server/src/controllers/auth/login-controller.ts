@@ -44,7 +44,7 @@ export const loginController = async (
 
       res.setHeader("Set-Cookie", [accessCookie, refreshCookie]);
 
-      res.status(200).json({ isSuccess: true });
+      res.status(200).json({ isSuccess: true, data: payload });
     } else {
       res.status(401).json({
         isSuccess: false,

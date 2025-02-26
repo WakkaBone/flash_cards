@@ -8,7 +8,7 @@ const apiPostfix = "/auth";
 export const AuthService = {
   async login(credentials: LoginPayload) {
     const response = await httpClient.post<
-      ApiResponse,
+      ApiResponse<AuthUserModel>,
       AxiosPromise<ApiResponse>,
       LoginPayload
     >(`${apiPostfix}/login`, credentials);
