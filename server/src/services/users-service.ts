@@ -12,10 +12,11 @@ import {
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { ACCESS_TOKEN_KEY, COLLECTIONS } from "../constants";
-import { TimelinePoint, UserModel } from "../models/user";
+import { TimelinePoint, TimelinePointDto, UserModel } from "../models/user";
 import { Request } from "express";
 import { decodeToken, JwtPayload } from "../utils/jwt-util";
 import { calculateDaysDiff } from "../utils/date-time";
+import { GetPracticeTimelineFilters } from "./cards-service";
 
 export const UsersService = {
   getUserById: async (id: string) => {
@@ -104,5 +105,35 @@ export const UsersService = {
       currentStreak: streakExpired ? 0 : user.currentStreak,
       lastPractice: lastPractice,
     };
+  },
+
+  getPracticeTimeline: async function (
+    userId: string,
+    filters?: GetPracticeTimelineFilters
+  ): Promise<TimelinePointDto[]> {
+    let practiceTimeline: TimelinePoint[] = (await this.getUserById(userId))
+      .practiceTimeline;
+
+    if (filters.action) {
+      practiceTimeline = practiceTimeline.filter(
+        ({ action }) => action === filters.action
+      );
+    }
+
+    if (filters.from) {
+      practiceTimeline = practiceTimeline.filter(
+        ({ dateTime }) => dateTime.toDate() >= filters.from
+      );
+    }
+    if (filters.to) {
+      practiceTimeline = practiceTimeline.filter(
+        ({ dateTime }) => dateTime.toDate() <= filters.to
+      );
+    }
+
+    return practiceTimeline.map((point) => ({
+      ...point,
+      dateTime: point.dateTime.toDate().toISOString(),
+    }));
   },
 };

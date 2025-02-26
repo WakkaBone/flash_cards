@@ -1,9 +1,6 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
-import {
-  CardsService,
-  GetPracticeTimelineFilters,
-} from "../../services/cards-service";
+import { GetPracticeTimelineFilters } from "../../services/cards-service";
 import { UsersService } from "../../services/users-service";
 import { TimelinePointDto } from "../../models/user";
 import { STATISTICS_ACTIONS } from "../../constants";
@@ -27,7 +24,8 @@ export const getTimelineController = async (
     };
 
     const userId = UsersService.getUserFromToken(req).id;
-    const timeline = await CardsService.getPracticeTimeline(userId, filters);
+    const timeline = await UsersService.getPracticeTimeline(userId, filters);
+
     res.status(200).json({ isSuccess: true, data: timeline });
   } catch (error) {
     res.status(500).json({

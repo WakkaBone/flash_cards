@@ -187,36 +187,6 @@ export const CardsService = {
     await deleteDoc(cardRef);
   },
 
-  getPracticeTimeline: async (
-    userId: string,
-    filters?: GetPracticeTimelineFilters
-  ): Promise<TimelinePointDto[]> => {
-    let practiceTimeline = (await UsersService.getUserById(userId))
-      .practiceTimeline;
-
-    if (filters.action) {
-      practiceTimeline = practiceTimeline.filter(
-        ({ action }) => action === filters.action
-      );
-    }
-
-    if (filters.from) {
-      practiceTimeline = practiceTimeline.filter(
-        ({ dateTime }) => dateTime.toDate() >= filters.from
-      );
-    }
-    if (filters.to) {
-      practiceTimeline = practiceTimeline.filter(
-        ({ dateTime }) => dateTime.toDate() <= filters.to
-      );
-    }
-
-    return practiceTimeline.map((point) => ({
-      ...point,
-      dateTime: point.dateTime.toDate().toISOString(),
-    }));
-  },
-
   getStatistics: async (userId: string) => {
     let queryRef = query(collection(db, COLLECTIONS.cards));
     const allQuery = query(queryRef);
