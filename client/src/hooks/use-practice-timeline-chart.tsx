@@ -5,6 +5,8 @@ import { getPracticeTimelineQuery } from "../queries/cards";
 import { GetPracticeTimelineFilters } from "./use-practice-timeline-filters";
 import { statisticsActionMapper } from "../utils/mappers";
 import { ChartData, ChartOptions } from "chart.js";
+import { useScreenSize } from "./use-screen-size";
+import { increasedLegendSpacingPlugin } from "../utils/chart-util";
 
 const formatDate = (date: Date) => date.toISOString().split("T")[0];
 
@@ -75,6 +77,8 @@ const sharedDatasetStyles = {
 export const usePracticeTimelineChart = (
   filters: GetPracticeTimelineFilters
 ) => {
+  const { isMobile } = useScreenSize();
+
   const { data } = useQuery<ApiResponse<TimelinePoint[]>>(
     getPracticeTimelineQuery(filters)
   );
@@ -112,7 +116,16 @@ export const usePracticeTimelineChart = (
   };
 
   const chartOptions: ChartOptions<"line"> = {
+    responsive: true,
+    aspectRatio: isMobile ? 1 : undefined,
     scales: {
+      x: {
+        ticks: {
+          font: {
+            size: isMobile ? 10 : 15,
+          },
+        },
+      },
       y: {
         beginAtZero: true,
         ticks: {
@@ -121,7 +134,7 @@ export const usePracticeTimelineChart = (
         },
         title: {
           display: true,
-          text: "Number of cards",
+          text: isMobile ? "Cards" : "Number of cards",
         },
       },
     },
@@ -138,5 +151,12 @@ export const usePracticeTimelineChart = (
     },
   };
 
-  return { chartData, chartOptions };
+  const chartStyles: React.CSSProperties = {
+    minHeight: isMobile ? "20vh" : "unset",
+    marginTop: "2rem",
+  };
+
+  const plugins = [increasedLegendSpacingPlugin];
+
+  return { chartData, chartOptions, chartStyles, plugins };
 };

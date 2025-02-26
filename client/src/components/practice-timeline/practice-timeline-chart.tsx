@@ -28,7 +28,15 @@ type PracticeTimelineChartPropsType = {
 export const PracticeTimelineChart = ({
   filters,
 }: PracticeTimelineChartPropsType) => {
-  const { chartData, chartOptions } = usePracticeTimelineChart(filters);
+  const { chartData, chartOptions, chartStyles, plugins } =
+    usePracticeTimelineChart(filters);
 
-  return <Line data={chartData} options={chartOptions} />;
+  return (
+    <Line
+      data={chartData}
+      options={chartOptions}
+      style={chartStyles}
+      plugins={plugins}
+    />
+  );
 };
