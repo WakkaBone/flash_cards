@@ -1,6 +1,6 @@
 import { AxiosError, AxiosPromise } from "axios";
 import httpClient from "../http-client";
-import { ApiResponse, LoginPayload } from "../models/api";
+import { ApiResponse, AuthUserModel, LoginPayload } from "../models/api";
 import { handleError } from "../utils/error-handler";
 
 const apiPostfix = "/auth";
@@ -23,7 +23,7 @@ export const AuthService = {
   },
 
   async checkAuth() {
-    const response = await httpClient.post<ApiResponse>(
+    const response = await httpClient.post<ApiResponse<AuthUserModel>>(
       `${apiPostfix}/check-auth`
     );
     if (response instanceof AxiosError) return handleError(response);

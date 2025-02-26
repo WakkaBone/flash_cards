@@ -4,6 +4,7 @@ export const ROUTES = {
   practice: "/practice",
   categories: "/categories",
   statistics: "/statistics",
+  users: "/users",
 };
 
 export const MAIN_CATEGORIES = {

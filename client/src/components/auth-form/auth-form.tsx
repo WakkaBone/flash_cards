@@ -10,16 +10,12 @@ type AuthFormType = {
 };
 
 export const AuthForm = () => {
-  const authContext = useAuthContext();
+  const { login } = useAuthContext();
   const {
     control,
     formState: { errors },
     handleSubmit,
   } = useForm<AuthFormType>();
-
-  if (!authContext) return null;
-
-  const { login } = authContext;
 
   const onSubmit = (data: AuthFormType) => login(data);
 

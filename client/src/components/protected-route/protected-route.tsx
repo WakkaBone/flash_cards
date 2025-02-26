@@ -4,10 +4,7 @@ import { ROUTES } from "../../constants";
 import { FullScreenLoader } from "../loader/full-screen-loader";
 
 export const ProtectedRoute = ({ children }: PropsWithChildren) => {
-  const authContext = useAuthContext();
-  if (!authContext) return null;
-
-  const { isAuthenticated } = authContext;
+  const { isAuthenticated } = useAuthContext();
 
   if (isAuthenticated !== undefined && !isAuthenticated) {
     window.location.href = ROUTES.login;

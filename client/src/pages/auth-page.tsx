@@ -7,12 +7,11 @@ import { VersionsInfo } from "../components/layout/versions-info";
 import { FullScreenLoader } from "../components/loader/full-screen-loader";
 
 export const AuthPage = () => {
-  const authContext = useAuthContext();
-  if (!authContext) return null;
+  const { isAuthenticated } = useAuthContext();
 
-  if (authContext.isAuthenticated === undefined) return <FullScreenLoader />;
+  if (isAuthenticated === undefined) return <FullScreenLoader />;
 
-  if (authContext.isAuthenticated) return <Navigate to="/" />;
+  if (isAuthenticated) return <Navigate to="/" />;
 
   return (
     <Container component="main" maxWidth="xs" sx={{ marginTop: 8 }}>

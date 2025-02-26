@@ -1,6 +1,7 @@
 import { CardModel, Priorities } from "./card";
 import { CategoryModel } from "./category";
 import { IdLabel } from "./shared";
+import { Roles } from "./user";
 
 export interface ApiError<T = any> {
   message?: string;
@@ -73,4 +74,10 @@ export type BulkDeleteCategoriesPayload = BulkDeleteSharedPayload;
 export type LoginPayload = {
   username: string;
   password: string;
+};
+
+export type AuthUserModel = {
+  id: string;
+  username: string;
+  role: Roles;
 };

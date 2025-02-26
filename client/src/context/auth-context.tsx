@@ -8,15 +8,21 @@ import {
 import { toastError } from "../utils/error-handler";
 import { useAuth } from "../hooks";
 import { AuthService } from "../services/auth-service";
+import { AuthUserModel } from "../models/api";
 
 type SimpleCredentialsType = { username: string; password: string };
 interface AuthContextType {
   isAuthenticated?: boolean;
   login: (credentials: SimpleCredentialsType) => void;
   logout: () => void;
+  user: AuthUserModel | null;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({
+  login: () => {},
+  logout: () => {},
+  user: null,
+});
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const { login: loginMutation, logout: logoutMutation } = useAuth();
@@ -24,10 +30,14 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     undefined
   );
 
+  const [user, setUser] = useState<AuthUserModel | null>(null);
+
   useEffect(() => {
-    AuthService.checkAuth().then((data) =>
-      setIsAuthenticated(!!data.isSuccess)
-    );
+    AuthService.checkAuth().then((data) => {
+      const isSuccess = !!data?.isSuccess;
+      setIsAuthenticated(isSuccess);
+      setUser(isSuccess ? data.data : undefined);
+    });
   }, []);
 
   const login = (credentials: SimpleCredentialsType) => {
@@ -57,7 +67,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, user }}>
       {children}
     </AuthContext.Provider>
   );
