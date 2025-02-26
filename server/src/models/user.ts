@@ -11,6 +11,11 @@ export type TimelinePointDto = Omit<TimelinePoint, "dateTime"> & {
   dateTime: string;
 };
 
+export enum Roles {
+  user = "user",
+  admin = "admin",
+}
+
 export type UserModel = {
   id: string;
   username: string;
@@ -19,4 +24,5 @@ export type UserModel = {
   currentStreak: number;
   longestStreak: number;
   practiceTimeline: TimelinePoint[];
+  role: Roles;
 };

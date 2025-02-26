@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
+import { Roles } from "../models/user";
 
-export type JwtPayload = { id: string; username: string };
+export type JwtPayload = { id: string; username: string; role: Roles };
 
 export function generateAccessToken(payload: JwtPayload) {
   return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);

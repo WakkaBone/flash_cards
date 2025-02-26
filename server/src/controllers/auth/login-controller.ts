@@ -32,7 +32,7 @@ export const loginController = async (
     }
 
     if (username === user.username && password === user.password) {
-      const payload: JwtPayload = { username: user.username, id: user.id };
+      const payload: JwtPayload = { id: user.id, username, role: user.role };
       const accessToken = generateAccessToken(payload);
       const refreshToken = generateRefreshToken(payload);
       const accessCookie = generateAuthCookie(ACCESS_TOKEN_KEY, accessToken);

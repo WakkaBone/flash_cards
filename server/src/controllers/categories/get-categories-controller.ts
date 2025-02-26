@@ -7,6 +7,7 @@ import {
 } from "../../services/categories-service";
 import { CategoryDto } from "../../models/category";
 import { UsersService } from "../../services/users-service";
+import { getOwnershipFilter } from "../../utils/roles-util";
 
 type GetCategoriesQueryParams = {
   search?: string;
@@ -24,14 +25,16 @@ export const getCategoriesController = async (
   try {
     const { search, from, to, numberOfCards, page, pageSize } = req.query;
 
+    const user = UsersService.getUserFromToken(req);
+
     const filters: GetCategoriesFilters = {
+      ownerId: getOwnershipFilter(user),
       search,
       from: from ? new Date(from) : undefined,
       to: to ? new Date(to) : undefined,
       numberOfCards: numberOfCards ? Number(numberOfCards) : undefined,
       page: page ? Number(page) : undefined,
       pageSize: pageSize ? Number(pageSize) : undefined,
-      ownerId: UsersService.getUserFromToken(req).id,
     };
 
     const result = await CategoriesService.getCategories(filters);

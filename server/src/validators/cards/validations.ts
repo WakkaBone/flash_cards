@@ -3,6 +3,7 @@ import { Priorities } from "../../models/card";
 import { CardsService } from "../../services/cards-service";
 import { STATISTICS_ACTIONS } from "../../constants";
 import { UsersService } from "../../services/users-service";
+import { isAdmin } from "../../utils/roles-util";
 
 export const englishValidation = body("english")
   .isString()
@@ -67,25 +68,28 @@ export const actionValidator = param("action")
 
 export const ownerValidation = param("id").custom(async (cardId, { req }) => {
   //TODO: fix type
-  const userId = UsersService.getUserFromToken(req as any).id;
+  const user = UsersService.getUserFromToken(req as any);
+
+  if (isAdmin(user)) return true;
 
   const card = await CardsService.getCardById(cardId);
 
-  if (card.ownerIds.includes(userId)) return true;
+  if (card.ownerIds.includes(user.id)) return true;
 
   throw new Error("You don't have rights to update this card");
 });
 
 export const bulkOwnerValidation = body("ids").custom(async (ids, { req }) => {
   //TODO: fix type
-  const userId = UsersService.getUserFromToken(req as any).id;
+  const user = UsersService.getUserFromToken(req as any);
+
+  if (isAdmin(user)) return true;
 
   ids.forEach(async (id) => {
     const card = await CardsService.getCardById(id);
 
-    if (!card.ownerIds.includes(userId)) {
+    if (!card.ownerIds.includes(user.id))
       throw new Error("You don't have rights to update this card");
-    }
   });
 
   return true;

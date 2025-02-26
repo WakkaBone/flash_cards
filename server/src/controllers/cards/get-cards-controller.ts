@@ -4,6 +4,7 @@ import { CardsService, GetCardsFilters } from "../../services/cards-service";
 import { isValid } from "../../utils/validation-util";
 import { CardModelDto } from "../../models/card";
 import { UsersService } from "../../services/users-service";
+import { getOwnershipFilter } from "../../utils/roles-util";
 
 type GetCardsQueryParams = {
   search?: string;
@@ -34,9 +35,10 @@ export const getCardsController = async (
       pageSize,
     } = req.query;
 
+    const user = UsersService.getUserFromToken(req);
+
     const filters: GetCardsFilters = {
-      //TODO: maybe disable this filter if role is admin and add column in the table for card owner
-      ownerId: UsersService.getUserFromToken(req).id,
+      ownerId: getOwnershipFilter(user),
       search,
       category: category ? category : undefined,
       includeLearned: includeLearned ? includeLearned === "true" : undefined,
