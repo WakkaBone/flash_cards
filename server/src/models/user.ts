@@ -24,13 +24,15 @@ export type UserModel = {
   longestStreak: number;
   practiceTimeline: TimelinePoint[];
   role: Roles;
+  createdAt: FieldValue;
 };
 
 export type UserModelDto = Omit<
   UserModel,
-  "password" | "practiceTimeline" | "lastPractice"
+  "password" | "practiceTimeline" | "lastPractice" | "createdAt"
 > & {
   id: string;
   numberOfCards: number;
   lastPractice: string;
+  createdAt: string;
 };

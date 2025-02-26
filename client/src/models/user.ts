@@ -11,4 +11,5 @@ export type UserModel = {
   currentStreak: number;
   longestStreak: number;
   role: Roles;
+  createdAt: string;
 };

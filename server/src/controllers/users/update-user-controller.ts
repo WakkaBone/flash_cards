@@ -24,6 +24,7 @@ export const updateUserController = async (
       lastPractice: user.lastPractice,
       password: user.password,
       practiceTimeline: user.practiceTimeline,
+      createdAt: user.createdAt,
     };
 
     await UsersService.updateUser(id, updatedUser);

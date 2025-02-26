@@ -54,6 +54,7 @@ const mapUserToUserDto = async (
     username: userData.username,
     numberOfCards: userCards.length,
     lastPractice: (userData.lastPractice as Timestamp).toDate().toISOString(),
+    createdAt: (userData.createdAt as Timestamp).toDate().toISOString(),
     currentStreak: userData.currentStreak,
     longestStreak: userData.longestStreak,
     role: userData.role,

@@ -14,6 +14,8 @@ import {
 } from "../models/api";
 import { IdLabel } from "../models/shared";
 import { PriorityCell } from "../components/cards-table/priority-cell";
+import { Roles, UserModel } from "../models/user";
+import { UsersTableRowType } from "../components/users-table/users-table";
 
 export const practiceModeMapper: Record<PracticeModes, string> = {
   [PracticeModes.eth]: "English to Hebrew",
@@ -42,6 +44,11 @@ export const statisticsActionMapper: Record<STATISTICS_ACTIONS, string> = {
   [STATISTICS_ACTIONS.Wrong]: "Wrong",
 };
 
+export const userRoleMapper: Record<Roles, string> = {
+  [Roles.admin]: "Admin",
+  [Roles.user]: "User",
+};
+
 export const mapCardToTableRow = (item: CardModel): CardsTableRowType => ({
   ...item,
   category: item.category.label,
@@ -61,6 +68,19 @@ export const mapCategoryToTableRow = (
   updatedAt: item.updatedAt,
   numberOfCards: item.numberOfCards.toString(),
   actions: <ActionsCellCategories category={item} />,
+});
+
+export const mapUserToTableRow = (user: UserModel): UsersTableRowType => ({
+  id: user.id,
+  username: user.username,
+  role: user.role,
+  numberOfCards: user.numberOfCards,
+  createdAt: user.createdAt,
+  currentStreak: user.currentStreak,
+  lastPractice: user.lastPractice,
+  longestStreak: user.longestStreak,
+  //TODO: add actions cell
+  actions: <></>,
 });
 
 export const mapAddCardFormToPayload = (

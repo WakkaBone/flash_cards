@@ -7,6 +7,7 @@ import { useCategoriesTableFilters } from "./use-categories-table-filters";
 import { useDebounce } from "./use-debounce";
 import { useDeleteCard } from "./use-delete-card";
 import { useGetCards } from "./use-get-cards";
+import { useGetUsers } from "./use-get-users";
 import { useMarkCardLearned } from "./use-mark-learned";
 import { useTablePagination } from "./use-pagination";
 import { usePopoverConfirmation } from "./use-popover-confirmation";
@@ -27,6 +28,7 @@ export {
   useDebounce,
   useDeleteCard,
   useGetCards,
+  useGetUsers,
   useMarkCardLearned,
   usePopoverConfirmation,
   usePracticeTimelineChart,
