@@ -25,9 +25,7 @@ export const isAuth = (req: Request, res: Response, next: NextFunction) => {
 
       if (!isRefreshTokenValid) throw new Error("Refresh token is invalid");
 
-      const newAccessToken = generateAccessToken({
-        username: isRefreshTokenValid.username,
-      });
+      const newAccessToken = generateAccessToken(isRefreshTokenValid);
       const newAccessTokenCookie = generateAuthCookie(
         ACCESS_TOKEN_KEY,
         newAccessToken

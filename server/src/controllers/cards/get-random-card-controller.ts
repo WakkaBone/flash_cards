@@ -24,6 +24,7 @@ export const getRandomCardController = async (
       req.query;
 
     const filters: GetCardsFilters = {
+      ownerId: UsersService.getUserFromToken(req).id,
       category: category ? category : undefined,
       includeLearned: includeLearned ? includeLearned === "true" : undefined,
       mistakesThreshold: mistakesThreshold
@@ -45,8 +46,8 @@ export const getRandomCardController = async (
     const card = sortedCards[0];
     await CardsService.updateLastReviewedDate(card.id);
 
-    const currentUser = UsersService.getCurrentUser(req);
-    currentUser && (await UsersService.updateLastPractice(currentUser));
+    const userId = UsersService.getUserFromToken(req).id;
+    userId && (await UsersService.updateLastPractice(userId));
 
     res.status(200).json({ isSuccess: true, data: card });
   } catch (error) {

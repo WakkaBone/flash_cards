@@ -5,6 +5,7 @@ import { isValid } from "../../utils/validation-util";
 import {
   generateAccessToken,
   generateRefreshToken,
+  JwtPayload,
 } from "../../utils/jwt-util";
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "../../constants";
 import { UsersService } from "../../services/users-service";
@@ -31,7 +32,7 @@ export const loginController = async (
     }
 
     if (username === user.username && password === user.password) {
-      const payload = { username: user.username };
+      const payload: JwtPayload = { username: user.username, id: user.id };
       const accessToken = generateAccessToken(payload);
       const refreshToken = generateRefreshToken(payload);
       const accessCookie = generateAuthCookie(ACCESS_TOKEN_KEY, accessToken);

@@ -3,6 +3,7 @@ import { ApiResponse } from "../../models/api-response";
 import { CardsService } from "../../services/cards-service";
 import { isValid } from "../../utils/validation-util";
 import { CardModelDto } from "../../models/card";
+import { UsersService } from "../../services/users-service";
 
 function similarityCheck(str1: string, str2: string) {
   const acceptableThreshold = 0.3;
@@ -41,8 +42,10 @@ export const addCardPrecheckController = async (
   res: Response<ApiResponse>
 ) => {
   if (!isValid(req, res)) return;
+  const ownerId = UsersService.getUserFromToken(req).id;
+
   try {
-    const allCards = await CardsService.getCards({});
+    const allCards = await CardsService.getCards({ ownerId });
 
     const similarCards: CardModelDto[] = [];
     for (const card of allCards) {

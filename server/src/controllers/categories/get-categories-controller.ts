@@ -6,6 +6,7 @@ import {
   GetCategoriesFilters,
 } from "../../services/categories-service";
 import { CategoryDto } from "../../models/category";
+import { UsersService } from "../../services/users-service";
 
 type GetCategoriesQueryParams = {
   search?: string;
@@ -30,6 +31,7 @@ export const getCategoriesController = async (
       numberOfCards: numberOfCards ? Number(numberOfCards) : undefined,
       page: page ? Number(page) : undefined,
       pageSize: pageSize ? Number(pageSize) : undefined,
+      ownerId: UsersService.getUserFromToken(req).id,
     };
 
     const result = await CategoriesService.getCategories(filters);

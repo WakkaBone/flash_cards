@@ -8,6 +8,7 @@ import {
   serverTimestamp,
   updateDoc,
   arrayUnion,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { ACCESS_TOKEN_KEY, COLLECTIONS } from "../constants";
@@ -17,6 +18,12 @@ import { decodeToken, JwtPayload } from "../utils/jwt-util";
 import { calculateDaysDiff } from "../utils/date-time";
 
 export const UsersService = {
+  getUserById: async (id: string) => {
+    const userRef = doc(db, COLLECTIONS.users, id);
+    const user = await getDoc(userRef);
+    return user.data() as UserModel;
+  },
+
   getUserByUsername: async (username: string) => {
     let queryRef = query(collection(db, COLLECTIONS.users));
     queryRef = query(queryRef, where("username", "==", username));
@@ -28,9 +35,9 @@ export const UsersService = {
     }))[0];
   },
 
-  updateLastPractice: async function (username: string) {
-    const user: UserModel = await this.getUserByUsername(username);
-    const userRef = doc(db, COLLECTIONS.users, user.id);
+  updateLastPractice: async function (userId: string) {
+    const user: UserModel = await this.getUserById(userId);
+    const userRef = doc(db, COLLECTIONS.users, userId);
 
     const currentStreak = user.currentStreak;
     const updates: Partial<UserModel> = { lastPractice: serverTimestamp() };
@@ -64,35 +71,33 @@ export const UsersService = {
     await updateDoc(userRef, updates);
   },
 
-  updateUser: async function (username: string, data: Partial<UserModel>) {
-    const user: UserModel = await this.getUserByUsername(username);
-    const userRef = doc(db, COLLECTIONS.users, user.id);
+  updateUser: async function (userId: string, data: Partial<UserModel>) {
+    const userRef = doc(db, COLLECTIONS.users, userId);
     await updateDoc(userRef, data);
   },
 
-  addTimelinePoint: async function (username: string, newPoint: TimelinePoint) {
-    const user: UserModel = await this.getUserByUsername(username);
-    const userRef = doc(db, COLLECTIONS.users, user.id);
+  addTimelinePoint: async function (userId: string, newPoint: TimelinePoint) {
+    const userRef = doc(db, COLLECTIONS.users, userId);
     await updateDoc(userRef, { practiceTimeline: arrayUnion(newPoint) });
   },
 
-  getCurrentUser: (req: Request) => {
+  getUserFromToken: (req: Request) => {
     const token = req.cookies[ACCESS_TOKEN_KEY];
     if (!token) throw new Error("Token is missing");
 
     const decoded = decodeToken(token);
     if (!token) throw new Error("Failed to parse the token");
 
-    return (decoded as JwtPayload).username;
+    return decoded as JwtPayload;
   },
 
-  getStreakData: async function (username: string) {
-    const user: UserModel = await this.getUserByUsername(username);
+  getStreakData: async function (userId: string) {
+    const user: UserModel = await this.getUserById(userId);
     const lastPractice = (user.lastPractice as Timestamp).toDate();
     const daysSinceLastPractice = calculateDaysDiff(new Date(), lastPractice);
 
     const streakExpired = daysSinceLastPractice > 1;
-    if (streakExpired) await this.updateUser(username, { streak: 0 });
+    if (streakExpired) await this.updateUser(userId, { streak: 0 });
 
     return {
       longestStreak: user.longestStreak,

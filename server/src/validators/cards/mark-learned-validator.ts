@@ -1,3 +1,4 @@
 import { idParamValidation } from "../shared";
+import { ownerValidation } from "./validations";
 
-export const markLearnedValidator = [idParamValidation];
+export const markLearnedValidator = [idParamValidation, ownerValidation];

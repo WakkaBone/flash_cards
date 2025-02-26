@@ -40,6 +40,7 @@ export type GetCardsFilters = {
   priority?: Priorities;
   page?: number;
   pageSize?: number;
+  ownerId?: string;
 };
 
 export type GetPracticeTimelineFilters = {
@@ -52,6 +53,10 @@ export const CardsService = {
   getCards: async (filters: GetCardsFilters = {}): Promise<CardModelDto[]> => {
     let queryRef = query(collection(db, COLLECTIONS.cards));
     const queries = [];
+
+    if (filters.ownerId) {
+      queries.push(where("ownerIds", "array-contains", filters.ownerId));
+    }
 
     if (filters.searchExact) {
       queries.push(where("english", "==", filters.searchExact));
@@ -183,10 +188,10 @@ export const CardsService = {
   },
 
   getPracticeTimeline: async (
-    username: string,
+    userId: string,
     filters?: GetPracticeTimelineFilters
   ): Promise<TimelinePointDto[]> => {
-    let practiceTimeline = (await UsersService.getUserByUsername(username))
+    let practiceTimeline = (await UsersService.getUserById(userId))
       .practiceTimeline;
 
     if (filters.action) {
@@ -212,7 +217,7 @@ export const CardsService = {
     }));
   },
 
-  getStatistics: async (username: string) => {
+  getStatistics: async (userId: string) => {
     let queryRef = query(collection(db, COLLECTIONS.cards));
     const allQuery = query(queryRef);
     const learnedQuery = query(queryRef, where("isLearned", "==", true));
@@ -233,7 +238,7 @@ export const CardsService = {
     const mostMistakesCard = mostMistakesSnapshot.docs[0].data() as CardModel;
 
     const { currentStreak, lastPractice, longestStreak } =
-      await UsersService.getStreakData(username);
+      await UsersService.getStreakData(userId);
 
     const statistics: Statistics = {
       totalCards: (await getDocs(allQuery)).size,

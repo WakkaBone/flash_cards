@@ -1,7 +1,8 @@
 import { bulkActionValidation } from "../shared";
-import { mainCategoryBodyValidation } from "./validations";
+import { bulkOwnerValidation, mainCategoryBodyValidation } from "./validations";
 
 export const bulkDeleteCategoriesValidator = [
   bulkActionValidation,
   mainCategoryBodyValidation,
+  bulkOwnerValidation,
 ];

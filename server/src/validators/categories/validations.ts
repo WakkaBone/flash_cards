@@ -1,6 +1,7 @@
 import { body, param } from "express-validator";
 import { MAIN_CATEGORIES } from "../../constants";
 import { CategoriesService } from "../../services/categories-service";
+import { UsersService } from "../../services/users-service";
 
 export const mainCategoryParamValidation = param("id").custom((value) => {
   const mainCategories = Object.values(MAIN_CATEGORIES);
@@ -30,3 +31,32 @@ export const categoryNameValidation = body("label")
 
     return true;
   });
+
+export const ownerValidation = param("id").custom(
+  async (categoryId, { req }) => {
+    //TODO: fix type
+    const userId = UsersService.getUserFromToken(req as any).id;
+
+    const category = await CategoriesService.getCategoryById(categoryId);
+
+    if (category.ownerIds.includes(userId)) return true;
+
+    throw new Error("You don't have rights to update this category");
+  }
+);
+
+export const bulkOwnerValidation = body("ids").custom(async (ids, { req }) => {
+  //TODO: fix type
+  const userId = UsersService.getUserFromToken(req as any).id;
+
+  ids.forEach(async (id) => {
+    const isMainCategory = Object.values(MAIN_CATEGORIES).includes(id);
+    const category = await CategoriesService.getCategoryById(id);
+
+    if (!isMainCategory && !category.ownerIds.includes(userId)) {
+      throw new Error("You don't have rights to update this category");
+    }
+  });
+
+  return true;
+});

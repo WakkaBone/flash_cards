@@ -26,8 +26,8 @@ export const getTimelineController = async (
       to: to ? new Date(to) : undefined,
     };
 
-    const username = UsersService.getCurrentUser(req);
-    const timeline = await CardsService.getPracticeTimeline(username, filters);
+    const userId = UsersService.getUserFromToken(req).id;
+    const timeline = await CardsService.getPracticeTimeline(userId, filters);
     res.status(200).json({ isSuccess: true, data: timeline });
   } catch (error) {
     res.status(500).json({
