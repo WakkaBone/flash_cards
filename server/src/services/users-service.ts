@@ -12,6 +12,7 @@ import {
   limit,
   QueryDocumentSnapshot,
   addDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { ACCESS_TOKEN_KEY, COLLECTIONS } from "../constants";
@@ -115,6 +116,11 @@ export const UsersService = {
 
   addUser: async function (user: UserModel): Promise<void> {
     await addDoc(collection(db, COLLECTIONS.users), user);
+  },
+
+  deleteUser: async (id: string): Promise<void> => {
+    const userRef = doc(db, COLLECTIONS.users, id);
+    await deleteDoc(userRef);
   },
 
   getUserById: async (id: string) => {

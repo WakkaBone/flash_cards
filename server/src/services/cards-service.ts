@@ -238,6 +238,16 @@ export const CardsService = {
     });
   },
 
+  deleteUsersCards: async function (userId: string) {
+    const usersCards = await this.getCards({
+      ownerId: userId,
+    });
+    usersCards.forEach(async (card: CardModelDto) => {
+      //remove the card only if it belongs only to the deleted user
+      if (card.ownerIds.length === 1) await this.deleteCard(card.id);
+    });
+  },
+
   sortBySRS: (cards: CardModelDto[]): CardModelDto[] => {
     return cards.sort((a, b) => {
       const nextReviewA = getNextReviewDate(

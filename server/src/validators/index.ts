@@ -14,6 +14,7 @@ import { bulkMarkLearnedValidator } from "./cards/bulk-mark-learned-validator";
 import { bulkDeleteCategoriesValidator } from "./categories/bulk-delete-categories-validator";
 import { getUsersValidator } from "./users/get-users-validator";
 import { addUserValidator } from "./users/add-user-validator";
+import { deleteUserValidator } from "./users/delete-user-validator";
 
 export {
   addCardValidator,
@@ -24,6 +25,7 @@ export {
   updateCardValidator,
   updateStatisticsValidator,
   deleteCardValidator,
+  deleteUserValidator,
   markLearnedValidator,
   getCardsValidator,
   getUsersValidator,

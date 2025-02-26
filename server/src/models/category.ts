@@ -13,4 +13,5 @@ export type CategoryDto = {
   numberOfCards: number;
   createdAt: string;
   updatedAt: string;
+  ownerIds: string[];
 };

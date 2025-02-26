@@ -43,6 +43,7 @@ const mapCategoryToCategoryDto = async (
     numberOfCards: cards.length,
     createdAt: categoryData.createdAt.toDate().toISOString(),
     updatedAt: (categoryData.updatedAt as Timestamp).toDate().toISOString(),
+    ownerIds: categoryData.ownerIds,
   };
 
   return categoryDto;
@@ -138,5 +139,16 @@ export const CategoriesService = {
   deleteCategory: async (id: string): Promise<void> => {
     const categoryRef = doc(db, COLLECTIONS.categories, id);
     await deleteDoc(categoryRef);
+  },
+
+  deleteUsersCategories: async function (userId: string) {
+    const usersCategories = await this.getCategories({
+      ownerId: userId,
+    });
+    usersCategories.forEach(async (category: CategoryDto) => {
+      //remove the category only if it belongs only to the deleted user
+      if (category.ownerIds.length === 1)
+        await this.deleteCategory(category.id);
+    });
   },
 };
