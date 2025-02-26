@@ -13,6 +13,7 @@ import {
   Timestamp,
   getDoc,
   serverTimestamp,
+  QueryDocumentSnapshot,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { CardModel, CardModelDto, Priorities } from "../models/card";
@@ -27,7 +28,7 @@ import { Statistics } from "../models/statistics";
 import { CategoriesService } from "./categories-service";
 import { UsersService } from "./users-service";
 import { getNextReviewDate } from "../utils/date-time";
-import { TimelinePointDto } from "../models/user";
+import { searchFilterCallback } from "../utils/search-util";
 
 export type GetCardsFilters = {
   category?: string;
@@ -47,6 +48,23 @@ export type GetPracticeTimelineFilters = {
   from?: Date;
   to?: Date;
   action?: STATISTICS_ACTIONS;
+};
+
+const mapCardToCardDto = async (
+  doc: QueryDocumentSnapshot
+): Promise<CardModelDto> => {
+  const cardData = doc.data() as CardModel;
+
+  const category = await CategoriesService.getCategoryById(cardData.category);
+
+  const cardDto: CardModelDto = {
+    id: doc.id,
+    ...cardData,
+    category: { id: cardData.category, label: category.label },
+    createdAt: cardData.createdAt.toDate().toISOString(),
+  };
+
+  return cardDto;
 };
 
 export const CardsService = {
@@ -90,34 +108,14 @@ export const CardsService = {
     const { docs } = await getDocs(query(queryRef, ...queries));
 
     const cards = await Promise.all(
-      docs.map(async (doc) => {
-        const cardData = doc.data() as CardModel;
-        const category = await CategoriesService.getCategoryById(
-          cardData.category
-        );
-
-        const cardDto: CardModelDto = {
-          id: doc.id,
-          ...cardData,
-          category: { id: cardData.category, label: category.label },
-          createdAt: cardData.createdAt.toDate().toISOString(),
-        };
-        return cardDto;
-      })
+      docs.map(async (doc) => mapCardToCardDto(doc))
     );
 
     if (filters.search) {
-      return cards.filter((card) => {
-        const searchableFields = ["english", "hebrew"];
-        return searchableFields.some((field) =>
-          card[field]
-            ? card[field]
-                .trim()
-                .toLowerCase()
-                .includes(filters.search.trim().toLowerCase())
-            : false
-        );
-      });
+      const searchableFields = ["english", "hebrew"];
+      return cards.filter((card) =>
+        searchFilterCallback(filters.search, card, searchableFields)
+      );
     }
 
     return cards;

@@ -26,3 +26,11 @@ export type UserModel = {
   practiceTimeline: TimelinePoint[];
   role: Roles;
 };
+
+export type UserModelDto = Omit<
+  UserModel,
+  "password" | "practiceTimeline" | "lastPractice"
+> & {
+  numberOfCards: number;
+  lastPractice: string;
+};

@@ -2,6 +2,7 @@ export const APIS = {
   auth: "auth",
   cards: "cards",
   categories: "categories",
+  users: "users",
   version: "version",
 };
 

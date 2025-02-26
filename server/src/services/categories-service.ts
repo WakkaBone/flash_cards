@@ -17,6 +17,7 @@ import { db } from "../config/firebase";
 import { COLLECTIONS, MAIN_CATEGORIES } from "../constants";
 import { CategoryDto, CategoryModel } from "../models/category";
 import { CardsService } from "./cards-service";
+import { searchFilterCallback } from "../utils/search-util";
 
 export type GetCategoriesFilters = {
   search?: string;
@@ -29,27 +30,31 @@ export type GetCategoriesFilters = {
   ownerId?: string;
 };
 
-export const CategoriesService = {
-  mapCategoryToCategoryDto: async function (
-    docRef: QueryDocumentSnapshot
-  ): Promise<CategoryDto> {
-    const categoryData = docRef.data() as CategoryModel;
-    const cards = await CardsService.getCards({ category: docRef.id });
-    const categoryDto: CategoryDto = {
-      id: docRef.id,
-      label: categoryData.label,
-      numberOfCards: cards.length,
-      createdAt: categoryData.createdAt.toDate().toISOString(),
-      updatedAt: (categoryData.updatedAt as Timestamp).toDate().toISOString(),
-    };
-    return categoryDto;
-  },
+const mapCategoryToCategoryDto = async (
+  docRef: QueryDocumentSnapshot
+): Promise<CategoryDto> => {
+  const categoryData = docRef.data() as CategoryModel;
 
+  const cards = await CardsService.getCards({ category: docRef.id });
+
+  const categoryDto: CategoryDto = {
+    id: docRef.id,
+    label: categoryData.label,
+    numberOfCards: cards.length,
+    createdAt: categoryData.createdAt.toDate().toISOString(),
+    updatedAt: (categoryData.updatedAt as Timestamp).toDate().toISOString(),
+  };
+
+  return categoryDto;
+};
+
+export const CategoriesService = {
   getMainCategories: async function (): Promise<CategoryDto[]> {
     return await Promise.all(
       Object.values(MAIN_CATEGORIES).map(async (id) => {
         const categoryDoc = await getDoc(doc(db, COLLECTIONS.categories, id));
-        return this.mapCategoryToCategoryDto(categoryDoc);
+
+        return mapCategoryToCategoryDto(categoryDoc);
       })
     );
   },
@@ -83,7 +88,7 @@ export const CategoriesService = {
     const { docs } = await getDocs(query(queryRef, ...queries));
 
     let categories = await Promise.all(
-      docs.map(async (doc) => await this.mapCategoryToCategoryDto(doc))
+      docs.map(async (doc) => await mapCategoryToCategoryDto(doc))
     );
 
     if (filters.numberOfCards) {
@@ -93,17 +98,10 @@ export const CategoriesService = {
     }
 
     if (filters.search) {
-      return categories.filter((card) => {
-        const searchableFields = ["label"];
-        return searchableFields.some((field) =>
-          card[field]
-            ? card[field]
-                .trim()
-                .toLowerCase()
-                .includes(filters.search.trim().toLowerCase())
-            : false
-        );
-      });
+      const searchableFields = ["label"];
+      return categories.filter((category) =>
+        searchFilterCallback(filters.search, category, searchableFields)
+      );
     }
 
     if (filters.ownerId) {

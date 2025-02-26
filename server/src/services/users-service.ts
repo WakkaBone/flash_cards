@@ -9,16 +9,109 @@ import {
   updateDoc,
   arrayUnion,
   getDoc,
+  limit,
+  QueryDocumentSnapshot,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { ACCESS_TOKEN_KEY, COLLECTIONS } from "../constants";
-import { TimelinePoint, TimelinePointDto, UserModel } from "../models/user";
+import {
+  Roles,
+  TimelinePoint,
+  TimelinePointDto,
+  UserModel,
+  UserModelDto,
+} from "../models/user";
 import { Request } from "express";
 import { decodeToken, JwtPayload } from "../utils/jwt-util";
 import { calculateDaysDiff } from "../utils/date-time";
-import { GetPracticeTimelineFilters } from "./cards-service";
+import { CardsService, GetPracticeTimelineFilters } from "./cards-service";
+import { searchFilterCallback } from "../utils/search-util";
+
+export type GetUsersFilters = {
+  search?: string;
+  searchExact?: string;
+  role?: Roles;
+  numberOfCards?: number;
+  from?: Date;
+  to?: Date;
+  longestStreak?: number;
+  currentStreak?: number;
+  page?: number;
+  pageSize?: number;
+};
+
+const mapUserToUserDto = async (
+  docRef: QueryDocumentSnapshot
+): Promise<UserModelDto> => {
+  const userData = docRef.data() as UserModel;
+
+  const userCards = await CardsService.getCards({ ownerId: userData.id });
+
+  return {
+    id: userData.id,
+    username: userData.username,
+    numberOfCards: userCards.length,
+    lastPractice: (userData.lastPractice as Timestamp).toDate().toISOString(),
+    currentStreak: userData.currentStreak,
+    longestStreak: userData.longestStreak,
+    role: userData.role,
+  };
+};
 
 export const UsersService = {
+  getUsers: async function (filters: GetUsersFilters): Promise<UserModelDto[]> {
+    let queryRef = query(collection(db, COLLECTIONS.users));
+    const queries = [];
+
+    if (filters.searchExact) {
+      queries.push(where("label", "==", filters.searchExact));
+    }
+
+    if (filters.from) {
+      queries.push(where("updatedAt", ">", Timestamp.fromDate(filters.from)));
+    }
+    if (filters.to) {
+      queries.push(where("updatedAt", "<", Timestamp.fromDate(filters.to)));
+    }
+
+    if (filters.currentStreak) {
+      queries.push(where("currentStreak", ">=", filters.currentStreak));
+    }
+    if (filters.longestStreak) {
+      queries.push(where("longestStreak", ">=", filters.longestStreak));
+    }
+
+    if (filters.role) {
+      queries.push(where("role", "==", filters.role));
+    }
+
+    //TODO: pagination
+    if (filters.page && filters.pageSize) {
+      queries.push(limit(filters.pageSize));
+    }
+
+    const { docs } = await getDocs(query(queryRef, ...queries));
+
+    let users = await Promise.all(
+      docs.map(async (doc) => await mapUserToUserDto(doc))
+    );
+
+    if (filters.numberOfCards) {
+      users = users.filter(
+        ({ numberOfCards }) => numberOfCards >= filters.numberOfCards
+      );
+    }
+
+    if (filters.search) {
+      const searchableFields = ["username"];
+      return users.filter((user) =>
+        searchFilterCallback(filters.search, user, searchableFields)
+      );
+    }
+
+    return users;
+  },
+
   getUserById: async (id: string) => {
     const userRef = doc(db, COLLECTIONS.users, id);
     const user = await getDoc(userRef);
