@@ -9,6 +9,7 @@ import {
 } from "../../utils/jwt-util";
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "../../constants";
 import { UsersService } from "../../services/users-service";
+import bcrypt from "bcrypt";
 
 type LoginBody = {
   username: string;
@@ -31,7 +32,9 @@ export const loginController = async (
       return;
     }
 
-    if (username === user.username && password === user.password) {
+    const passwordCorrect = await bcrypt.compare(password, user.password);
+
+    if (passwordCorrect) {
       const payload: JwtPayload = { id: user.id, username, role: user.role };
       const accessToken = generateAccessToken(payload);
       const refreshToken = generateRefreshToken(payload);

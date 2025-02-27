@@ -76,7 +76,7 @@ export const useDeleteUsers = () => {
       {
         onSuccess: (...args) => {
           toast("Users deleted", { type: "success" });
-          queryClient.invalidateQueries({ queryKey: ["categories"] });
+          queryClient.invalidateQueries({ queryKey: ["users"] });
           options?.onSuccess?.(...args);
         },
         onError: (...args) => {

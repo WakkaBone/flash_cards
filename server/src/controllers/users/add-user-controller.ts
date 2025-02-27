@@ -4,6 +4,7 @@ import { isValid } from "../../utils/validation-util";
 import { serverTimestamp, Timestamp } from "firebase/firestore";
 import { UsersService } from "../../services/users-service";
 import { Roles, UserModel } from "../../models/user";
+import { encrypt } from "../../utils/encryption-util";
 
 type CreateUserBody = {
   username: string;
@@ -18,9 +19,11 @@ export const addUserController = async (
   try {
     const { username, password, role } = req.body;
 
+    const passwordHash = await encrypt(password);
+
     const user: UserModel = {
       username,
-      password,
+      password: passwordHash,
       role,
       lastPractice: Timestamp.now(),
       createdAt: serverTimestamp(),

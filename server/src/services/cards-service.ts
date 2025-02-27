@@ -186,24 +186,33 @@ export const CardsService = {
   },
 
   getStatistics: async (userId: string) => {
-    let queryRef = query(collection(db, COLLECTIONS.cards));
+    let queryRef = query(
+      collection(db, COLLECTIONS.cards),
+      where("ownerIds", "array-contains", userId)
+    );
+
     const allQuery = query(queryRef);
     const learnedQuery = query(queryRef, where("isLearned", "==", true));
     const lastAddedQuery = query(
-      collection(db, COLLECTIONS.cards),
+      queryRef,
       orderBy("createdAt", "desc"),
       limit(1)
     );
     const mostMistakesQuery = query(
-      collection(db, COLLECTIONS.cards),
+      queryRef,
       orderBy("statistics.wrong", "desc"),
       limit(1)
     );
 
     const lastAddedWordSnapshot = await getDocs(lastAddedQuery);
     const mostMistakesSnapshot = await getDocs(mostMistakesQuery);
-    const lastAddedCard = lastAddedWordSnapshot.docs[0].data() as CardModel;
-    const mostMistakesCard = mostMistakesSnapshot.docs[0].data() as CardModel;
+
+    const lastAddedCard = lastAddedWordSnapshot.docs[0]
+      ? (lastAddedWordSnapshot.docs[0].data() as CardModel)
+      : undefined;
+    const mostMistakesCard = mostMistakesSnapshot.docs[0]
+      ? (mostMistakesSnapshot.docs[0]?.data() as CardModel)
+      : undefined;
 
     const { currentStreak, lastPractice, longestStreak } =
       await UsersService.getStreakData(userId);
