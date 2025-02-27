@@ -9,15 +9,21 @@ type AuthFormType = {
   password: string;
 };
 
-export const AuthForm = () => {
-  const { login } = useAuthContext();
+type AuthFormPropsType = {
+  mode: "login" | "register";
+};
+export const AuthForm = ({ mode }: AuthFormPropsType) => {
+  const { login, signup, isLoading } = useAuthContext();
   const {
     control,
     formState: { errors },
     handleSubmit,
   } = useForm<AuthFormType>();
 
-  const onSubmit = (data: AuthFormType) => login(data);
+  const isLogin = mode === "login";
+
+  const onSubmit = (data: AuthFormType) =>
+    isLogin ? login(data) : signup(data);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -64,8 +70,14 @@ export const AuthForm = () => {
       </Box>
 
       <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <Button type="submit" variant="contained" color="primary" fullWidth>
-          Log In
+        <Button
+          loading={isLoading}
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+        >
+          {isLogin ? "Log In" : "Sign Up"}
         </Button>
       </Box>
     </form>

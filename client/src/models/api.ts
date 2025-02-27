@@ -99,6 +99,8 @@ export type LoginPayload = {
   password: string;
 };
 
+export type SignupPayload = LoginPayload;
+
 export type AuthUserModel = {
   id: string;
   username: string;
