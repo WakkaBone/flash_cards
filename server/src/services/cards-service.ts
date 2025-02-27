@@ -24,11 +24,12 @@ import {
   MIN_EASE_COEFFICIENT,
   STATISTICS_ACTIONS,
 } from "../constants";
-import { Statistics } from "../models/statistics";
+import { Statistics, StatisticsAdmin } from "../models/statistics";
 import { CategoriesService } from "./categories-service";
 import { UsersService } from "./users-service";
 import { getNextReviewDate } from "../utils/date-time";
 import { searchFilterCallback } from "../utils/search-util";
+import { UserModel } from "../models/user";
 
 export type GetCardsFilters = {
   category?: string;
@@ -185,7 +186,7 @@ export const CardsService = {
     await deleteDoc(cardRef);
   },
 
-  getStatistics: async (userId: string) => {
+  getStatistics: async function (userId: string) {
     let queryRef = query(
       collection(db, COLLECTIONS.cards),
       where("ownerIds", "array-contains", userId)
@@ -211,7 +212,7 @@ export const CardsService = {
       ? (lastAddedWordSnapshot.docs[0].data() as CardModel)
       : undefined;
     const mostMistakesCard = mostMistakesSnapshot.docs[0]
-      ? (mostMistakesSnapshot.docs[0]?.data() as CardModel)
+      ? (mostMistakesSnapshot.docs[0].data() as CardModel)
       : undefined;
 
     const { currentStreak, lastPractice, longestStreak } =
@@ -232,6 +233,88 @@ export const CardsService = {
     };
 
     return statistics;
+  },
+
+  getAdminStatistics: async (userId: string): Promise<StatisticsAdmin> => {
+    let cardsQueryRef = query(collection(db, COLLECTIONS.cards));
+    let usersQueryRef = query(collection(db, COLLECTIONS.users));
+
+    const totalCards = (await getDocs(cardsQueryRef)).size;
+    const totalLearnedCards = (
+      await getDocs(query(cardsQueryRef, where("isLearned", "==", true)))
+    ).size;
+    const totalUsers = (await getDocs(usersQueryRef)).size;
+
+    const lastAddedQuery = query(
+      cardsQueryRef,
+      orderBy("createdAt", "desc"),
+      limit(1)
+    );
+    const mostMistakesQuery = query(
+      cardsQueryRef,
+      orderBy("statistics.wrong", "desc"),
+      limit(1)
+    );
+    const longestStreakQuery = query(
+      usersQueryRef,
+      orderBy("longestStreak", "desc"),
+      limit(1)
+    );
+    const longestActiveStreakQuery = query(
+      usersQueryRef,
+      orderBy("currentStreak", "desc"),
+      limit(1)
+    );
+    const lastPracticeQuery = query(
+      usersQueryRef,
+      orderBy("lastPractice", "desc"),
+      limit(1)
+    );
+
+    const lastAddedWordSnapshot = await getDocs(lastAddedQuery);
+    const mostMistakesSnapshot = await getDocs(mostMistakesQuery);
+    const longestStreakSnapshot = await getDocs(longestStreakQuery);
+    const longestActiveStreakSnapshot = await getDocs(longestActiveStreakQuery);
+    const lastPracticeSnapshot = await getDocs(lastPracticeQuery);
+
+    const lastAddedCard = lastAddedWordSnapshot.docs[0]
+      ? (lastAddedWordSnapshot.docs[0].data() as CardModel)
+      : undefined;
+    const mostMistakesCard = mostMistakesSnapshot.docs[0]
+      ? (mostMistakesSnapshot.docs[0].data() as CardModel)
+      : undefined;
+    const longestStreakUser = longestStreakSnapshot.docs[0]
+      ? (longestStreakSnapshot.docs[0].data() as UserModel)
+      : undefined;
+    const longestActiveStreakUser = longestActiveStreakSnapshot.docs[0]
+      ? (longestActiveStreakSnapshot.docs[0].data() as UserModel)
+      : undefined;
+    const lastPracticeUser = lastPracticeSnapshot.docs[0]
+      ? (lastPracticeSnapshot.docs[0].data() as UserModel)
+      : undefined;
+
+    return {
+      totalCards,
+      totalLearnedCards,
+      lastAdded: lastAddedCard
+        ? `${lastAddedCard.hebrew} - ${lastAddedCard.english}`
+        : "",
+      mostMistakes: mostMistakesCard
+        ? `${mostMistakesCard.hebrew} - ${mostMistakesCard.english}`
+        : "",
+      totalUsers,
+      longestActiveStreak: longestActiveStreakUser
+        ? `${longestActiveStreakUser.longestStreak} - ${longestActiveStreakUser.username}`
+        : "",
+      longestStreak: longestStreakUser
+        ? `${longestStreakUser.longestStreak} - ${longestStreakUser.username}`
+        : "",
+      lastPractice: lastPracticeUser
+        ? `${(lastPracticeUser.lastPractice as Timestamp)
+            .toDate()
+            .toISOString()} - ${lastPracticeUser.username}`
+        : "",
+    };
   },
 
   moveCardsToOtherCategory: async function (categoryId: string): Promise<void> {

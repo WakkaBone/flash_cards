@@ -10,6 +10,17 @@ export enum StatisticsCounters {
   mostMistakes = "mostMistakes",
 }
 
+export enum StatisticsCountersAdmin {
+  totalCards = "totalCards",
+  totalLearnedCards = "totalLearnedCards",
+  longestStreak = "longestStreak",
+  longestActiveStreak = "longestActiveStreak",
+  lastPractice = "lastPractice",
+  lastAdded = "lastAdded",
+  mostMistakes = "mostMistakes",
+  totalUsers = "totalUsers",
+}
+
 export type Statistics = {
   totalCards: number;
   totalLearnedCards: number;
@@ -17,6 +28,17 @@ export type Statistics = {
   mostMistakes: string;
   currentStreak: number;
   longestStreak: number;
+  lastPractice: string;
+};
+
+export type StatisticsAdmin = {
+  totalCards: number;
+  totalLearnedCards: number;
+  lastAdded: string;
+  mostMistakes: string;
+  totalUsers: number;
+  longestActiveStreak: string;
+  longestStreak: string;
   lastPractice: string;
 };
 

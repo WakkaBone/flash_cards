@@ -1,6 +1,9 @@
 import { CardsTableRowType } from "../components/cards-table/cards-table";
 import { CardModel, Priorities } from "../models/card";
-import { StatisticsCounters } from "../models/statistics";
+import {
+  StatisticsCounters,
+  StatisticsCountersAdmin,
+} from "../models/statistics";
 import { PracticeModes } from "../pages/practice-page";
 import { ActionsCell as ActionsCellCards } from "../components/cards-table/actions-cell";
 import { CategoryModel } from "../models/category";
@@ -32,6 +35,20 @@ export const statisticsLabelsMapper: Record<StatisticsCounters, string> = {
   [StatisticsCounters.longestStreak]: "Longest Streak",
   [StatisticsCounters.lastAdded]: "Last Added",
   [StatisticsCounters.mostMistakes]: "Most Mistakes",
+};
+
+export const adminStatisticsLabelsMapper: Record<
+  StatisticsCountersAdmin,
+  string
+> = {
+  [StatisticsCountersAdmin.totalCards]: "Total Cards",
+  [StatisticsCountersAdmin.lastAdded]: "Last Added",
+  [StatisticsCountersAdmin.lastPractice]: "Last Practice",
+  [StatisticsCountersAdmin.longestActiveStreak]: "Longest Active Streak",
+  [StatisticsCountersAdmin.longestStreak]: "Longest Streak",
+  [StatisticsCountersAdmin.mostMistakes]: "Most Mistakes",
+  [StatisticsCountersAdmin.totalLearnedCards]: "Total Learned Cards",
+  [StatisticsCountersAdmin.totalUsers]: "Total Users",
 };
 
 export const priorityMapper: Record<Priorities, string> = {

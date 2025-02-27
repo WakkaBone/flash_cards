@@ -5,25 +5,31 @@ import { CenteredLoader } from "../loader/loader";
 import { CollapsibleSection } from "../collapsible/collapsible-section";
 import { BarChartRounded } from "@mui/icons-material";
 
-export const StatisticsSection = () => {
+export const AdminStatisticsSection = () => {
   const {
-    statisticsEntries,
-    statisticsRest: { isFetched },
+    adminStatisticsEntries,
+    adminStatisticsRest: { isFetched },
   } = useStatistics();
 
   return (
     <CollapsibleSection
-      buttonText="Counters"
+      buttonText="Admin Counters"
       buttonProps={{ startIcon: <BarChartRounded /> }}
     >
       {!isFetched ? (
         <CenteredLoader />
       ) : (
         <Grid container spacing={2}>
-          {statisticsEntries?.map((counter, index) => {
-            const keysWithTranslation = ["lastAdded", "mostMistakes"];
+          {adminStatisticsEntries?.map((counter, index) => {
+            const keysWithTooltip = [
+              "lastAdded",
+              "mostMistakes",
+              "lastPractice",
+              "longestStreak",
+              "longestActiveStreak",
+            ];
             let value: string | JSX.Element = counter[1];
-            if (keysWithTranslation.includes(counter[0])) {
+            if (keysWithTooltip.includes(counter[0])) {
               const splitValue = counter[1].split(" - ");
               value = (
                 <Tooltip title={splitValue[1]}>
