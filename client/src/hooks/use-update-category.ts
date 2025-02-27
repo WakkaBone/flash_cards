@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
 import { toastError } from "../utils/error-handler";
 import { updateCategoryMutation } from "../mutations/categories";
+import { MAIN_CATEGORIES } from "../constants";
 
 export const useUpdateCategory = () => {
   const queryClient = useQueryClient();
@@ -12,7 +13,14 @@ export const useUpdateCategory = () => {
   const updateCategory = (
     category: UpdateCategoryPayload,
     options?: MutateOptionsEnhanced<ApiResponse, unknown, UpdateCategoryPayload>
-  ) =>
+  ) => {
+    const forbiddenIds = Object.values(MAIN_CATEGORIES);
+    const canDelete = !forbiddenIds.includes(category.id);
+    if (!canDelete) {
+      toastError({ message: "You cannot edit one of the main categories" });
+      return;
+    }
+
     mutate(category, {
       onSuccess: (...args) => {
         args[0].isSuccess &&
@@ -29,5 +37,7 @@ export const useUpdateCategory = () => {
         options?.onSettled?.(data, error, variables, context);
       },
     });
+  };
+
   return { updateCategory, ...rest };
 };

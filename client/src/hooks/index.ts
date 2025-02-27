@@ -6,6 +6,7 @@ import { useCardsTableFilters } from "./use-cards-table-filters";
 import { useCategoriesTableFilters } from "./use-categories-table-filters";
 import { useDebounce } from "./use-debounce";
 import { useDeleteCard } from "./use-delete-card";
+import { useDeleteUsers } from "./use-delete-users";
 import { useGetCards } from "./use-get-cards";
 import { useGetUsers } from "./use-get-users";
 import { useMarkCardLearned } from "./use-mark-learned";
@@ -17,6 +18,7 @@ import { useRandomCard } from "./use-random-card";
 import { useScreenSize } from "./use-screen-size";
 import { useTimer } from "./use-timer";
 import { useUpdateCard } from "./use-update-card";
+import { useUpdateUser } from "./use-update-user";
 
 export {
   useAddCard,
@@ -27,6 +29,7 @@ export {
   useCategoriesTableFilters,
   useDebounce,
   useDeleteCard,
+  useDeleteUsers,
   useGetCards,
   useGetUsers,
   useMarkCardLearned,
@@ -38,4 +41,5 @@ export {
   useScreenSize,
   useTimer,
   useUpdateCard,
+  useUpdateUser,
 };

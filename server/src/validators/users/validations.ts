@@ -1,12 +1,14 @@
 import { body, param } from "express-validator";
 import { Roles } from "../../models/user";
-import { PASSWORD_RULES } from "../../constants";
+import { PASSWORD_RULES, USERNAME_RULES } from "../../constants";
 import { UsersService } from "../../services/users-service";
 
 export const usernameValidation = body("username")
   .isString()
   .notEmpty()
-  .withMessage("Username is required");
+  .withMessage("Username is required")
+  .matches(USERNAME_RULES)
+  .withMessage("Username cannot contain special chars");
 
 export const passwordValidation = body("password")
   .isString()

@@ -19,8 +19,10 @@ enum AllOption {
   All = 0,
 }
 export type PrioritiesExtended = Priorities | AllOption;
+export type RolesExtended = Roles | AllOption;
 
 export type GetCardsFilters = {
+  ownerId?: string;
   category?: IdLabel | null;
   search?: string;
   includeLearned?: boolean;

@@ -16,6 +16,7 @@ import { IdLabel } from "../models/shared";
 import { PriorityCell } from "../components/cards-table/priority-cell";
 import { Roles, UserModel } from "../models/user";
 import { UsersTableRowType } from "../components/users-table/users-table";
+import { ActionsCell as ActionsCellUsers } from "../components/users-table/actions-cell";
 
 export const practiceModeMapper: Record<PracticeModes, string> = {
   [PracticeModes.eth]: "English to Hebrew",
@@ -79,8 +80,7 @@ export const mapUserToTableRow = (user: UserModel): UsersTableRowType => ({
   currentStreak: user.currentStreak,
   lastPractice: user.lastPractice,
   longestStreak: user.longestStreak,
-  //TODO: add actions cell
-  actions: <></>,
+  actions: <ActionsCellUsers user={user} />,
 });
 
 export const mapAddCardFormToPayload = (

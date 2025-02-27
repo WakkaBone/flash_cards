@@ -3,17 +3,16 @@ import { useGetCards, useScreenSize, useTablePagination } from "../../hooks";
 import { useEffect, useState } from "react";
 import { CardsTableRowType } from "../cards-table/cards-table";
 import { mapCardToTableRow } from "../../utils/mappers";
-import { IdLabel } from "../../models/shared";
 import { cardsTableColumns } from "../cards-table/columns";
 
-type CategoryCardsPropsType = {
-  category: IdLabel;
+type UserCardsPropsType = {
+  userId: string;
 };
-export const CategoryCards = ({ category }: CategoryCardsPropsType) => {
+export const UserCards = ({ userId }: UserCardsPropsType) => {
   const { isMobile, isTablet } = useScreenSize();
   const [rows, setRows] = useState<CardsTableRowType[]>([]);
 
-  const { data, isLoading, isFetching } = useGetCards({ category });
+  const { data, isLoading, isFetching } = useGetCards({ ownerId: userId });
 
   useEffect(() => {
     if (!data.data) return;

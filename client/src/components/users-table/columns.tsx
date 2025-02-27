@@ -11,8 +11,8 @@ export const usersTableColumns: GridColDef<UsersTableRowType>[] = [
     headerName: "Role",
     renderCell: (params) => <RoleCell role={params.row.role} />,
   },
-  { field: "currentStreak", headerName: "Current Streak" },
-  { field: "longestStreak", headerName: "Longest Streak" },
+  { field: "currentStreak", headerName: "Current Streak", flex: 1 },
+  { field: "longestStreak", headerName: "Longest Streak", flex: 1 },
   {
     field: "lastPractice",
     headerName: "Last Practice",
@@ -20,6 +20,7 @@ export const usersTableColumns: GridColDef<UsersTableRowType>[] = [
       row.lastPractice
         ? format(new Date(row.lastPractice), "dd/MM/yyyy HH:mm")
         : "",
+    flex: 1,
   },
   {
     field: "createdAt",
@@ -28,6 +29,7 @@ export const usersTableColumns: GridColDef<UsersTableRowType>[] = [
       row.lastPractice
         ? format(new Date(row.createdAt), "dd/MM/yyyy HH:mm")
         : "",
+    flex: 1,
   },
   {
     field: "actions",

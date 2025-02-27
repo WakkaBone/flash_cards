@@ -6,6 +6,7 @@ import { mapUserToTableRow } from "../../utils/mappers";
 import { ToastContainer } from "react-toastify";
 import { usersTableColumns } from "./columns";
 import { Roles } from "../../models/user";
+import { BulkActions } from "./bulk-actions";
 
 export type UsersTableRowType = {
   id: string;
@@ -41,7 +42,12 @@ export const UsersTable = () => {
   return (
     <>
       {/* TODO: add filters */}
-      {/* TODO: add bulk actions */}
+      {rowsSelected.length > 0 && (
+        <BulkActions
+          rowsSelected={rowsSelected}
+          setRowsSelected={setRowsSelected}
+        />
+      )}
       <DataGrid
         {...paginationProps}
         onRowSelectionModelChange={(e) => setRowsSelected(e)}

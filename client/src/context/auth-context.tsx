@@ -9,6 +9,7 @@ import { toastError } from "../utils/error-handler";
 import { useAuth } from "../hooks";
 import { AuthService } from "../services/auth-service";
 import { AuthUserModel } from "../models/api";
+import { Roles } from "../models/user";
 
 type SimpleCredentialsType = { username: string; password: string };
 interface AuthContextType {
@@ -16,12 +17,15 @@ interface AuthContextType {
   login: (credentials: SimpleCredentialsType) => void;
   logout: () => void;
   user: AuthUserModel | null;
+  isAdmin: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
+  isAuthenticated: undefined,
   login: () => {},
   logout: () => {},
   user: null,
+  isAdmin: false,
 });
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
@@ -69,7 +73,15 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, user }}>
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
+        login,
+        logout,
+        user,
+        isAdmin: user?.role === Roles.admin,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -4,39 +4,40 @@ import { toast } from "react-toastify";
 import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
 import { toastError } from "../utils/error-handler";
 import {
-  bulkDeleteCategoriesMutation,
-  deleteCategoryMutation,
-} from "../mutations/categories";
-import { MAIN_CATEGORIES } from "../constants";
+  bulkDeleteUsersMutation,
+  deleteUserMutation,
+} from "../mutations/users";
+import { useAuthContext } from "../context/auth-context";
 
-export const useDeleteCategory = () => {
+export const useDeleteUsers = () => {
   const queryClient = useQueryClient();
 
-  const { mutate: mutateDeleteCategory, ...deleteCategoryRest } = useMutation(
-    deleteCategoryMutation
-  );
+  const { mutate: mutateDeleteUser, ...deleteUserRest } =
+    useMutation(deleteUserMutation);
 
-  const deleteCategory = (
-    categoryId: string,
-    options?: MutateOptionsEnhanced<
-      ApiResponse,
-      unknown,
-      { categoryId: string }
-    >
+  const { user, isAdmin } = useAuthContext();
+
+  const deleteUser = (
+    userId: string,
+    options?: MutateOptionsEnhanced<ApiResponse, unknown, { userId: string }>
   ) => {
-    const forbiddenIds = Object.values(MAIN_CATEGORIES);
-    const canDelete = !forbiddenIds.includes(categoryId);
-    if (!canDelete) {
-      toastError({ message: "You cannot remove one of the main categories" });
+    if (!isAdmin) {
+      toastError({ message: "You do not have the rights to delete users" });
       return;
     }
 
-    mutateDeleteCategory(
-      { categoryId },
+    const canDelete = userId !== (user?.id as string);
+    if (!canDelete) {
+      toastError({ message: "You cannot remove yourself" });
+      return;
+    }
+
+    mutateDeleteUser(
+      { userId },
       {
         onSuccess: (...args) => {
-          toast("Category deleted", { type: "success" });
-          queryClient.invalidateQueries({ queryKey: ["categories"] });
+          toast("User deleted", { type: "success" });
+          queryClient.invalidateQueries({ queryKey: ["users"] });
           options?.onSuccess?.(...args);
         },
         onError: (...args) => {
@@ -51,25 +52,30 @@ export const useDeleteCategory = () => {
     );
   };
 
-  const { mutate: mutateBulkDeleteCategories, ...bulkDeleteCategoriesRest } =
-    useMutation(bulkDeleteCategoriesMutation);
+  const { mutate: mutateBulkDeleteUsers, ...bulkDeleteUsersRest } = useMutation(
+    bulkDeleteUsersMutation
+  );
 
-  const bulkDeleteCategories = (
+  const bulkDeleteUsers = (
     ids: string[],
     options?: MutateOptionsEnhanced<ApiResponse, unknown, { ids: string[] }>
   ) => {
-    const forbiddenIds = Object.values(MAIN_CATEGORIES);
-    const canDelete = ids.every((id) => !forbiddenIds.includes(id as string));
-    if (!canDelete) {
-      toastError({ message: "You cannot remove one of the main categories" });
+    if (!isAdmin) {
+      toastError({ message: "You do not have the rights to delete users" });
       return;
     }
 
-    mutateBulkDeleteCategories(
+    const canDelete = !ids.includes(user?.id as string);
+    if (!canDelete) {
+      toastError({ message: "You cannot remove yourself" });
+      return;
+    }
+
+    mutateBulkDeleteUsers(
       { ids },
       {
         onSuccess: (...args) => {
-          toast("Categories deleted", { type: "success" });
+          toast("Users deleted", { type: "success" });
           queryClient.invalidateQueries({ queryKey: ["categories"] });
           options?.onSuccess?.(...args);
         },
@@ -86,9 +92,9 @@ export const useDeleteCategory = () => {
   };
 
   return {
-    deleteCategory,
-    deleteCategoryRest,
-    bulkDeleteCategories,
-    bulkDeleteCategoriesRest,
+    deleteUser,
+    deleteUserRest,
+    bulkDeleteUsers,
+    bulkDeleteUsersRest,
   };
 };
