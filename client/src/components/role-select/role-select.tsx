@@ -16,7 +16,7 @@ export const RoleSelect = (
 
   return (
     <FormControl fullWidth>
-      <InputLabel id="role-select-label">Roles</InputLabel>
+      <InputLabel id="role-select-label">Role</InputLabel>
       <Select<RolesExtended>
         labelId="role-select-label"
         id="role-select"

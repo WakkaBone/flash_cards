@@ -1,4 +1,5 @@
 import { useAddCard } from "./use-add-card";
+import { useAddUser } from "./use-add-user";
 import { useAppVersions } from "./use-app-versions";
 import { useAuth } from "./use-auth";
 import { useBulkActions } from "./use-bulk-actions";
@@ -22,6 +23,7 @@ import { useUpdateUser } from "./use-update-user";
 
 export {
   useAddCard,
+  useAddUser,
   useAppVersions,
   useAuth,
   useBulkActions,

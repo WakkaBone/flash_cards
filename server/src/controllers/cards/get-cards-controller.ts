@@ -14,6 +14,7 @@ type GetCardsQueryParams = {
   to?: string;
   mistakesThreshold?: string;
   priority?: string;
+  ownerId?: string;
   page?: string;
   pageSize?: string;
 };
@@ -31,6 +32,7 @@ export const getCardsController = async (
       to,
       mistakesThreshold,
       priority,
+      ownerId,
       page,
       pageSize,
     } = req.query;
@@ -38,7 +40,7 @@ export const getCardsController = async (
     const user = UsersService.getUserFromToken(req);
 
     const filters: GetCardsFilters = {
-      ownerId: getOwnershipFilter(user),
+      ownerId: ownerId || getOwnershipFilter(user),
       search,
       category: category ? category : undefined,
       includeLearned: includeLearned ? includeLearned === "true" : undefined,

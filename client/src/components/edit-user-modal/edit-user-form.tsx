@@ -2,8 +2,9 @@ import { Stack, TextField } from "@mui/material";
 import { Controller, UseFormReturn } from "react-hook-form";
 import { Roles } from "../../models/user";
 import { RoleSelect } from "../role-select/role-select";
+import { useEffect } from "react";
 
-const USERNAME_PATTERN = /^[A-Za-z0-9]+$/;
+const USERNAME_RULES = /^[A-Za-z0-9]+$/;
 
 export type EditUserFormType = {
   username: string;
@@ -17,7 +18,12 @@ export const EditUserForm = ({ formProps }: EditUserFormPropsType) => {
   const {
     control,
     formState: { errors },
+    reset,
   } = formProps;
+
+  useEffect(() => {
+    return () => reset();
+  }, [reset]);
 
   return (
     <Stack spacing={2} mb={2} direction={"row"} alignItems={"start"}>
@@ -26,7 +32,7 @@ export const EditUserForm = ({ formProps }: EditUserFormPropsType) => {
         rules={{
           required: "Username is required",
           pattern: {
-            value: USERNAME_PATTERN,
+            value: USERNAME_RULES,
             message: "Username cannot contain special characters",
           },
         }}
@@ -49,7 +55,9 @@ export const EditUserForm = ({ formProps }: EditUserFormPropsType) => {
           required: "Role is required",
         }}
         control={control}
-        render={({ field }) => <RoleSelect {...field} error={!!errors.role} />}
+        render={({ field }) => (
+          <RoleSelect {...field} required error={!!errors.role} />
+        )}
       />
     </Stack>
   );

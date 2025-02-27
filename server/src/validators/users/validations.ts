@@ -40,7 +40,7 @@ export const deleteYourselfValidation = param("id").custom(
   async (userId, { req }) => {
     //TODO: fix type
     const user = UsersService.getUserFromToken(req as any);
-    if (user.id !== userId) throw new Error("You can't delete yourself");
+    if (user.id === userId) throw new Error("You can't delete yourself");
     return true;
   }
 );

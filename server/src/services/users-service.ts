@@ -67,7 +67,7 @@ export const UsersService = {
     const queries = [];
 
     if (filters.searchExact) {
-      queries.push(where("label", "==", filters.searchExact));
+      queries.push(where("username", "==", filters.searchExact));
     }
 
     if (filters.from) {

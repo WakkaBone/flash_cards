@@ -6,6 +6,7 @@ import { englishValidator, hebrewValidator } from "../../utils/validators";
 import { IdLabel } from "../../models/shared";
 import { Priorities } from "../../models/card";
 import { PrioritySelect } from "../priority-select/priority-select";
+import { useEffect } from "react";
 
 export type EditCardFormType = {
   category: IdLabel;
@@ -22,7 +23,12 @@ export const EditCardForm = ({ formProps }: EditCardFormPropsType) => {
   const {
     control,
     formState: { errors },
+    reset,
   } = formProps;
+
+  useEffect(() => {
+    return () => reset();
+  }, [reset]);
 
   return (
     <>
@@ -104,7 +110,7 @@ export const EditCardForm = ({ formProps }: EditCardFormPropsType) => {
           rules={{ required: "Priority is required" }}
           control={control}
           render={({ field }) => (
-            <PrioritySelect {...field} error={!!errors.priority} />
+            <PrioritySelect {...field} error={!!errors.priority} required />
           )}
         />
       </Stack>
