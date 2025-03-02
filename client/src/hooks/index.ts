@@ -20,6 +20,7 @@ import { useScreenSize } from "./use-screen-size";
 import { useTimer } from "./use-timer";
 import { useUpdateCard } from "./use-update-card";
 import { useUpdateUser } from "./use-update-user";
+import { useUsersTableFilters } from "./use-users-table-filters";
 
 export {
   useAddCard,
@@ -44,4 +45,5 @@ export {
   useTimer,
   useUpdateCard,
   useUpdateUser,
+  useUsersTableFilters,
 };

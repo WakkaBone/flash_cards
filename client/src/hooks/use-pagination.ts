@@ -4,6 +4,7 @@ import { useState } from "react";
 const DEFAULT_PAGE_SIZE = 10;
 
 export const useTablePagination = () => {
+  //TODO: implement server side pagination
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize: DEFAULT_PAGE_SIZE,

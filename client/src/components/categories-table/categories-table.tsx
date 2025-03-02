@@ -30,7 +30,6 @@ export const CategoriesTable = () => {
     setRows(data.data.map((item) => mapCategoryToTableRow(item)));
   }, [data]);
 
-  //TODO: implement server side pagination
   const paginationProps = useTablePagination();
 
   //TODO: make grid more responsive

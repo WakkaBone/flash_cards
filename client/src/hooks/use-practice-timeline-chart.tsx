@@ -1,8 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { ApiResponse, STATISTICS_ACTIONS } from "../models/api";
+import {
+  ApiResponse,
+  GetPracticeTimelineFilters,
+  STATISTICS_ACTIONS,
+} from "../models/api";
 import { TimelinePoint } from "../models/statistics";
 import { getPracticeTimelineQuery } from "../queries/cards";
-import { GetPracticeTimelineFilters } from "./use-practice-timeline-filters";
 import { statisticsActionMapper } from "../utils/mappers";
 import { ChartData, ChartOptions } from "chart.js";
 import { useScreenSize } from "./use-screen-size";

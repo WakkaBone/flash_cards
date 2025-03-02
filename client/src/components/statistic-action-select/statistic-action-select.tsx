@@ -8,7 +8,7 @@ import {
 import { statisticsActionMapper } from "../../utils/mappers";
 import { StatisticsActionTypeExtended } from "../../hooks/use-practice-timeline-filters";
 import { STATISTICS_ACTIONS } from "../../models/api";
-import { AllActions } from "../../models/shared";
+import { AllOptionString } from "../../models/shared";
 
 export const StatisticsActionsSelect = (
   props: SelectProps<StatisticsActionTypeExtended>
@@ -23,7 +23,7 @@ export const StatisticsActionsSelect = (
         id="statistics-actions-select"
         {...props}
       >
-        <MenuItem key={"all"} value={AllActions.All}>
+        <MenuItem key={"all"} value={AllOptionString.All}>
           All
         </MenuItem>
         {actions.map((action) => (

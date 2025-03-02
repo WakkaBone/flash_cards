@@ -19,7 +19,6 @@ export const UserCards = ({ userId }: UserCardsPropsType) => {
     setRows(data.data.map((card) => mapCardToTableRow(card)));
   }, [data]);
 
-  //TODO: implement server side pagination
   const paginationProps = useTablePagination();
 
   return (

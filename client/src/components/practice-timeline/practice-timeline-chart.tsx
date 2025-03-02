@@ -1,5 +1,4 @@
 import { usePracticeTimelineChart } from "../../hooks";
-import { GetPracticeTimelineFilters } from "../../hooks/use-practice-timeline-filters";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -11,6 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { GetPracticeTimelineFilters } from "../../models/api";
 
 ChartJS.register(
   CategoryScale,

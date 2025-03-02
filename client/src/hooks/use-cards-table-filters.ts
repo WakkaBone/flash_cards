@@ -3,10 +3,11 @@ import { useDebounce } from "./use-debounce";
 import { GetCardsFilters, PrioritiesExtended } from "../models/api";
 import { CategoryOptionType } from "../components/category-select/category-select";
 import { SelectChangeEvent } from "@mui/material";
+import { AllOptionInt } from "../models/shared";
 
 export const defaultFilters: Partial<GetCardsFilters> = {
   includeLearned: false,
-  priority: 0,
+  priority: AllOptionInt.All,
 };
 
 export const useCardsTableFilters = (initialFilters: GetCardsFilters) => {

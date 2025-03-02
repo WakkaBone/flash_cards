@@ -34,7 +34,6 @@ export const CardsTable = () => {
     setRows(data.data.map((item) => mapCardToTableRow(item)));
   }, [data]);
 
-  //TODO: implement server side pagination
   const paginationProps = useTablePagination();
 
   //TODO: make grid more responsive

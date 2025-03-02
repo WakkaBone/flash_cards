@@ -1,19 +1,9 @@
 import { useState } from "react";
-import {
-  GetPracticeTimelineFilters as GetPracticeTimelineFiltersApi,
-  STATISTICS_ACTIONS,
-} from "../models/api";
+import { GetPracticeTimelineFilters, STATISTICS_ACTIONS } from "../models/api";
 import { SelectChangeEvent } from "@mui/material";
-import { AllActions } from "../models/shared";
+import { AllOptionString } from "../models/shared";
 
-export type StatisticsActionTypeExtended = STATISTICS_ACTIONS | AllActions;
-
-export type GetPracticeTimelineFilters = Omit<
-  GetPracticeTimelineFiltersApi,
-  "action"
-> & {
-  action?: StatisticsActionTypeExtended;
-};
+export type StatisticsActionTypeExtended = STATISTICS_ACTIONS | AllOptionString;
 
 export const getInitialPracticeTimelineFilters =
   (): GetPracticeTimelineFilters => {
@@ -21,7 +11,7 @@ export const getInitialPracticeTimelineFilters =
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(now.getDate() - 7);
 
-    return { from: oneWeekAgo, to: now, action: AllActions.All };
+    return { from: oneWeekAgo, to: now, action: AllOptionString.All };
   };
 
 export const usePracticeTimelineFilters = (

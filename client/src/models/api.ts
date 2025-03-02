@@ -1,6 +1,7 @@
+import { StatisticsActionTypeExtended } from "../hooks/use-practice-timeline-filters";
 import { CardModel, Priorities } from "./card";
 import { CategoryModel } from "./category";
-import { IdLabel } from "./shared";
+import { AllOptionInt, AllOptionString, IdLabel } from "./shared";
 import { Roles, UserModel } from "./user";
 
 export interface ApiError<T = any> {
@@ -15,11 +16,8 @@ export interface ApiResponse<T = any, E = any> {
   error?: ApiError<E>;
 }
 
-enum AllOption {
-  All = 0,
-}
-export type PrioritiesExtended = Priorities | AllOption;
-export type RolesExtended = Roles | AllOption;
+export type PrioritiesExtended = Priorities | AllOptionInt;
+export type RolesExtended = Roles | AllOptionString;
 
 export type GetCardsFilters = {
   ownerId?: string;
@@ -44,7 +42,7 @@ export type GetCategoriesFilters = {
 };
 
 export type GetPracticeTimelineFilters = {
-  action?: STATISTICS_ACTIONS;
+  action?: StatisticsActionTypeExtended;
   from?: Date;
   to?: Date;
 };
@@ -52,12 +50,12 @@ export type GetPracticeTimelineFilters = {
 export type GetUsersFilters = {
   search?: string;
   searchExact?: string;
-  role?: Roles;
-  numberOfCards?: number;
+  role?: RolesExtended;
+  numberOfCards?: string;
   from?: Date;
   to?: Date;
-  longestStreak?: number;
-  currentStreak?: number;
+  longestStreak?: string;
+  currentStreak?: string;
   page?: number;
   pageSize?: number;
 };

@@ -7,6 +7,8 @@ import { ToastContainer } from "react-toastify";
 import { usersTableColumns } from "./columns";
 import { Roles } from "../../models/user";
 import { BulkActions } from "./bulk-actions";
+import { UsersFilters } from "./users-filters";
+import { defaultFilters } from "../../hooks/use-users-table-filters";
 
 export type UsersTableRowType = {
   id: string;
@@ -23,7 +25,7 @@ export type UsersTableRowType = {
 export const UsersTable = () => {
   const { isMobile, isTablet } = useScreenSize();
 
-  const [filters, setFilters] = useState<GetUsersFilters>({});
+  const [filters, setFilters] = useState<GetUsersFilters>(defaultFilters);
   const { data, isLoading, isFetching } = useGetUsers(filters);
   const [rows, setRows] = useState<UsersTableRowType[]>([]);
 
@@ -32,7 +34,6 @@ export const UsersTable = () => {
     setRows(data.data.map((item) => mapUserToTableRow(item)));
   }, [data]);
 
-  //TODO: implement server side pagination
   const paginationProps = useTablePagination();
 
   //TODO: make grid more responsive
@@ -41,7 +42,7 @@ export const UsersTable = () => {
 
   return (
     <>
-      {/* TODO: add filters */}
+      <UsersFilters filters={filters} onChange={setFilters} />
       {rowsSelected.length > 0 && (
         <BulkActions
           rowsSelected={rowsSelected}
