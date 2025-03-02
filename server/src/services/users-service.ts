@@ -25,9 +25,13 @@ import {
 } from "../models/user";
 import { Request } from "express";
 import { decodeToken, JwtPayload } from "../utils/jwt-util";
-import { calculateDaysDiff } from "../utils/date-time";
+import { calculateDaysDiff, getCountByDate } from "../utils/date-time";
 import { CardsService, GetPracticeTimelineFilters } from "./cards-service";
 import { searchFilterCallback } from "../utils/search-util";
+import {
+  GetUsersDynamicsDto,
+  UserAdditionDynamicsFilters,
+} from "../models/statistics";
 
 export type GetUsersFilters = {
   search?: string;
@@ -240,5 +244,19 @@ export const UsersService = {
       ...point,
       dateTime: point.dateTime.toDate().toISOString(),
     }));
+  },
+
+  getUserDynamics: async function (
+    filters: UserAdditionDynamicsFilters
+  ): Promise<GetUsersDynamicsDto> {
+    const users: UserModelDto[] = await this.getUsers(filters);
+
+    const groupedByCreationDate = getCountByDate(users, "createdAt");
+    const groupedByLastPracticeDate = getCountByDate(users, "lastPractice");
+
+    return {
+      createdAt: groupedByCreationDate,
+      lastPractice: groupedByLastPracticeDate,
+    };
   },
 };

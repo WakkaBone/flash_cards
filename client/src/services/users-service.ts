@@ -4,12 +4,14 @@ import {
   AddUserPayload,
   ApiResponse,
   BulkDeleteUsersPayload,
+  GetPracticeTimelineFilters,
   GetUsersFilters,
   UpdateUserPayload,
 } from "../models/api";
 import { buildUrl } from "../utils/url-util";
 import { handleError } from "../utils/error-handler";
 import { CategoryModel } from "../models/category";
+import { TimelinePoint } from "../models/statistics";
 
 const apiPostfix = "/users";
 
@@ -59,6 +61,16 @@ export const UsersService = {
       AxiosPromise<ApiResponse> | AxiosError<ApiResponse>,
       UpdateUserPayload
     >(`${apiPostfix}/${user.id}`, user);
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
+  },
+
+  async getPracticeTimeline(filters: GetPracticeTimelineFilters) {
+    const url = buildUrl(`${apiPostfix}/timeline`, filters);
+    const response = await httpClient.get<
+      ApiResponse<TimelinePoint[]>,
+      AxiosPromise<ApiResponse<TimelinePoint[]>> | AxiosError<ApiResponse>
+    >(url);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
   },

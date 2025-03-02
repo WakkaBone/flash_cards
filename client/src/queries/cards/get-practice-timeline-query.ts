@@ -1,6 +1,6 @@
 import { DefinedInitialDataOptions } from "@tanstack/react-query";
 import { ApiResponse, GetPracticeTimelineFilters } from "../../models/api";
-import { CardsService } from "../../services/cards-service";
+import { UsersService } from "../../services/users-service";
 import { TimelinePoint } from "../../models/statistics";
 
 export const getPracticeTimelineQuery = (
@@ -8,5 +8,5 @@ export const getPracticeTimelineQuery = (
 ): DefinedInitialDataOptions<ApiResponse<TimelinePoint[]>> => ({
   initialData: { isSuccess: false, data: [] },
   queryKey: ["timeline", filters],
-  queryFn: async () => await CardsService.getPracticeTimeline(filters),
+  queryFn: async () => await UsersService.getPracticeTimeline(filters),
 });

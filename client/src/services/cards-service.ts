@@ -6,16 +6,11 @@ import {
   BulkDeleteCardsPayload,
   BulkMarkLearnedPayload,
   GetCardsFilters,
-  GetPracticeTimelineFilters,
   STATISTICS_ACTIONS,
   UpdateCardPayload,
 } from "../models/api";
 import { CardModel } from "../models/card";
-import {
-  Statistics,
-  StatisticsAdmin,
-  TimelinePoint,
-} from "../models/statistics";
+import { Statistics, StatisticsAdmin } from "../models/statistics";
 import { buildUrl } from "../utils/url-util";
 import { handleError } from "../utils/error-handler";
 import { compileGetCardsFilters } from "../utils/mappers";
@@ -137,16 +132,6 @@ export const CardsService = {
       ApiResponse<Statistics>,
       AxiosPromise<ApiResponse<StatisticsAdmin>> | AxiosError<ApiResponse>
     >(`${apiPostfix}/statistics-admin`);
-    if (response instanceof AxiosError) return handleError(response);
-    return response.data;
-  },
-
-  async getPracticeTimeline(filters: GetPracticeTimelineFilters) {
-    const url = buildUrl(`${apiPostfix}/timeline`, filters);
-    const response = await httpClient.get<
-      ApiResponse<TimelinePoint[]>,
-      AxiosPromise<ApiResponse<TimelinePoint[]>> | AxiosError<ApiResponse>
-    >(url);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
   },

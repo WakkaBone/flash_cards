@@ -5,9 +5,9 @@ import { bulkMarkLearnedController } from "./bulk-mark-learned-controller";
 import { deleteCardController } from "./delete-card-controller";
 import { getAdminStatisticsController } from "./get-admin-statistics-controller";
 import { getCardsController } from "./get-cards-controller";
+import { getCardsDynamicsController } from "./get-dynamics-controller";
 import { getRandomCardController } from "./get-random-card-controller";
 import { getStatisticsController } from "./get-statistics-controller";
-import { getTimelineController } from "./get-timeline-controller";
 import { markLearnedController } from "./mark-learned-controller";
 import { updateCardController } from "./update-card-controller";
 import { updateStatisticsController } from "./update-statistics-controller";
@@ -19,10 +19,10 @@ export {
   bulkMarkLearnedController,
   deleteCardController,
   getCardsController,
+  getCardsDynamicsController,
   getRandomCardController,
   getStatisticsController,
   getAdminStatisticsController,
-  getTimelineController,
   markLearnedController,
   updateCardController,
   updateStatisticsController,
