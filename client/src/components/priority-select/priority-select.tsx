@@ -10,9 +10,10 @@ import { Priorities } from "../../models/card";
 import { PrioritiesExtended } from "../../models/api";
 import { AllOptionInt } from "../../models/shared";
 
-export const PrioritySelect = (
-  props: SelectProps<PrioritiesExtended> & { showAll?: boolean }
-) => {
+export const PrioritySelect = ({
+  showAll,
+  ...props
+}: SelectProps<PrioritiesExtended> & { showAll?: boolean }) => {
   const priorities = Object.values(Priorities).filter(
     (key) => !isNaN(Number(key))
   ) as Priorities[];
@@ -25,7 +26,7 @@ export const PrioritySelect = (
         id="priority-select"
         {...props}
       >
-        {!!props.showAll && <MenuItem value={AllOptionInt.All}>All</MenuItem>}
+        {!!showAll && <MenuItem value={AllOptionInt.All}>All</MenuItem>}
         {priorities.map((priority) => (
           <MenuItem key={priority} value={priority}>
             {priorityMapper[priority]}

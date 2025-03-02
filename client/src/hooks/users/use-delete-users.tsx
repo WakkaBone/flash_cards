@@ -1,13 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ApiResponse } from "../models/api";
+import { ApiResponse } from "../../models/api";
 import { toast } from "react-toastify";
-import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
-import { toastError } from "../utils/error-handler";
+import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
+import { toastError } from "../../utils/error-handler";
 import {
   bulkDeleteUsersMutation,
   deleteUserMutation,
-} from "../mutations/users";
-import { useAuthContext } from "../context/auth-context";
+} from "../../mutations/users";
+import { useAuthContext } from "../../context/auth-context";
 
 export const useDeleteUsers = () => {
   const queryClient = useQueryClient();

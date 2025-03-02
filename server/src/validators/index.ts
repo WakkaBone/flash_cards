@@ -18,6 +18,7 @@ import { deleteUserValidator } from "./users/delete-user-validator";
 import { updateUserValidator } from "./users/update-user-validator";
 import { bulkDeleteUsersValidator } from "./users/bulk-delete-users-validator";
 import { signupValidator } from "./auth/signup-validator";
+import { patchAccountValidator } from "./auth/patch-account-validator";
 
 export {
   addCardValidator,
@@ -40,4 +41,5 @@ export {
   updateCategoryValidator,
   updateUserValidator,
   signupValidator,
+  patchAccountValidator,
 };

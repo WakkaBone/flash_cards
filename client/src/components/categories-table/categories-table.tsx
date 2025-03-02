@@ -4,7 +4,7 @@ import { useScreenSize, useTablePagination } from "../../hooks";
 import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 import { mapCategoryToTableRow } from "../../utils/mappers";
 import { ToastContainer } from "react-toastify";
-import { useGetCategories } from "../../hooks/use-get-categories";
+import { useGetCategories } from "../../hooks/categories/use-get-categories";
 import { CategoriesFilters } from "./categories-filters";
 import { BulkActions } from "./bulk-actions";
 import { categoriesTableColumns } from "./columns";

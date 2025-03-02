@@ -15,6 +15,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useState } from "react";
 import { useScreenSize } from "../../hooks";
 import {
+  AccountCircleOutlined,
   AddCircleOutline,
   BackupTableOutlined,
   BarChartRounded,
@@ -119,7 +120,14 @@ const MenuList = ({ closeDrawer }: { closeDrawer?: () => void }) => {
   if (!user) return null;
 
   return (
-    <List sx={{ pt: 0, height: "100%", overflow: "hidden" }}>
+    <List
+      sx={{
+        pt: 0,
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       {menuOptions
         .filter(({ roles }) => (user ? roles.includes(user?.role) : false))
         .map(({ id, path, label, icon }) => (
@@ -134,18 +142,28 @@ const MenuList = ({ closeDrawer }: { closeDrawer?: () => void }) => {
             }}
           />
         ))}
+      <ListItem style={{ flexGrow: 1 }} />
+      <MenuItem
+        id="my-account"
+        key="my-account"
+        label="My account"
+        onClick={() => handleMenuItemClick(ROUTES.myAccount)}
+        icon={<AccountCircleOutlined sx={iconStyles} />}
+        isActive={pathname === ROUTES.myAccount}
+        listItemStyle={{
+          backgroundColor:
+            pathname === ROUTES.myAccount ? "#1976d2" : "transparent",
+        }}
+      />
       <MenuItem
         id="logout"
+        key="logout"
         label="Logout"
         onClick={logout}
         icon={<Logout sx={iconStyles} />}
-        listItemStyle={{
-          position: "absolute",
-          bottom: "0",
-          marginBottom: "30px",
-        }}
         isActive={false}
       />
+      <ListItem style={{ marginBottom: "10px" }} />
     </List>
   );
 };

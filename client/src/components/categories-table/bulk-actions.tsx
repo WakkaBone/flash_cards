@@ -3,7 +3,7 @@ import { GridRowSelectionModel } from "@mui/x-data-grid";
 import { usePopoverConfirmation } from "../../hooks";
 import { DeleteForeverRounded } from "@mui/icons-material";
 import { PopoverConfirmation } from "../popover-confirmation/popover-confirmation";
-import { useDeleteCategory } from "../../hooks/use-delete-category";
+import { useDeleteCategory } from "../../hooks";
 import { BulkActionsContainer } from "../bulk-actions/bulk-actions-container";
 
 type BulkActionsPropsType = {

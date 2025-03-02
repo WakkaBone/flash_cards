@@ -3,8 +3,7 @@ import { Controller, UseFormReturn } from "react-hook-form";
 import { Roles } from "../../models/user";
 import { RoleSelect } from "../role-select/role-select";
 import { useEffect } from "react";
-
-const USERNAME_RULES = /^[A-Za-z0-9]+$/;
+import { usernameValidator } from "../../utils/validators";
 
 export type EditUserFormType = {
   username: string;
@@ -31,10 +30,7 @@ export const EditUserForm = ({ formProps }: EditUserFormPropsType) => {
         name="username"
         rules={{
           required: "Username is required",
-          pattern: {
-            value: USERNAME_RULES,
-            message: "Username cannot contain special characters",
-          },
+          ...usernameValidator,
         }}
         control={control}
         render={({ field }) => (

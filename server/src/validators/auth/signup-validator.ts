@@ -4,5 +4,5 @@ import { passwordValidation, usernameValidation } from "./validations";
 export const signupValidator = [
   usernameValidation,
   passwordValidation,
-  uniqueUsernameValidation,
+  uniqueUsernameValidation(true),
 ];

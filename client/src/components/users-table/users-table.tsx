@@ -8,7 +8,7 @@ import { usersTableColumns } from "./columns";
 import { Roles } from "../../models/user";
 import { BulkActions } from "./bulk-actions";
 import { UsersFilters } from "./users-filters";
-import { defaultFilters } from "../../hooks/use-users-table-filters";
+import { defaultFilters } from "../../hooks/users/use-users-table-filters";
 
 export type UsersTableRowType = {
   id: string;

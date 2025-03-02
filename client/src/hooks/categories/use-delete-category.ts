@@ -1,13 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ApiResponse } from "../models/api";
+import { ApiResponse } from "../../models/api";
 import { toast } from "react-toastify";
-import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
-import { toastError } from "../utils/error-handler";
+import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
+import { toastError } from "../../utils/error-handler";
 import {
   bulkDeleteCategoriesMutation,
   deleteCategoryMutation,
-} from "../mutations/categories";
-import { MAIN_CATEGORIES } from "../constants";
+} from "../../mutations/categories";
+import { MAIN_CATEGORIES } from "../../constants";
 
 export const useDeleteCategory = () => {
   const queryClient = useQueryClient();

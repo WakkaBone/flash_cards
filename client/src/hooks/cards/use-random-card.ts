@@ -1,13 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ApiResponse, STATISTICS_ACTIONS } from "../models/api";
-import { CardModel } from "../models/card";
-import { getRandomCardQuery } from "../queries/cards";
+import { ApiResponse, STATISTICS_ACTIONS } from "../../models/api";
+import { CardModel } from "../../models/card";
+import { getRandomCardQuery } from "../../queries/cards";
 import { useEffect, useState } from "react";
-import { updateCardStatsMutation } from "../mutations/cards";
+import { updateCardStatsMutation } from "../../mutations/cards";
 import { toast } from "react-toastify";
-import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
-import { PracticeFilersType } from "../pages/practice-page";
-import { toastError } from "../utils/error-handler";
+import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
+import { PracticeFilersType } from "../../pages/practice-page";
+import { toastError } from "../../utils/error-handler";
 
 export const useRandomCard = (filters: PracticeFilersType) => {
   const queryClient = useQueryClient();

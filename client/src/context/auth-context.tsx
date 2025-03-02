@@ -23,6 +23,7 @@ interface AuthContextType {
   isLoading: boolean;
   user: AuthUserModel | null;
   isAdmin: boolean;
+  updateUsername: (username: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -33,6 +34,7 @@ const AuthContext = createContext<AuthContextType>({
   signup: () => {},
   user: null,
   isAdmin: false,
+  updateUsername: () => {},
 });
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
@@ -106,6 +108,9 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     });
   };
 
+  const updateUsername = (username: string) =>
+    setUser((user) => ({ ...user, username } as AuthUserModel));
+
   return (
     <AuthContext.Provider
       value={{
@@ -116,6 +121,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         isLoading: isLoggingIn || isSigningUp,
         user,
         isAdmin: user?.role === Roles.admin,
+        updateUsername,
       }}
     >
       {children}

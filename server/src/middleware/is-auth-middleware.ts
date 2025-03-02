@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "../constants";
-import { generateAccessToken, JwtPayload } from "../utils/jwt-util";
-import { generateAuthCookie } from "../utils/cookie-util";
+import { JwtPayload } from "../utils/jwt-util";
+import { AuthService } from "../services/auth-service";
 
 export const isAuth = (req: Request, res: Response, next: NextFunction) => {
   const accessToken = req.cookies[ACCESS_TOKEN_KEY];
@@ -25,11 +25,9 @@ export const isAuth = (req: Request, res: Response, next: NextFunction) => {
 
       if (!isRefreshTokenValid) throw new Error("Refresh token is invalid");
 
-      const newAccessToken = generateAccessToken(isRefreshTokenValid);
-      const newAccessTokenCookie = generateAuthCookie(
-        ACCESS_TOKEN_KEY,
-        newAccessToken
-      );
+      const newAccessTokenCookie =
+        AuthService.issueAccessTokenCookie(isRefreshTokenValid);
+
       res.setHeader("Set-Cookie", newAccessTokenCookie);
     }
 

@@ -4,6 +4,7 @@ import {
   ApiResponse,
   AuthUserModel,
   LoginPayload,
+  PatchAccountPayload,
   SignupPayload,
 } from "../models/api";
 import { handleError } from "../utils/error-handler";
@@ -41,6 +42,16 @@ export const AuthService = {
       AxiosPromise<ApiResponse>,
       SignupPayload
     >(`${apiPostfix}/signup`, credentials);
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
+  },
+
+  async patchAccount(patchData: PatchAccountPayload) {
+    const response = await httpClient.patch<
+      ApiResponse,
+      AxiosPromise<ApiResponse>,
+      PatchAccountPayload
+    >(`${apiPostfix}/account`, patchData);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
   },

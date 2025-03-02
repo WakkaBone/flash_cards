@@ -3,13 +3,13 @@ import {
   ApiResponse,
   GetPracticeTimelineFilters,
   STATISTICS_ACTIONS,
-} from "../models/api";
-import { TimelinePoint } from "../models/statistics";
-import { getPracticeTimelineQuery } from "../queries/cards";
-import { statisticsActionMapper } from "../utils/mappers";
+} from "../../models/api";
+import { TimelinePoint } from "../../models/statistics";
+import { getPracticeTimelineQuery } from "../../queries/cards";
+import { statisticsActionMapper } from "../../utils/mappers";
 import { ChartData, ChartOptions } from "chart.js";
-import { useScreenSize } from "./use-screen-size";
-import { increasedLegendSpacingPlugin } from "../utils/chart-util";
+import { useScreenSize } from "../use-screen-size";
+import { increasedLegendSpacingPlugin } from "../../utils/chart-util";
 
 const formatDate = (date: Date) => date.toISOString().split("T")[0];
 

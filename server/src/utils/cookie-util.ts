@@ -1,3 +1,5 @@
+import { accessTokenDuration } from "../services/auth-service";
+
 export const generateAuthCookie = (
   name: string,
   token: string,
@@ -12,7 +14,7 @@ export const generateAuthCookie = (
   const authCookie = `${name}=${token}; Path=${
     options?.path ?? "/"
   }; SameSite=${options?.sameSite ?? "None"}; Max-Age=${
-    options?.maxAge ?? 600
+    options?.maxAge ?? accessTokenDuration
   }; ${options?.secure ?? "Secure;"} ${options?.httpOnly ?? "HttpOnly;"}`;
   return authCookie;
 };

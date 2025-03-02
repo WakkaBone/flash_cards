@@ -3,15 +3,15 @@ import {
   loginMutation,
   logoutMutation,
   signupMutation,
-} from "../mutations/auth";
+} from "../../mutations/auth";
 import {
   ApiResponse,
   AuthUserModel,
   LoginPayload,
   SignupPayload,
-} from "../models/api";
-import { toastError } from "../utils/error-handler";
-import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
+} from "../../models/api";
+import { toastError } from "../../utils/error-handler";
+import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
 
 const useAuth = () => {
   const { mutate: loginMutate, ...loginRest } = useMutation(loginMutation);

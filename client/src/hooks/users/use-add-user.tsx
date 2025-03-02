@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AddUserPayload, ApiResponse } from "../models/api";
-import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
+import { AddUserPayload, ApiResponse } from "../../models/api";
+import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
 import { toast } from "react-toastify";
-import { toastError } from "../utils/error-handler";
-import { addUserMutation } from "../mutations/users";
-import { useAuthContext } from "../context/auth-context";
+import { toastError } from "../../utils/error-handler";
+import { addUserMutation } from "../../mutations/users";
+import { useAuthContext } from "../../context/auth-context";
 
 export const useAddUser = () => {
   const { isAdmin } = useAuthContext();

@@ -1,6 +1,7 @@
-import { Button, Stack } from "@mui/material";
+import { Button } from "@mui/material";
 import { useState } from "react";
 import { AddUserModal } from "../add-user-modal/add-user-modal";
+import { TableHeader } from "../table-header/table-header";
 
 export const UsersHeader = () => {
   const [showModal, setShowModal] = useState(false);
@@ -8,11 +9,7 @@ export const UsersHeader = () => {
   const handleCloseModal = () => setShowModal(false);
 
   return (
-    <Stack
-      direction="row"
-      gap={1}
-      sx={{ mb: 1, height: "2.5em", justifyContent: "flex-end" }}
-    >
+    <TableHeader>
       <Button variant="contained" onClick={handleOpenModal}>
         Add User
       </Button>
@@ -21,6 +18,6 @@ export const UsersHeader = () => {
         onClose={handleCloseModal}
         onSuccess={handleCloseModal}
       />
-    </Stack>
+    </TableHeader>
   );
 };

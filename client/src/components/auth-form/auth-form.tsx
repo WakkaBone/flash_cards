@@ -1,8 +1,7 @@
 import { Box, Button, TextField } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { useAuthContext } from "../../context/auth-context";
-
-const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+import { passwordValidator } from "../../utils/validators";
 
 type AuthFormType = {
   username: string;
@@ -49,11 +48,7 @@ export const AuthForm = ({ mode }: AuthFormPropsType) => {
           name="password"
           rules={{
             required: "Password is required",
-            pattern: {
-              value: PASSWORD_REGEX,
-              message:
-                "Password must be at least 8 characters long, include at least one uppercase letter and one special character.",
-            },
+            ...passwordValidator,
           }}
           control={control}
           render={({ field }) => (

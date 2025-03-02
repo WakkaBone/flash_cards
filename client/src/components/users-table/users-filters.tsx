@@ -35,7 +35,7 @@ export const UsersFilters = ({
     FilterTypes.CurrentStreak,
   ],
 }: UsersTableFiltersPropsType) => {
-  const { isMobile } = useScreenSize();
+  const { isMobile, isTablet } = useScreenSize();
 
   const {
     filters,
@@ -63,59 +63,64 @@ export const UsersFilters = ({
     >
       <Box
         sx={{
-          flexDirection: isMobile ? "column" : "row",
+          flexDirection: isMobile || isTablet ? "column" : "row",
           display: "flex",
           gap: 2,
           padding: 2,
         }}
       >
         {enabledFilters.includes(FilterTypes.Search) && (
-          <Input
-            fullWidth
-            value={search}
-            placeholder="Search"
-            onChange={handleSearch}
-          />
+          <Stack direction="row" spacing={1} sx={{ width: "100%" }}>
+            <Input
+              fullWidth
+              value={search}
+              placeholder="Search"
+              onChange={handleSearch}
+            />
+          </Stack>
         )}
-        {enabledFilters.includes(FilterTypes.Role) && (
-          <RoleSelect showAll value={filters.role} onChange={handleRole} />
-        )}
-        {enabledFilters.includes(FilterTypes.NumberOfCards) && (
-          <TextField
-            fullWidth
-            type="number"
-            label="Cards"
-            value={numberOfCards}
-            onChange={handleNumberOfCards}
-            placeholder="Cards"
-          />
-        )}
+        <Stack direction="row" spacing={1} sx={{ width: "100%" }}>
+          {enabledFilters.includes(FilterTypes.Role) && (
+            <RoleSelect showAll value={filters.role} onChange={handleRole} />
+          )}
+          {enabledFilters.includes(FilterTypes.NumberOfCards) && (
+            <TextField
+              fullWidth
+              type="number"
+              label="Cards"
+              value={numberOfCards}
+              onChange={handleNumberOfCards}
+              placeholder="Cards"
+            />
+          )}
+        </Stack>
         {enabledFilters.includes(FilterTypes.LongestSteak) && (
-          <TextField
-            fullWidth
-            type="number"
-            label="Longest Streak"
-            value={longestStreak}
-            onChange={handleLongestStreak}
-            placeholder="Longest Streak"
-          />
+          <Stack direction="row" spacing={1} sx={{ width: "100%" }}>
+            <TextField
+              fullWidth
+              type="number"
+              label="Longest Streak"
+              value={longestStreak}
+              onChange={handleLongestStreak}
+              placeholder="Longest Streak"
+            />
+          </Stack>
         )}
         {enabledFilters.includes(FilterTypes.CurrentStreak) && (
-          <TextField
-            fullWidth
-            type="number"
-            label="Current Streak"
-            value={currentStreak}
-            onChange={handleCurrentStreak}
-            placeholder="Current Streak"
-          />
+          <Stack direction="row" spacing={1} sx={{ width: "100%" }}>
+            <TextField
+              fullWidth
+              type="number"
+              label="Current Streak"
+              value={currentStreak}
+              onChange={handleCurrentStreak}
+              placeholder="Current Streak"
+            />
+          </Stack>
         )}
+
         {enabledFilters.includes(FilterTypes.DateRange) && (
-          <Stack
-            direction="row"
-            spacing={1}
-            sx={{ width: isMobile ? "100%" : "200%" }}
-          >
+          <Stack direction="row" spacing={1} sx={{ width: "100%" }}>
             <DateTimeRangePicker
               handleDateRangeChange={handleDateRange}
               selectedRange={{

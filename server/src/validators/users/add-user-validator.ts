@@ -10,6 +10,6 @@ export const addUserValidator = [
   usernameValidation,
   passwordValidation,
   roleValidation,
-  uniqueUsernameValidation,
+  uniqueUsernameValidation(true),
   isAdminValidation,
 ];

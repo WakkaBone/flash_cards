@@ -8,6 +8,6 @@ import {
 export const updateUserValidator = [
   usernameValidation,
   roleValidation,
-  uniqueUsernameValidation,
+  uniqueUsernameValidation(true),
   isAdminValidation,
 ];

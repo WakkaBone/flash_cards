@@ -4,10 +4,7 @@ import { Roles } from "../../models/user";
 import { RoleSelect } from "../role-select/role-select";
 import { useEffect } from "react";
 import { useScreenSize } from "../../hooks";
-
-const USERNAME_RULES = /^[A-Za-z0-9]+$/;
-const PASSWORD_RULES =
-  /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+={}\[\]:;"'<>,.?/\\|`~\-]{8,}$/;
+import { passwordValidator, usernameValidator } from "../../utils/validators";
 
 export type AddUserFormType = {
   username: string;
@@ -37,10 +34,7 @@ export const AddUserForm = ({ formProps }: AddUserFormPropsType) => {
           name="username"
           rules={{
             required: "Username is required",
-            pattern: {
-              value: USERNAME_RULES,
-              message: "Username cannot contain special characters",
-            },
+            ...usernameValidator,
           }}
           control={control}
           render={({ field }) => (
@@ -59,11 +53,7 @@ export const AddUserForm = ({ formProps }: AddUserFormPropsType) => {
           name="password"
           rules={{
             required: "Password is required",
-            pattern: {
-              value: PASSWORD_RULES,
-              message:
-                "Password must be no less than 8 characters and contain both letters and numbers",
-            },
+            ...passwordValidator,
           }}
           control={control}
           render={({ field }) => (

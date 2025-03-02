@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ApiResponse, UpdateCategoryPayload } from "../models/api";
+import { ApiResponse, UpdateCategoryPayload } from "../../models/api";
 import { toast } from "react-toastify";
-import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
-import { toastError } from "../utils/error-handler";
-import { updateCategoryMutation } from "../mutations/categories";
-import { MAIN_CATEGORIES } from "../constants";
+import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
+import { toastError } from "../../utils/error-handler";
+import { updateCategoryMutation } from "../../mutations/categories";
+import { MAIN_CATEGORIES } from "../../constants";
 
 export const useUpdateCategory = () => {
   const queryClient = useQueryClient();

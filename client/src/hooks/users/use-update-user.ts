@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ApiResponse, UpdateUserPayload } from "../models/api";
+import { ApiResponse, UpdateUserPayload } from "../../models/api";
 import { toast } from "react-toastify";
-import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
-import { toastError } from "../utils/error-handler";
-import { updateUserMutation } from "../mutations/users";
-import { useAuthContext } from "../context/auth-context";
+import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
+import { toastError } from "../../utils/error-handler";
+import { updateUserMutation } from "../../mutations/users";
+import { useAuthContext } from "../../context/auth-context";
 
 export const useUpdateUser = () => {
   const queryClient = useQueryClient();

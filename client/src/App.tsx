@@ -22,6 +22,7 @@ import { UsersPage } from "./pages/users-page";
 import { AdminRoute } from "./components/protected-route/admin-route";
 import { SignupPage } from "./pages/signup-page";
 import { UnauthorizedRoute } from "./components/protected-route/unauthorized-route";
+import { MyAccountPage } from "./pages/my-account-page";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +54,7 @@ function App() {
                     </AdminRoute>
                   }
                 />
+                <Route path={ROUTES.myAccount} element={<MyAccountPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Route>
               <Route

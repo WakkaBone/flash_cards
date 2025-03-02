@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { GetPracticeTimelineFilters, STATISTICS_ACTIONS } from "../models/api";
+import {
+  GetPracticeTimelineFilters,
+  STATISTICS_ACTIONS,
+} from "../../models/api";
 import { SelectChangeEvent } from "@mui/material";
-import { AllOptionString } from "../models/shared";
+import { AllOptionString } from "../../models/shared";
 
 export type StatisticsActionTypeExtended = STATISTICS_ACTIONS | AllOptionString;
 

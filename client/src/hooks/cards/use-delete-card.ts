@@ -1,25 +1,24 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ApiResponse } from "../models/api";
-import { markCardLearnedMutation } from "../mutations/cards";
+import { ApiResponse } from "../../models/api";
 import { toast } from "react-toastify";
-import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
-import { toastError } from "../utils/error-handler";
+import { deleteCardMutation } from "../../mutations/cards";
+import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
+import { toastError } from "../../utils/error-handler";
 
-export const useMarkCardLearned = () => {
+export const useDeleteCard = () => {
   const queryClient = useQueryClient();
 
-  const { mutate: mutateMarkLearned, isPending } = useMutation(
-    markCardLearnedMutation
-  );
-  const markCardLearned = (
+  const { mutate: mutateDeleteCard, isPending } =
+    useMutation(deleteCardMutation);
+  const deleteCard = (
     cardId: string,
     options?: MutateOptionsEnhanced<ApiResponse, unknown, { cardId: string }>
   ) =>
-    mutateMarkLearned(
+    mutateDeleteCard(
       { cardId },
       {
         onSuccess: (...args) => {
-          toast("Card marked as learned", { type: "success" });
+          toast("Card deleted", { type: "success" });
           queryClient.invalidateQueries({ queryKey: ["cards"] });
           options?.onSuccess?.(...args);
         },
@@ -34,5 +33,5 @@ export const useMarkCardLearned = () => {
       }
     );
 
-  return { markCardLearned, isPending };
+  return { deleteCard, isPending };
 };

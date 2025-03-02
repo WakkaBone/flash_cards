@@ -10,9 +10,11 @@ import { RolesExtended } from "../../models/api";
 import { Roles } from "../../models/user";
 import { AllOptionString } from "../../models/shared";
 
-export const RoleSelect = (
-  props: SelectProps<RolesExtended> & { showAll?: boolean }
-) => {
+export const RoleSelect = ({
+  showAll,
+  required,
+  ...props
+}: SelectProps<RolesExtended> & { showAll?: boolean; required?: boolean }) => {
   const roles = Object.values(Roles) as Roles[];
 
   return (
@@ -21,11 +23,10 @@ export const RoleSelect = (
       <Select<RolesExtended>
         labelId="role-select-label"
         id="role-select"
+        required={!!required}
         {...props}
       >
-        {!!props.showAll && (
-          <MenuItem value={AllOptionString.All}>All</MenuItem>
-        )}
+        {!!showAll && <MenuItem value={AllOptionString.All}>All</MenuItem>}
         {roles.map((role) => (
           <MenuItem key={role} value={role}>
             {userRoleMapper[role]}

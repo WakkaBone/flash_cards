@@ -2,29 +2,32 @@ import { body, param } from "express-validator";
 import { Roles } from "../../models/user";
 import { PASSWORD_RULES, USERNAME_RULES } from "../../constants";
 import { UsersService } from "../../services/users-service";
+import {
+  passwordRulesViolatedMessage,
+  usernameRulesViolatedMessage,
+} from "../../utils/validation-util";
 
 export const usernameValidation = body("username")
   .isString()
   .notEmpty()
   .withMessage("Username is required")
   .matches(USERNAME_RULES)
-  .withMessage("Username cannot contain special chars");
+  .withMessage(usernameRulesViolatedMessage);
 
 export const passwordValidation = body("password")
   .isString()
   .notEmpty()
   .withMessage("Password is required")
   .matches(PASSWORD_RULES)
-  .withMessage(
-    "Password must be at least 8 characters long and contain both letters and numbers"
-  );
+  .withMessage(passwordRulesViolatedMessage);
 
 export const roleValidation = body("role")
   .isIn(Object.values(Roles))
   .withMessage("Invalid role");
 
-export const uniqueUsernameValidation = body("username").custom(
-  async (username) => {
+export const uniqueUsernameValidation = (isRequired: boolean = true) =>
+  body("username").custom(async (username) => {
+    if (!isRequired && !username) return true;
     const sameUsernames = await UsersService.getUsers({
       searchExact: username,
     });
@@ -33,8 +36,7 @@ export const uniqueUsernameValidation = body("username").custom(
       throw new Error("Such username already exists");
 
     return true;
-  }
-);
+  });
 
 export const deleteYourselfValidation = param("id").custom(
   async (userId, { req }) => {

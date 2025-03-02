@@ -1,4 +1,4 @@
-import { StatisticsActionTypeExtended } from "../hooks/use-practice-timeline-filters";
+import { StatisticsActionTypeExtended } from "../hooks/practice-timeline/use-practice-timeline-filters";
 import { CardModel, Priorities } from "./card";
 import { CategoryModel } from "./category";
 import { AllOptionInt, AllOptionString, IdLabel } from "./shared";
@@ -95,6 +95,12 @@ export type BulkDeleteUsersPayload = BulkDeleteSharedPayload;
 export type LoginPayload = {
   username: string;
   password: string;
+};
+
+export type PatchAccountPayload = {
+  username?: string;
+  oldPassword?: string;
+  newPassword?: string;
 };
 
 export type SignupPayload = LoginPayload;

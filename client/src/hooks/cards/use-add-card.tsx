@@ -1,17 +1,19 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addCardMutation, addCardPrecheckMutation } from "../mutations/cards";
-import { AddCardPayload, ApiResponse } from "../models/api";
+import {
+  addCardMutation,
+  addCardPrecheckMutation,
+} from "../../mutations/cards";
+import { AddCardPayload, ApiResponse } from "../../models/api";
 import { toast } from "react-toastify";
-import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
+import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
 import { useState } from "react";
-import { CardModel } from "../models/card";
-import { AddCardFormType } from "../components/add-card-form/add-card-form";
+import { CardModel } from "../../models/card";
 import { Box, Typography } from "@mui/material";
 import {
   ConfirmationModalPropsType,
   ConfirmationModalTypes,
-} from "../components/confirmation-modal/confirmation-modal";
-import { ErrorCodes, toastError } from "../utils/error-handler";
+} from "../../components/confirmation-modal/confirmation-modal";
+import { ErrorCodes, toastError } from "../../utils/error-handler";
 
 const ConfirmAddWordModalMessage = ({
   similarWords,

@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addCategoryMutation } from "../mutations/categories/add-category-mutation";
-import { AddCategoryPayload, ApiResponse } from "../models/api";
-import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
+import { addCategoryMutation } from "../../mutations/categories/add-category-mutation";
+import { AddCategoryPayload, ApiResponse } from "../../models/api";
+import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
 import { toast } from "react-toastify";
-import { toastError } from "../utils/error-handler";
+import { toastError } from "../../utils/error-handler";
 
 export const useAddCategory = () => {
   const queryClient = useQueryClient();

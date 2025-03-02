@@ -10,8 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { AddCircleOutline } from "@mui/icons-material";
 import { useScreenSize } from "../../hooks";
-import { useGetCategories } from "../../hooks/use-get-categories";
-import { useAddCategory } from "../../hooks/use-add-category";
+import { useGetCategories, useAddCategory } from "../../hooks";
 import { mapCategoryToSelectOption } from "../../utils/mappers";
 import { IdLabel } from "../../models/shared";
 

@@ -1,15 +1,10 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
-import { generateAuthCookie } from "../../utils/cookie-util";
 import { isValid } from "../../utils/validation-util";
-import {
-  generateAccessToken,
-  generateRefreshToken,
-  JwtPayload,
-} from "../../utils/jwt-util";
-import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "../../constants";
+import { JwtPayload } from "../../utils/jwt-util";
 import { UsersService } from "../../services/users-service";
 import bcrypt from "bcrypt";
+import { AuthService } from "../../services/auth-service";
 
 type LoginBody = {
   username: string;
@@ -36,16 +31,9 @@ export const loginController = async (
 
     if (passwordCorrect) {
       const payload: JwtPayload = { id: user.id, username, role: user.role };
-      const accessToken = generateAccessToken(payload);
-      const refreshToken = generateRefreshToken(payload);
-      const accessCookie = generateAuthCookie(ACCESS_TOKEN_KEY, accessToken);
-      const refreshCookie = generateAuthCookie(
-        REFRESH_TOKEN_KEY,
-        refreshToken,
-        { maxAge: 43200 } //12 hours
-      );
+      const authCookies = AuthService.issueAuthCookies(payload);
 
-      res.setHeader("Set-Cookie", [accessCookie, refreshCookie]);
+      res.setHeader("Set-Cookie", authCookies);
 
       res.status(200).json({ isSuccess: true, data: payload });
     } else {
