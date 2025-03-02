@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { CategoryModel } from "../../models/category";
-import { useUpdateCategory } from "../../hooks/use-update-category";
+import { useUpdateCategory } from "../../hooks";
 import { EditCategoryForm, EditCategoryFormType } from "./edit-category-form";
 import { CategoryCards } from "./category-cards";
 

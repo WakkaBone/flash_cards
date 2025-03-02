@@ -4,12 +4,10 @@ import {
   FilterTypes,
   PracticeTimelineFilters,
 } from "./practice-timeline-filters";
-import {
-  getInitialPracticeTimelineFilters,
-  GetPracticeTimelineFilters,
-} from "../../hooks/use-practice-timeline-filters";
+import { getInitialPracticeTimelineFilters } from "../../hooks/practice-timeline/use-practice-timeline-filters";
 import { CollapsibleSection } from "../collapsible/collapsible-section";
 import { TimelineOutlined } from "@mui/icons-material";
+import { GetPracticeTimelineFilters } from "../../models/api";
 
 export const PracticeTimeline = () => {
   const [filters, setFilters] = useState<GetPracticeTimelineFilters>(

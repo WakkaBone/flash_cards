@@ -4,6 +4,7 @@ import {
   englishValidation,
   hebrewValidation,
   isLearnedValidation,
+  ownerValidation,
   priorityValidation,
   statisticsValidation,
 } from "./validations";
@@ -16,4 +17,5 @@ export const updateCardValidator = [
   isLearnedValidation,
   englishValidation,
   statisticsValidation,
+  ownerValidation,
 ];

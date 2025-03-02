@@ -1,5 +1,5 @@
 import { DataGrid } from "@mui/x-data-grid";
-import { useGetCards, useScreenSize } from "../../hooks";
+import { useGetCards, useScreenSize, useTablePagination } from "../../hooks";
 import { useEffect, useState } from "react";
 import { CardsTableRowType } from "../cards-table/cards-table";
 import { mapCardToTableRow } from "../../utils/mappers";
@@ -20,8 +20,11 @@ export const CategoryCards = ({ category }: CategoryCardsPropsType) => {
     setRows(data.data.map((card) => mapCardToTableRow(card)));
   }, [data]);
 
+  const paginationProps = useTablePagination();
+
   return (
     <DataGrid
+      {...paginationProps}
       disableColumnFilter={isMobile || isTablet}
       disableColumnSorting={isMobile || isTablet}
       disableColumnMenu={isMobile || isTablet}

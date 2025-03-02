@@ -4,7 +4,8 @@ import { CardModel, Priorities } from "../models/card";
 import { UsersService } from "./users-service";
 import { Request } from "express";
 import { TimelinePoint } from "../models/user";
-import { STATISTICS_ACTIONS } from "../constants";
+import { MAIN_CATEGORIES, STATISTICS_ACTIONS } from "../constants";
+import { CategoriesService } from "./categories-service";
 
 export const PatchService = {
   resetSrsProps: async function () {
@@ -34,11 +35,12 @@ export const PatchService = {
           statistics: card.statistics,
           details: card.details,
           lastReviewDate: defaultValues.lastReviewDate,
+          ownerIds: card.ownerIds,
         };
 
         await CardsService.updateCard(card.id, updatedCard);
       } catch (error) {
-        throw new Error("Failed to update the card");
+        throw new Error(`Failed to update the card ${card.id}`);
       }
     });
   },
@@ -50,14 +52,14 @@ export const PatchService = {
       try {
         await CardsService.updateCard(card.id, { priority: Priorities.Medium });
       } catch (error) {
-        throw new Error("Failed to update the card");
+        throw new Error(`Failed to update the card ${card.id}`);
       }
     });
   },
 
   resetUserTimeline: async function (req: Request) {
+    const userId = UsersService.getUserFromToken(req).id;
     try {
-      const username = UsersService.getCurrentUser(req);
       const cards = await CardsService.getCards({});
       const practiceTimeline: TimelinePoint[] = [
         {
@@ -66,9 +68,37 @@ export const PatchService = {
           action: STATISTICS_ACTIONS.Correct,
         },
       ];
-      await UsersService.updateUser(username, { practiceTimeline });
+      await UsersService.updateUser(userId, { practiceTimeline });
     } catch (error) {
-      throw new Error("Failed to update the user");
+      throw new Error(`Failed to update the user ${userId}`);
     }
+  },
+
+  addOwnerIdToEntities: async function (req: Request) {
+    const userId = UsersService.getUserFromToken(req).id;
+    const ownerIds = [userId];
+
+    const cards = await CardsService.getCards({ includeLearned: true });
+    cards.forEach(async (card) => {
+      try {
+        await CardsService.updateCard(card.id, { ownerIds });
+      } catch (error) {
+        throw new Error(`Failed to update the card ${card.id}`);
+      }
+    });
+
+    const categories = await CategoriesService.getCategories({});
+    categories.forEach(async (category) => {
+      try {
+        const isMainCategory = Object.values(MAIN_CATEGORIES).includes(
+          category.id
+        );
+        await CategoriesService.updateCategory(category.id, {
+          ownerIds: isMainCategory ? [] : ownerIds,
+        });
+      } catch (error) {
+        throw new Error(`Failed to update the category ${category.id}`);
+      }
+    });
   },
 };

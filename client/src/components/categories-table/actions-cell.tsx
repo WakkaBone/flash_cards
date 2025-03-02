@@ -2,7 +2,7 @@ import { Button, Tooltip } from "@mui/material";
 import { DeleteForeverRounded, EditRounded } from "@mui/icons-material";
 import { useCallback, useState } from "react";
 import { CategoryModel } from "../../models/category";
-import { useDeleteCategory } from "../../hooks/use-delete-category";
+import { useDeleteCategory } from "../../hooks";
 import { MAIN_CATEGORIES } from "../../constants";
 import { EditCategoryModal } from "../edit-category-modal/edit-category-modal";
 

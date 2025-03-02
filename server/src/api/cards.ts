@@ -9,6 +9,7 @@ import {
   updateStatisticsController,
   getRandomCardController,
   getStatisticsController,
+  getAdminStatisticsController,
   addCardPrecheckController,
   bulkDeleteCardsController,
   bulkMarkLearnedController,
@@ -23,6 +24,7 @@ import {
   updateCardValidator,
   updateStatisticsValidator,
 } from "../validators";
+import { isAdminValidation } from "../validators/shared";
 
 const router = Router();
 
@@ -50,6 +52,11 @@ router.patch(
 );
 router.patch("/:id/learned", markLearnedValidator, markLearnedController);
 router.get("/statistics", getStatisticsController);
+router.get(
+  "/statistics-admin",
+  [isAdminValidation],
+  getAdminStatisticsController
+);
 router.get("/timeline", getTimelineController);
 
 export default router;

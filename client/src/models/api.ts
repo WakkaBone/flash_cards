@@ -1,6 +1,8 @@
+import { StatisticsActionTypeExtended } from "../hooks/practice-timeline/use-practice-timeline-filters";
 import { CardModel, Priorities } from "./card";
 import { CategoryModel } from "./category";
-import { IdLabel } from "./shared";
+import { AllOptionInt, AllOptionString, IdLabel } from "./shared";
+import { Roles, UserModel } from "./user";
 
 export interface ApiError<T = any> {
   message?: string;
@@ -14,12 +16,11 @@ export interface ApiResponse<T = any, E = any> {
   error?: ApiError<E>;
 }
 
-enum AllOption {
-  All = 0,
-}
-export type PrioritiesExtended = Priorities | AllOption;
+export type PrioritiesExtended = Priorities | AllOptionInt;
+export type RolesExtended = Roles | AllOptionString;
 
 export type GetCardsFilters = {
+  ownerId?: string;
   category?: IdLabel | null;
   search?: string;
   includeLearned?: boolean;
@@ -41,9 +42,22 @@ export type GetCategoriesFilters = {
 };
 
 export type GetPracticeTimelineFilters = {
-  action?: STATISTICS_ACTIONS;
+  action?: StatisticsActionTypeExtended;
   from?: Date;
   to?: Date;
+};
+
+export type GetUsersFilters = {
+  search?: string;
+  searchExact?: string;
+  role?: RolesExtended;
+  numberOfCards?: string;
+  from?: Date;
+  to?: Date;
+  longestStreak?: string;
+  currentStreak?: string;
+  page?: number;
+  pageSize?: number;
 };
 
 export enum STATISTICS_ACTIONS {
@@ -62,15 +76,37 @@ export type AddCategoryPayload = {
   label: string;
 };
 
+export type AddUserPayload = {
+  username: string;
+  password: string;
+  role: Roles;
+};
+
 export type UpdateCardPayload = CardModel;
 export type UpdateCategoryPayload = CategoryModel;
+export type UpdateUserPayload = UserModel;
 
 export type BulkDeleteSharedPayload = { ids: string[] };
 export type BulkDeleteCardsPayload = BulkDeleteSharedPayload;
 export type BulkMarkLearnedPayload = BulkDeleteSharedPayload;
 export type BulkDeleteCategoriesPayload = BulkDeleteSharedPayload;
+export type BulkDeleteUsersPayload = BulkDeleteSharedPayload;
 
 export type LoginPayload = {
   username: string;
   password: string;
+};
+
+export type PatchAccountPayload = {
+  username?: string;
+  oldPassword?: string;
+  newPassword?: string;
+};
+
+export type SignupPayload = LoginPayload;
+
+export type AuthUserModel = {
+  id: string;
+  username: string;
+  role: Roles;
 };

@@ -3,6 +3,7 @@ import { addCardPrecheckController } from "./add-card-precheck-controller";
 import { bulkDeleteCardsController } from "./bulk-delete-controller";
 import { bulkMarkLearnedController } from "./bulk-mark-learned-controller";
 import { deleteCardController } from "./delete-card-controller";
+import { getAdminStatisticsController } from "./get-admin-statistics-controller";
 import { getCardsController } from "./get-cards-controller";
 import { getRandomCardController } from "./get-random-card-controller";
 import { getStatisticsController } from "./get-statistics-controller";
@@ -20,6 +21,7 @@ export {
   getCardsController,
   getRandomCardController,
   getStatisticsController,
+  getAdminStatisticsController,
   getTimelineController,
   markLearnedController,
   updateCardController,

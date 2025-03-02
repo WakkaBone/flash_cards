@@ -2,6 +2,7 @@ export const APIS = {
   auth: "auth",
   cards: "cards",
   categories: "categories",
+  users: "users",
   version: "version",
 };
 
@@ -28,3 +29,7 @@ export const REFRESH_TOKEN_KEY = "refresh_token";
 
 export const MIN_EASE_COEFFICIENT = 1.3;
 export const MAX_EASE_COEFFICIENT = 2.5;
+
+export const PASSWORD_RULES =
+  /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+={}\[\]:;"'<>,.?/\\|`~\-]{8,}$/;
+export const USERNAME_RULES = /^[A-Za-z0-9]+$/;

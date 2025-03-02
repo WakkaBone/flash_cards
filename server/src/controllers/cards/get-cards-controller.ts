@@ -3,6 +3,8 @@ import { ApiResponse } from "../../models/api-response";
 import { CardsService, GetCardsFilters } from "../../services/cards-service";
 import { isValid } from "../../utils/validation-util";
 import { CardModelDto } from "../../models/card";
+import { UsersService } from "../../services/users-service";
+import { getOwnershipFilter } from "../../utils/roles-util";
 
 type GetCardsQueryParams = {
   search?: string;
@@ -12,6 +14,7 @@ type GetCardsQueryParams = {
   to?: string;
   mistakesThreshold?: string;
   priority?: string;
+  ownerId?: string;
   page?: string;
   pageSize?: string;
 };
@@ -29,11 +32,15 @@ export const getCardsController = async (
       to,
       mistakesThreshold,
       priority,
+      ownerId,
       page,
       pageSize,
     } = req.query;
 
+    const user = UsersService.getUserFromToken(req);
+
     const filters: GetCardsFilters = {
+      ownerId: ownerId || getOwnershipFilter(user),
       search,
       category: category ? category : undefined,
       includeLearned: includeLearned ? includeLearned === "true" : undefined,

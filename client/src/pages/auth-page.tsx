@@ -1,35 +1,45 @@
 import { Box, Container, Paper, Typography } from "@mui/material";
-import { useAuthContext } from "../context/auth-context";
 import { ToastContainer } from "react-toastify";
-import { Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { AuthForm } from "../components/auth-form/auth-form";
 import { VersionsInfo } from "../components/layout/versions-info";
-import { FullScreenLoader } from "../components/loader/full-screen-loader";
+import { ROUTES } from "../constants";
 
-export const AuthPage = () => {
-  const authContext = useAuthContext();
-  if (!authContext) return null;
-
-  if (authContext.isAuthenticated === undefined) return <FullScreenLoader />;
-
-  if (authContext.isAuthenticated) return <Navigate to="/" />;
-
-  return (
-    <Container component="main" maxWidth="xs" sx={{ marginTop: 8 }}>
-      <Paper elevation={3} sx={{ padding: 3 }}>
-        <Typography
-          variant="h5"
-          component="h1"
-          align="center"
-          sx={{ marginBottom: 2 }}
-        >
-          Login
-        </Typography>
-        <AuthForm />
-        <Box mt={3} />
-        <VersionsInfo />
-      </Paper>
-      <ToastContainer />
-    </Container>
-  );
-};
+export const AuthPage = () => (
+  <Container component="main" maxWidth="xs" sx={{ marginTop: 8 }}>
+    <Paper elevation={3} sx={{ padding: 3 }}>
+      <Typography
+        variant="h5"
+        component="h1"
+        align="center"
+        sx={{ marginBottom: 2 }}
+      >
+        Login
+      </Typography>
+      <AuthForm mode="login" />
+      <Box mt={3} />
+      <Typography
+        variant="subtitle2"
+        sx={{
+          textAlign: "center",
+          "& .link": {
+            textDecoration: "none",
+            color: "primary.main",
+            fontWeight: "bold",
+            "&:hover": {
+              textDecoration: "underline",
+            },
+          },
+        }}
+      >
+        Do not have an account?{" "}
+        <Link to={ROUTES.signup} className="link">
+          Sign up
+        </Link>
+      </Typography>
+      <Box mt={3} />
+      <VersionsInfo />
+    </Paper>
+    <ToastContainer />
+  </Container>
+);

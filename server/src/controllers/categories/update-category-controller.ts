@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
 import { isValid } from "../../utils/validation-util";
 import { Timestamp, serverTimestamp } from "firebase/firestore";
-import { CategoryDto } from "../../models/category";
+import { CategoryDto, CategoryModel } from "../../models/category";
 import { CategoriesService } from "../../services/categories-service";
 
 type UpdateCategoryParams = { id: string };
@@ -15,12 +15,16 @@ export const updateCategoryController = async (
   try {
     const { id } = req.params;
     const { label, createdAt } = req.body;
-    const category = {
+    const category = await CategoriesService.getCategoryById(id);
+
+    const updatedCategory: CategoryModel = {
       label,
       updatedAt: serverTimestamp(),
       createdAt: Timestamp.fromDate(new Date(createdAt)),
+      ownerIds: category.ownerIds,
     };
-    await CategoriesService.updateCategory(id, category);
+
+    await CategoriesService.updateCategory(id, updatedCategory);
     res.status(200).json({ isSuccess: true });
   } catch (error) {
     res.status(500).json({

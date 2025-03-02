@@ -23,8 +23,8 @@ export const updateStatisticsController = async (
       cardId: id,
     };
 
-    const username = UsersService.getCurrentUser(req);
-    await UsersService.addTimelinePoint(username, newTimelinePoint);
+    const userId = UsersService.getUserFromToken(req).id;
+    await UsersService.addTimelinePoint(userId, newTimelinePoint);
 
     res.status(200).json({ isSuccess: true });
   } catch (error) {

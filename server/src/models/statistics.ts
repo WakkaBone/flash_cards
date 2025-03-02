@@ -7,3 +7,14 @@ export type Statistics = {
   longestStreak: number;
   lastPractice: string;
 };
+
+export type StatisticsAdmin = {
+  totalCards: number;
+  totalLearnedCards: number;
+  lastAdded: string;
+  mostMistakes: string;
+  totalUsers: number;
+  longestActiveStreak: string;
+  longestStreak: string;
+  lastPractice: string;
+};

@@ -18,6 +18,11 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { CategoriesPage } from "./pages/categories-page";
 import { StatisticsPage } from "./pages/statistics-page";
+import { UsersPage } from "./pages/users-page";
+import { AdminRoute } from "./components/protected-route/admin-route";
+import { SignupPage } from "./pages/signup-page";
+import { UnauthorizedRoute } from "./components/protected-route/unauthorized-route";
+import { MyAccountPage } from "./pages/my-account-page";
 
 const queryClient = new QueryClient();
 
@@ -25,8 +30,8 @@ function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <Router>
+        <Router>
+          <AuthProvider>
             <Routes>
               <Route
                 path="/"
@@ -41,12 +46,36 @@ function App() {
                 <Route path={ROUTES.practice} element={<PracticePage />} />
                 <Route path={ROUTES.categories} element={<CategoriesPage />} />
                 <Route path={ROUTES.statistics} element={<StatisticsPage />} />
+                <Route
+                  path={ROUTES.users}
+                  element={
+                    <AdminRoute>
+                      <UsersPage />
+                    </AdminRoute>
+                  }
+                />
+                <Route path={ROUTES.myAccount} element={<MyAccountPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Route>
-              <Route path={ROUTES.login} element={<AuthPage />} />
+              <Route
+                path={ROUTES.login}
+                element={
+                  <UnauthorizedRoute>
+                    <AuthPage />
+                  </UnauthorizedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.signup}
+                element={
+                  <UnauthorizedRoute>
+                    <SignupPage />
+                  </UnauthorizedRoute>
+                }
+              />
             </Routes>
-          </Router>
-        </AuthProvider>
+          </AuthProvider>
+        </Router>
       </QueryClientProvider>
     </LocalizationProvider>
   );

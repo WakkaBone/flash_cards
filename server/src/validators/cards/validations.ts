@@ -2,6 +2,8 @@ import { body, param } from "express-validator";
 import { Priorities } from "../../models/card";
 import { CardsService } from "../../services/cards-service";
 import { STATISTICS_ACTIONS } from "../../constants";
+import { UsersService } from "../../services/users-service";
+import { isAdmin } from "../../utils/roles-util";
 
 export const englishValidation = body("english")
   .isString()
@@ -44,16 +46,51 @@ export const statisticsValidation = body("statistics").custom((value) => {
   throw new Error("Invalid statistics");
 });
 
-export const uniqueWordValidation = body("english").custom(async (english) => {
-  const sameWords = await CardsService.getCards({
-    searchExact: english,
-  });
+export const uniqueWordValidation = body("english").custom(
+  async (english, { req }) => {
+    //TODO: fix type
+    const userId = UsersService.getUserFromToken(req as any).id;
 
-  if (sameWords.length > 0) throw new Error("Such word already exists");
+    const sameWords = await CardsService.getCards({
+      ownerId: userId,
+      searchExact: english,
+    });
 
-  return true;
-});
+    if (sameWords.length > 0) throw new Error("Such word already exists");
+
+    return true;
+  }
+);
 
 export const actionValidator = param("action")
   .isIn(Object.values(STATISTICS_ACTIONS))
   .withMessage("Invalid action");
+
+export const ownerValidation = param("id").custom(async (cardId, { req }) => {
+  //TODO: fix type
+  const user = UsersService.getUserFromToken(req as any);
+
+  if (isAdmin(user)) return true;
+
+  const card = await CardsService.getCardById(cardId);
+
+  if (card.ownerIds.includes(user.id)) return true;
+
+  throw new Error("You don't have rights to update this card");
+});
+
+export const bulkOwnerValidation = body("ids").custom(async (ids, { req }) => {
+  //TODO: fix type
+  const user = UsersService.getUserFromToken(req as any);
+
+  if (isAdmin(user)) return true;
+
+  ids.forEach(async (id) => {
+    const card = await CardsService.getCardById(id);
+
+    if (!card.ownerIds.includes(user.id))
+      throw new Error("You don't have rights to update this card");
+  });
+
+  return true;
+});

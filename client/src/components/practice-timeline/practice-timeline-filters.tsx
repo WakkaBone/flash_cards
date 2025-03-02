@@ -6,7 +6,7 @@ import { DateTimeRangePicker } from "../date-time-range-picker/date-time-range-p
 import { FilterAlt } from "@mui/icons-material";
 import { CollapsibleSection } from "../collapsible/collapsible-section";
 import { StatisticsActionsSelect } from "../statistic-action-select/statistic-action-select";
-import { GetPracticeTimelineFilters } from "../../hooks/use-practice-timeline-filters";
+import { GetPracticeTimelineFilters } from "../../models/api";
 
 export enum FilterTypes {
   DateRange = "dateRange",

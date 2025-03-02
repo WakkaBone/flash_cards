@@ -1,9 +1,9 @@
 import { UseMutationOptions } from "@tanstack/react-query";
-import { ApiResponse, LoginPayload } from "../../models/api";
+import { ApiResponse, AuthUserModel, LoginPayload } from "../../models/api";
 import { AuthService } from "../../services/auth-service";
 
 export const loginMutation: UseMutationOptions<
-  ApiResponse,
+  ApiResponse<AuthUserModel>,
   Error,
   LoginPayload
 > = {

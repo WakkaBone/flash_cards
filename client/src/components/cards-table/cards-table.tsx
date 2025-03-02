@@ -3,7 +3,7 @@ import { GetCardsFilters } from "../../models/api";
 import { useGetCards, useScreenSize, useTablePagination } from "../../hooks";
 import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 import { mapCardToTableRow } from "../../utils/mappers";
-import { defaultFilters } from "../../hooks/use-cards-table-filters";
+import { defaultFilters } from "../../hooks/cards/use-cards-table-filters";
 import { ToastContainer } from "react-toastify";
 import { CardsFilters } from "../cards-filters/cards-filters";
 import { cardsTableColumns } from "./columns";
@@ -34,7 +34,6 @@ export const CardsTable = () => {
     setRows(data.data.map((item) => mapCardToTableRow(item)));
   }, [data]);
 
-  //TODO: implement server side pagination
   const paginationProps = useTablePagination();
 
   //TODO: make grid more responsive

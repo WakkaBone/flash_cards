@@ -6,7 +6,10 @@ import { CollapsibleSection } from "../collapsible/collapsible-section";
 import { BarChartRounded } from "@mui/icons-material";
 
 export const StatisticsSection = () => {
-  const { statisticsEntries, isFetched } = useStatistics();
+  const {
+    statisticsEntries,
+    statisticsRest: { isFetched },
+  } = useStatistics();
 
   return (
     <CollapsibleSection

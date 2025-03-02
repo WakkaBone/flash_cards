@@ -11,11 +11,13 @@ import {
   Timestamp,
   doc,
   serverTimestamp,
+  QueryDocumentSnapshot,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
-import { COLLECTIONS } from "../constants";
+import { COLLECTIONS, MAIN_CATEGORIES } from "../constants";
 import { CategoryDto, CategoryModel } from "../models/category";
 import { CardsService } from "./cards-service";
+import { searchFilterCallback } from "../utils/search-util";
 
 export type GetCategoriesFilters = {
   search?: string;
@@ -25,14 +27,48 @@ export type GetCategoriesFilters = {
   numberOfCards?: number;
   page?: number;
   pageSize?: number;
+  ownerId?: string;
+};
+
+const mapCategoryToCategoryDto = async (
+  docRef: QueryDocumentSnapshot
+): Promise<CategoryDto> => {
+  const categoryData = docRef.data() as CategoryModel;
+
+  const cards = await CardsService.getCards({ category: docRef.id });
+
+  const categoryDto: CategoryDto = {
+    id: docRef.id,
+    label: categoryData.label,
+    numberOfCards: cards.length,
+    createdAt: categoryData.createdAt.toDate().toISOString(),
+    updatedAt: (categoryData.updatedAt as Timestamp).toDate().toISOString(),
+    ownerIds: categoryData.ownerIds,
+  };
+
+  return categoryDto;
 };
 
 export const CategoriesService = {
-  getCategories: async (
+  getMainCategories: async function (): Promise<CategoryDto[]> {
+    return await Promise.all(
+      Object.values(MAIN_CATEGORIES).map(async (id) => {
+        const categoryDoc = await getDoc(doc(db, COLLECTIONS.categories, id));
+
+        return mapCategoryToCategoryDto(categoryDoc);
+      })
+    );
+  },
+
+  getCategories: async function (
     filters: GetCategoriesFilters
-  ): Promise<CategoryDto[]> => {
+  ): Promise<CategoryDto[]> {
     let queryRef = query(collection(db, COLLECTIONS.categories));
     const queries = [];
+
+    if (filters.ownerId) {
+      queries.push(where("ownerIds", "array-contains", filters.ownerId));
+    }
 
     if (filters.searchExact) {
       queries.push(where("label", "==", filters.searchExact));
@@ -53,20 +89,7 @@ export const CategoriesService = {
     const { docs } = await getDocs(query(queryRef, ...queries));
 
     let categories = await Promise.all(
-      docs.map(async (doc) => {
-        const categoryData = doc.data() as CategoryModel;
-        const cards = await CardsService.getCards({ category: doc.id });
-        const categoryDto: CategoryDto = {
-          id: doc.id,
-          label: categoryData.label,
-          numberOfCards: cards.length,
-          createdAt: categoryData.createdAt.toDate().toISOString(),
-          updatedAt: (categoryData.updatedAt as Timestamp)
-            .toDate()
-            .toISOString(),
-        };
-        return categoryDto;
-      })
+      docs.map(async (doc) => await mapCategoryToCategoryDto(doc))
     );
 
     if (filters.numberOfCards) {
@@ -76,17 +99,15 @@ export const CategoriesService = {
     }
 
     if (filters.search) {
-      return categories.filter((card) => {
-        const searchableFields = ["label"];
-        return searchableFields.some((field) =>
-          card[field]
-            ? card[field]
-                .trim()
-                .toLowerCase()
-                .includes(filters.search.trim().toLowerCase())
-            : false
-        );
-      });
+      const searchableFields = ["label"];
+      return categories.filter((category) =>
+        searchFilterCallback(filters.search, category, searchableFields)
+      );
+    }
+
+    if (filters.ownerId) {
+      const mainCategories = await this.getMainCategories();
+      return [...mainCategories, ...categories];
     }
 
     return categories;
@@ -104,7 +125,7 @@ export const CategoriesService = {
 
   updateCategory: async (
     id: string,
-    category: CategoryModel
+    category: Partial<CategoryModel>
   ): Promise<void> => {
     const categoryRef = doc(db, COLLECTIONS.categories, id);
     await updateDoc(categoryRef, category);
@@ -118,5 +139,16 @@ export const CategoriesService = {
   deleteCategory: async (id: string): Promise<void> => {
     const categoryRef = doc(db, COLLECTIONS.categories, id);
     await deleteDoc(categoryRef);
+  },
+
+  deleteUsersCategories: async function (userId: string) {
+    const usersCategories = await this.getCategories({
+      ownerId: userId,
+    });
+    usersCategories.forEach(async (category: CategoryDto) => {
+      //remove the category only if it belongs only to the deleted user
+      if (category.ownerIds.length === 1)
+        await this.deleteCategory(category.id);
+    });
   },
 };

@@ -14,3 +14,8 @@ export const isValid = (req: Request, res: Response) => {
   });
   return false;
 };
+
+export const passwordRulesViolatedMessage =
+  "Password must be at least 8 characters long and contain both letters and numbers";
+export const usernameRulesViolatedMessage =
+  "Username cannot contain special chars";

@@ -9,6 +9,8 @@ export const patchDbController = async (req: Request, res: Response) => {
 
     // await PatchService.resetUserTimeline(req);
 
+    // await PatchService.addOwnerIdToEntities(req);
+
     res.status(200).json({ isSuccess: true });
   } catch (error) {
     res.status(500).json({

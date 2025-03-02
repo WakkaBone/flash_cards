@@ -1,6 +1,7 @@
-import { Button, Stack, TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { useState } from "react";
-import { useAddCategory } from "../../hooks/use-add-category";
+import { useAddCategory } from "../../hooks";
+import { TableHeader } from "../table-header/table-header";
 
 export const CategoriesHeader = () => {
   const [isAddVisible, setIsAddVisible] = useState(false);
@@ -15,7 +16,7 @@ export const CategoriesHeader = () => {
     addCategory({ label: name }, { onSuccess: () => setIsAddVisible(false) });
 
   return (
-    <Stack direction="row" gap={1} sx={{ mb: 1, height: "2.5em" }}>
+    <TableHeader>
       {isAddVisible ? (
         <Button
           loading={isPending}
@@ -30,7 +31,7 @@ export const CategoriesHeader = () => {
           variant="contained"
           onClick={() => setIsAddVisible(true)}
         >
-          Add
+          Add Category
         </Button>
       )}
       {isAddVisible && (
@@ -50,6 +51,6 @@ export const CategoriesHeader = () => {
           </Button>
         </>
       )}
-    </Stack>
+    </TableHeader>
   );
 };

@@ -5,6 +5,7 @@ import { isValid } from "../../utils/validation-util";
 import { serverTimestamp, Timestamp } from "firebase/firestore";
 import { CategoriesService } from "../../services/categories-service";
 import { CardModel, Priorities } from "../../models/card";
+import { UsersService } from "../../services/users-service";
 
 type CreateCardBody = {
   category: string;
@@ -20,6 +21,8 @@ export const addCardController = async (
   if (!isValid(req, res)) return;
   try {
     const { category, english, hebrew, details, priority } = req.body;
+
+    const user = UsersService.getUserFromToken(req);
 
     const initialSrsValues = {
       easinessFactor: 2.5,
@@ -38,6 +41,7 @@ export const addCardController = async (
       isLearned: false,
       createdAt: Timestamp.now(),
       ...initialSrsValues,
+      ownerIds: [user.id],
     };
     await CardsService.addCard(card);
 

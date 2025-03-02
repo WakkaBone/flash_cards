@@ -4,6 +4,7 @@ import { CardsService, GetCardsFilters } from "../../services/cards-service";
 import { isValid } from "../../utils/validation-util";
 import { CardModelDto } from "../../models/card";
 import { UsersService } from "../../services/users-service";
+import { getOwnershipFilter } from "../../utils/roles-util";
 
 type GetRandomCardQueryParams = {
   category?: string;
@@ -23,7 +24,10 @@ export const getRandomCardController = async (
     const { category, includeLearned, mistakesThreshold, priority, from, to } =
       req.query;
 
+    const user = UsersService.getUserFromToken(req);
+
     const filters: GetCardsFilters = {
+      ownerId: getOwnershipFilter(user),
       category: category ? category : undefined,
       includeLearned: includeLearned ? includeLearned === "true" : undefined,
       mistakesThreshold: mistakesThreshold
@@ -45,8 +49,8 @@ export const getRandomCardController = async (
     const card = sortedCards[0];
     await CardsService.updateLastReviewedDate(card.id);
 
-    const currentUser = UsersService.getCurrentUser(req);
-    currentUser && (await UsersService.updateLastPractice(currentUser));
+    const userId = UsersService.getUserFromToken(req).id;
+    userId && (await UsersService.updateLastPractice(userId));
 
     res.status(200).json({ isSuccess: true, data: card });
   } catch (error) {

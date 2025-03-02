@@ -1,27 +1,28 @@
 import { Box, Button, TextField } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { useAuthContext } from "../../context/auth-context";
-
-const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+import { passwordValidator } from "../../utils/validators";
 
 type AuthFormType = {
   username: string;
   password: string;
 };
 
-export const AuthForm = () => {
-  const authContext = useAuthContext();
+type AuthFormPropsType = {
+  mode: "login" | "register";
+};
+export const AuthForm = ({ mode }: AuthFormPropsType) => {
+  const { login, signup, isLoading } = useAuthContext();
   const {
     control,
     formState: { errors },
     handleSubmit,
   } = useForm<AuthFormType>();
 
-  if (!authContext) return null;
+  const isLogin = mode === "login";
 
-  const { login } = authContext;
-
-  const onSubmit = (data: AuthFormType) => login(data);
+  const onSubmit = (data: AuthFormType) =>
+    isLogin ? login(data) : signup(data);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -47,11 +48,7 @@ export const AuthForm = () => {
           name="password"
           rules={{
             required: "Password is required",
-            pattern: {
-              value: PASSWORD_REGEX,
-              message:
-                "Password must be at least 8 characters long, include at least one uppercase letter and one special character.",
-            },
+            ...passwordValidator,
           }}
           control={control}
           render={({ field }) => (
@@ -68,8 +65,14 @@ export const AuthForm = () => {
       </Box>
 
       <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <Button type="submit" variant="contained" color="primary" fullWidth>
-          Log In
+        <Button
+          loading={isLoading}
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+        >
+          {isLogin ? "Log In" : "Sign Up"}
         </Button>
       </Box>
     </form>

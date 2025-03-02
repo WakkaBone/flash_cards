@@ -1,4 +1,8 @@
 import { idParamValidation } from "../shared";
-import { actionValidator } from "./validations";
+import { actionValidator, ownerValidation } from "./validations";
 
-export const updateStatisticsValidator = [idParamValidation, actionValidator];
+export const updateStatisticsValidator = [
+  idParamValidation,
+  actionValidator,
+  ownerValidation,
+];

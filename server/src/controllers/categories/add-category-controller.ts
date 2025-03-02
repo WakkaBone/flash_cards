@@ -3,6 +3,8 @@ import { ApiResponse } from "../../models/api-response";
 import { isValid } from "../../utils/validation-util";
 import { serverTimestamp, Timestamp } from "firebase/firestore";
 import { CategoriesService } from "../../services/categories-service";
+import { UsersService } from "../../services/users-service";
+import { CategoryModel } from "../../models/category";
 
 type CreateCategoryBody = {
   label: string;
@@ -14,10 +16,14 @@ export const addCategoryController = async (
   if (!isValid(req, res)) return;
   try {
     const { label } = req.body;
-    const category = {
+
+    const userId = UsersService.getUserFromToken(req).id;
+
+    const category: CategoryModel = {
       label,
       createdAt: Timestamp.now(),
       updatedAt: serverTimestamp(),
+      ownerIds: [userId],
     };
 
     await CategoriesService.addCategory(category);

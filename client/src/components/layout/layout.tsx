@@ -6,10 +6,9 @@ import { useAuthContext } from "../../context/auth-context";
 import { FullScreenLoader } from "../loader/full-screen-loader";
 
 export const Layout = () => {
-  const authContext = useAuthContext();
-  if (!authContext) return null;
+  const { isAuthenticated } = useAuthContext();
 
-  if (authContext.isAuthenticated === undefined) return <FullScreenLoader />;
+  if (isAuthenticated === undefined) return <FullScreenLoader />;
 
   return (
     <Box sx={{ display: "flex" }}>

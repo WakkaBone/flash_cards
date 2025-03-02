@@ -3,6 +3,9 @@ export type IdLabel = {
   label: string;
 };
 
-export enum AllActions {
-  All = "all",
+export enum AllOptionInt {
+  All = 0,
+}
+export enum AllOptionString {
+  All = "",
 }

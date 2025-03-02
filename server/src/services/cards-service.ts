@@ -13,6 +13,7 @@ import {
   Timestamp,
   getDoc,
   serverTimestamp,
+  QueryDocumentSnapshot,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { CardModel, CardModelDto, Priorities } from "../models/card";
@@ -23,11 +24,12 @@ import {
   MIN_EASE_COEFFICIENT,
   STATISTICS_ACTIONS,
 } from "../constants";
-import { Statistics } from "../models/statistics";
+import { Statistics, StatisticsAdmin } from "../models/statistics";
 import { CategoriesService } from "./categories-service";
 import { UsersService } from "./users-service";
 import { getNextReviewDate } from "../utils/date-time";
-import { TimelinePointDto } from "../models/user";
+import { searchFilterCallback } from "../utils/search-util";
+import { UserModel } from "../models/user";
 
 export type GetCardsFilters = {
   category?: string;
@@ -40,6 +42,7 @@ export type GetCardsFilters = {
   priority?: Priorities;
   page?: number;
   pageSize?: number;
+  ownerId?: string;
 };
 
 export type GetPracticeTimelineFilters = {
@@ -48,10 +51,31 @@ export type GetPracticeTimelineFilters = {
   action?: STATISTICS_ACTIONS;
 };
 
+const mapCardToCardDto = async (
+  doc: QueryDocumentSnapshot
+): Promise<CardModelDto> => {
+  const cardData = doc.data() as CardModel;
+
+  const category = await CategoriesService.getCategoryById(cardData.category);
+
+  const cardDto: CardModelDto = {
+    id: doc.id,
+    ...cardData,
+    category: { id: cardData.category, label: category.label },
+    createdAt: cardData.createdAt.toDate().toISOString(),
+  };
+
+  return cardDto;
+};
+
 export const CardsService = {
   getCards: async (filters: GetCardsFilters = {}): Promise<CardModelDto[]> => {
     let queryRef = query(collection(db, COLLECTIONS.cards));
     const queries = [];
+
+    if (filters.ownerId) {
+      queries.push(where("ownerIds", "array-contains", filters.ownerId));
+    }
 
     if (filters.searchExact) {
       queries.push(where("english", "==", filters.searchExact));
@@ -85,34 +109,14 @@ export const CardsService = {
     const { docs } = await getDocs(query(queryRef, ...queries));
 
     const cards = await Promise.all(
-      docs.map(async (doc) => {
-        const cardData = doc.data() as CardModel;
-        const category = await CategoriesService.getCategoryById(
-          cardData.category
-        );
-
-        const cardDto: CardModelDto = {
-          id: doc.id,
-          ...cardData,
-          category: { id: cardData.category, label: category.label },
-          createdAt: cardData.createdAt.toDate().toISOString(),
-        };
-        return cardDto;
-      })
+      docs.map(async (doc) => mapCardToCardDto(doc))
     );
 
     if (filters.search) {
-      return cards.filter((card) => {
-        const searchableFields = ["english", "hebrew"];
-        return searchableFields.some((field) =>
-          card[field]
-            ? card[field]
-                .trim()
-                .toLowerCase()
-                .includes(filters.search.trim().toLowerCase())
-            : false
-        );
-      });
+      const searchableFields = ["english", "hebrew"];
+      return cards.filter((card) =>
+        searchFilterCallback(filters.search, card, searchableFields)
+      );
     }
 
     return cards;
@@ -182,58 +186,37 @@ export const CardsService = {
     await deleteDoc(cardRef);
   },
 
-  getPracticeTimeline: async (
-    username: string,
-    filters?: GetPracticeTimelineFilters
-  ): Promise<TimelinePointDto[]> => {
-    let practiceTimeline = (await UsersService.getUserByUsername(username))
-      .practiceTimeline;
+  getStatistics: async function (userId: string) {
+    let queryRef = query(
+      collection(db, COLLECTIONS.cards),
+      where("ownerIds", "array-contains", userId)
+    );
 
-    if (filters.action) {
-      practiceTimeline = practiceTimeline.filter(
-        ({ action }) => action === filters.action
-      );
-    }
-
-    if (filters.from) {
-      practiceTimeline = practiceTimeline.filter(
-        ({ dateTime }) => dateTime.toDate() >= filters.from
-      );
-    }
-    if (filters.to) {
-      practiceTimeline = practiceTimeline.filter(
-        ({ dateTime }) => dateTime.toDate() <= filters.to
-      );
-    }
-
-    return practiceTimeline.map((point) => ({
-      ...point,
-      dateTime: point.dateTime.toDate().toISOString(),
-    }));
-  },
-
-  getStatistics: async (username: string) => {
-    let queryRef = query(collection(db, COLLECTIONS.cards));
     const allQuery = query(queryRef);
     const learnedQuery = query(queryRef, where("isLearned", "==", true));
     const lastAddedQuery = query(
-      collection(db, COLLECTIONS.cards),
+      queryRef,
       orderBy("createdAt", "desc"),
       limit(1)
     );
     const mostMistakesQuery = query(
-      collection(db, COLLECTIONS.cards),
+      queryRef,
       orderBy("statistics.wrong", "desc"),
       limit(1)
     );
 
     const lastAddedWordSnapshot = await getDocs(lastAddedQuery);
     const mostMistakesSnapshot = await getDocs(mostMistakesQuery);
-    const lastAddedCard = lastAddedWordSnapshot.docs[0].data() as CardModel;
-    const mostMistakesCard = mostMistakesSnapshot.docs[0].data() as CardModel;
+
+    const lastAddedCard = lastAddedWordSnapshot.docs[0]
+      ? (lastAddedWordSnapshot.docs[0].data() as CardModel)
+      : undefined;
+    const mostMistakesCard = mostMistakesSnapshot.docs[0]
+      ? (mostMistakesSnapshot.docs[0].data() as CardModel)
+      : undefined;
 
     const { currentStreak, lastPractice, longestStreak } =
-      await UsersService.getStreakData(username);
+      await UsersService.getStreakData(userId);
 
     const statistics: Statistics = {
       totalCards: (await getDocs(allQuery)).size,
@@ -252,6 +235,88 @@ export const CardsService = {
     return statistics;
   },
 
+  getAdminStatistics: async (userId: string): Promise<StatisticsAdmin> => {
+    let cardsQueryRef = query(collection(db, COLLECTIONS.cards));
+    let usersQueryRef = query(collection(db, COLLECTIONS.users));
+
+    const totalCards = (await getDocs(cardsQueryRef)).size;
+    const totalLearnedCards = (
+      await getDocs(query(cardsQueryRef, where("isLearned", "==", true)))
+    ).size;
+    const totalUsers = (await getDocs(usersQueryRef)).size;
+
+    const lastAddedQuery = query(
+      cardsQueryRef,
+      orderBy("createdAt", "desc"),
+      limit(1)
+    );
+    const mostMistakesQuery = query(
+      cardsQueryRef,
+      orderBy("statistics.wrong", "desc"),
+      limit(1)
+    );
+    const longestStreakQuery = query(
+      usersQueryRef,
+      orderBy("longestStreak", "desc"),
+      limit(1)
+    );
+    const longestActiveStreakQuery = query(
+      usersQueryRef,
+      orderBy("currentStreak", "desc"),
+      limit(1)
+    );
+    const lastPracticeQuery = query(
+      usersQueryRef,
+      orderBy("lastPractice", "desc"),
+      limit(1)
+    );
+
+    const lastAddedWordSnapshot = await getDocs(lastAddedQuery);
+    const mostMistakesSnapshot = await getDocs(mostMistakesQuery);
+    const longestStreakSnapshot = await getDocs(longestStreakQuery);
+    const longestActiveStreakSnapshot = await getDocs(longestActiveStreakQuery);
+    const lastPracticeSnapshot = await getDocs(lastPracticeQuery);
+
+    const lastAddedCard = lastAddedWordSnapshot.docs[0]
+      ? (lastAddedWordSnapshot.docs[0].data() as CardModel)
+      : undefined;
+    const mostMistakesCard = mostMistakesSnapshot.docs[0]
+      ? (mostMistakesSnapshot.docs[0].data() as CardModel)
+      : undefined;
+    const longestStreakUser = longestStreakSnapshot.docs[0]
+      ? (longestStreakSnapshot.docs[0].data() as UserModel)
+      : undefined;
+    const longestActiveStreakUser = longestActiveStreakSnapshot.docs[0]
+      ? (longestActiveStreakSnapshot.docs[0].data() as UserModel)
+      : undefined;
+    const lastPracticeUser = lastPracticeSnapshot.docs[0]
+      ? (lastPracticeSnapshot.docs[0].data() as UserModel)
+      : undefined;
+
+    return {
+      totalCards,
+      totalLearnedCards,
+      lastAdded: lastAddedCard
+        ? `${lastAddedCard.hebrew} - ${lastAddedCard.english}`
+        : "",
+      mostMistakes: mostMistakesCard
+        ? `${mostMistakesCard.hebrew} - ${mostMistakesCard.english}`
+        : "",
+      totalUsers,
+      longestActiveStreak: longestActiveStreakUser
+        ? `${longestActiveStreakUser.longestStreak} - ${longestActiveStreakUser.username}`
+        : "",
+      longestStreak: longestStreakUser
+        ? `${longestStreakUser.longestStreak} - ${longestStreakUser.username}`
+        : "",
+      lastPractice: lastPracticeUser
+        ? `${(lastPracticeUser.lastPractice as Timestamp)
+            .toDate()
+            .toISOString()} - ${lastPracticeUser.username}`
+        : "",
+    };
+  },
+
   moveCardsToOtherCategory: async function (categoryId: string): Promise<void> {
     const allCardsWithCategory = await this.getCards({
       category: categoryId,
@@ -262,6 +327,16 @@ export const CardsService = {
         createdAt: Timestamp.fromDate(new Date(card.createdAt)),
         category: MAIN_CATEGORIES.other,
       });
+    });
+  },
+
+  deleteUsersCards: async function (userId: string) {
+    const usersCards = await this.getCards({
+      ownerId: userId,
+    });
+    usersCards.forEach(async (card: CardModelDto) => {
+      //remove the card only if it belongs only to the deleted user
+      if (card.ownerIds.length === 1) await this.deleteCard(card.id);
     });
   },
 

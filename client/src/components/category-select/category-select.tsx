@@ -6,7 +6,7 @@ import {
   SelectProps,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useGetCategories } from "../../hooks/use-get-categories";
+import { useGetCategories } from "../../hooks";
 import { IdLabel } from "../../models/shared";
 import { mapCategoryToSelectOption } from "../../utils/mappers";
 

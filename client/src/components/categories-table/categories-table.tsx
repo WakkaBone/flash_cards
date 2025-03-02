@@ -1,44 +1,13 @@
 import { useEffect, useState } from "react";
 import { GetCategoriesFilters } from "../../models/api";
 import { useScreenSize, useTablePagination } from "../../hooks";
-import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
+import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 import { mapCategoryToTableRow } from "../../utils/mappers";
 import { ToastContainer } from "react-toastify";
-import { format } from "date-fns";
-import { useGetCategories } from "../../hooks/use-get-categories";
+import { useGetCategories } from "../../hooks/categories/use-get-categories";
 import { CategoriesFilters } from "./categories-filters";
-import { BulkActions } from "./bulk-actionts";
-
-const columns: GridColDef<CategoriesTableRowType>[] = [
-  { field: "name", headerName: "Name", flex: 1 },
-  { field: "numberOfCards", headerName: "Cards", flex: 1 },
-  {
-    field: "updatedAt",
-    valueGetter: (value) => new Date(value),
-    headerName: "Updated At",
-    type: "dateTime",
-    flex: 1,
-    sortComparator: (v1, v2) => v1 - v2,
-    renderCell: ({ row }) =>
-      row.updatedAt ? format(new Date(row.updatedAt), "dd/MM/yyyy HH:mm") : "",
-  },
-  {
-    field: "createdAt",
-    valueGetter: (value) => new Date(value),
-    headerName: "Added At",
-    type: "dateTime",
-    flex: 1,
-    sortComparator: (v1, v2) => v1 - v2,
-    renderCell: ({ row }) =>
-      row.createdAt ? format(new Date(row.createdAt), "dd/MM/yyyy HH:mm") : "",
-  },
-  {
-    field: "actions",
-    headerName: "",
-    flex: 1,
-    renderCell: (params) => params.value,
-  },
-];
+import { BulkActions } from "./bulk-actions";
+import { categoriesTableColumns } from "./columns";
 
 export type CategoriesTableRowType = {
   id: string;
@@ -61,7 +30,6 @@ export const CategoriesTable = () => {
     setRows(data.data.map((item) => mapCategoryToTableRow(item)));
   }, [data]);
 
-  //TODO: implement server side pagination
   const paginationProps = useTablePagination();
 
   //TODO: make grid more responsive
@@ -91,7 +59,9 @@ export const CategoriesTable = () => {
           },
         }}
         rows={rows}
-        columns={isMobile ? columns.slice(0, 3) : columns}
+        columns={
+          isMobile ? categoriesTableColumns.slice(0, 3) : categoriesTableColumns
+        }
         disableRowSelectionOnClick
       />
       <ToastContainer />

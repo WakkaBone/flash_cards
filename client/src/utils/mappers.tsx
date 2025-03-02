@@ -1,6 +1,9 @@
 import { CardsTableRowType } from "../components/cards-table/cards-table";
 import { CardModel, Priorities } from "../models/card";
-import { StatisticsCounters } from "../models/statistics";
+import {
+  StatisticsCounters,
+  StatisticsCountersAdmin,
+} from "../models/statistics";
 import { PracticeModes } from "../pages/practice-page";
 import { ActionsCell as ActionsCellCards } from "../components/cards-table/actions-cell";
 import { CategoryModel } from "../models/category";
@@ -14,6 +17,9 @@ import {
 } from "../models/api";
 import { IdLabel } from "../models/shared";
 import { PriorityCell } from "../components/cards-table/priority-cell";
+import { Roles, UserModel } from "../models/user";
+import { UsersTableRowType } from "../components/users-table/users-table";
+import { ActionsCell as ActionsCellUsers } from "../components/users-table/actions-cell";
 
 export const practiceModeMapper: Record<PracticeModes, string> = {
   [PracticeModes.eth]: "English to Hebrew",
@@ -31,6 +37,20 @@ export const statisticsLabelsMapper: Record<StatisticsCounters, string> = {
   [StatisticsCounters.mostMistakes]: "Most Mistakes",
 };
 
+export const adminStatisticsLabelsMapper: Record<
+  StatisticsCountersAdmin,
+  string
+> = {
+  [StatisticsCountersAdmin.totalCards]: "Total Cards",
+  [StatisticsCountersAdmin.lastAdded]: "Last Added",
+  [StatisticsCountersAdmin.lastPractice]: "Last Practice",
+  [StatisticsCountersAdmin.longestActiveStreak]: "Longest Active Streak",
+  [StatisticsCountersAdmin.longestStreak]: "Longest Streak",
+  [StatisticsCountersAdmin.mostMistakes]: "Most Mistakes",
+  [StatisticsCountersAdmin.totalLearnedCards]: "Total Learned Cards",
+  [StatisticsCountersAdmin.totalUsers]: "Total Users",
+};
+
 export const priorityMapper: Record<Priorities, string> = {
   [Priorities.Low]: "Low",
   [Priorities.Medium]: "Medium",
@@ -40,6 +60,11 @@ export const priorityMapper: Record<Priorities, string> = {
 export const statisticsActionMapper: Record<STATISTICS_ACTIONS, string> = {
   [STATISTICS_ACTIONS.Correct]: "Correct",
   [STATISTICS_ACTIONS.Wrong]: "Wrong",
+};
+
+export const userRoleMapper: Record<Roles, string> = {
+  [Roles.admin]: "Admin",
+  [Roles.user]: "User",
 };
 
 export const mapCardToTableRow = (item: CardModel): CardsTableRowType => ({
@@ -61,6 +86,18 @@ export const mapCategoryToTableRow = (
   updatedAt: item.updatedAt,
   numberOfCards: item.numberOfCards.toString(),
   actions: <ActionsCellCategories category={item} />,
+});
+
+export const mapUserToTableRow = (user: UserModel): UsersTableRowType => ({
+  id: user.id,
+  username: user.username,
+  role: user.role,
+  numberOfCards: user.numberOfCards,
+  createdAt: user.createdAt,
+  currentStreak: user.currentStreak,
+  lastPractice: user.lastPractice,
+  longestStreak: user.longestStreak,
+  actions: <ActionsCellUsers user={user} />,
 });
 
 export const mapAddCardFormToPayload = (

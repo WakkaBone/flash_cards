@@ -25,6 +25,7 @@ export type CardModel = {
   lastReviewDate?: FieldValue;
   nextReviewDate?: FieldValue;
   priority: Priorities;
+  ownerIds: string[];
 };
 
 export type CardModelDto = Omit<CardModel, "createdAt" | "category"> & {

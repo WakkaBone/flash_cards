@@ -9,8 +9,8 @@ export const getStatisticsController = async (
   res: Response<ApiResponse<Statistics>>
 ) => {
   try {
-    const username = UsersService.getCurrentUser(req);
-    const statistics = await CardsService.getStatistics(username);
+    const userId = UsersService.getUserFromToken(req).id;
+    const statistics = await CardsService.getStatistics(userId);
     res.status(200).json({ isSuccess: true, data: statistics });
   } catch (error) {
     res.status(500).json({

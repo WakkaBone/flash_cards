@@ -35,6 +35,7 @@ export const updateCardController = async (
       statistics,
       isLearned,
       priority,
+      ownerIds: cardBeforeUpdate.ownerIds,
       createdAt: cardBeforeUpdate.createdAt,
       easinessFactor: cardBeforeUpdate.easinessFactor,
       interval: cardBeforeUpdate.interval,

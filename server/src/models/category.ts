@@ -4,6 +4,7 @@ export type CategoryModel = {
   label: string;
   createdAt: Timestamp;
   updatedAt: FieldValue;
+  ownerIds: string[];
 };
 
 export type CategoryDto = {
@@ -12,4 +13,5 @@ export type CategoryDto = {
   numberOfCards: number;
   createdAt: string;
   updatedAt: string;
+  ownerIds: string[];
 };

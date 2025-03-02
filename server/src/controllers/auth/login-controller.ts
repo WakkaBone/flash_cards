@@ -1,13 +1,10 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
-import { generateAuthCookie } from "../../utils/cookie-util";
 import { isValid } from "../../utils/validation-util";
-import {
-  generateAccessToken,
-  generateRefreshToken,
-} from "../../utils/jwt-util";
-import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "../../constants";
+import { JwtPayload } from "../../utils/jwt-util";
 import { UsersService } from "../../services/users-service";
+import bcrypt from "bcrypt";
+import { AuthService } from "../../services/auth-service";
 
 type LoginBody = {
   username: string;
@@ -30,20 +27,15 @@ export const loginController = async (
       return;
     }
 
-    if (username === user.username && password === user.password) {
-      const payload = { username: user.username };
-      const accessToken = generateAccessToken(payload);
-      const refreshToken = generateRefreshToken(payload);
-      const accessCookie = generateAuthCookie(ACCESS_TOKEN_KEY, accessToken);
-      const refreshCookie = generateAuthCookie(
-        REFRESH_TOKEN_KEY,
-        refreshToken,
-        { maxAge: 43200 } //12 hours
-      );
+    const passwordCorrect = await bcrypt.compare(password, user.password);
 
-      res.setHeader("Set-Cookie", [accessCookie, refreshCookie]);
+    if (passwordCorrect) {
+      const payload: JwtPayload = { id: user.id, username, role: user.role };
+      const authCookies = AuthService.issueAuthCookies(payload);
 
-      res.status(200).json({ isSuccess: true });
+      res.setHeader("Set-Cookie", authCookies);
+
+      res.status(200).json({ isSuccess: true, data: payload });
     } else {
       res.status(401).json({
         isSuccess: false,
