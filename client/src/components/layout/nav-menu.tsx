@@ -111,6 +111,7 @@ const MenuList = ({ closeDrawer }: { closeDrawer?: () => void }) => {
   const navigate = useNavigate();
   const { user, logout } = useAuthContext();
   const { pathname } = useLocation();
+  const { isMobile } = useScreenSize();
 
   const handleMenuItemClick = (path: string) => {
     navigate(path);
@@ -123,7 +124,7 @@ const MenuList = ({ closeDrawer }: { closeDrawer?: () => void }) => {
     <List
       sx={{
         pt: 0,
-        minHeight: "100vh",
+        minHeight: isMobile ? "95vh" : "100vh",
         display: "flex",
         flexDirection: "column",
       }}

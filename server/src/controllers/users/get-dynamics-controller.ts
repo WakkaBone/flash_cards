@@ -4,7 +4,7 @@ import { UsersService } from "../../services/users-service";
 import { Roles } from "../../models/user";
 import {
   GetUsersDynamicsDto,
-  UserAdditionDynamicsFilters,
+  GetUserDynamicsFilters,
 } from "../../models/statistics";
 
 type GetUsersDynamicsQueryParams = {
@@ -19,7 +19,7 @@ export const getUsersDynamicsController = async (
   try {
     const { role, from, to } = req.query;
 
-    const filters: UserAdditionDynamicsFilters = {
+    const filters: GetUserDynamicsFilters = {
       role: role ? (role as Roles) : undefined,
       from: from ? new Date(from) : undefined,
       to: to ? new Date(to) : undefined,

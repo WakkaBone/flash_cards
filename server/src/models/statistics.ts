@@ -23,11 +23,11 @@ export type StatisticsAdmin = {
   lastPractice: string;
 };
 
-export type UserAdditionDynamicsFilters = DateRange & {
+export type GetUserDynamicsFilters = DateRange & {
   role?: Roles;
 };
 
-export type CardAdditionDynamicsFilters = DateRange & {
+export type GetCardDynamicsFilters = DateRange & {
   priority?: Priorities;
 };
 

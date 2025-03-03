@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
 import {
-  CardAdditionDynamicsFilters,
+  GetCardDynamicsFilters,
   GetCardsDynamicsDto,
 } from "../../models/statistics";
 import { Priorities } from "../../models/card";
@@ -19,7 +19,7 @@ export const getCardsDynamicsController = async (
   try {
     const { priority, from, to } = req.query;
 
-    const filters: CardAdditionDynamicsFilters = {
+    const filters: GetCardDynamicsFilters = {
       priority: priority ? (Number(priority) as Priorities) : undefined,
       from: from ? new Date(from) : undefined,
       to: to ? new Date(to) : undefined,

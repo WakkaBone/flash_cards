@@ -20,7 +20,9 @@ export const getCountByDate = <T extends { [key: string]: any }>(
   field: keyof T
 ): CounterByDate =>
   entities.reduce((acc, entity) => {
-    const dateString = entity[field] && entity[field].split("T")[0];
+    const fieldExists = !!entity[field];
+    const isDate = fieldExists && !isNaN(Date.parse(entity[field]));
+    const dateString = isDate && entity[field].split("T")[0];
     dateString && (acc[dateString] = (acc[dateString] || 0) + 1);
     return acc;
   }, {} as CounterByDate);

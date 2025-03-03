@@ -1,7 +1,7 @@
 import { StatisticsActionTypeExtended } from "../hooks/practice-timeline/use-practice-timeline-filters";
 import { CardModel, Priorities } from "./card";
 import { CategoryModel } from "./category";
-import { AllOptionInt, AllOptionString, IdLabel } from "./shared";
+import { AllOptionInt, AllOptionString, DateRange, IdLabel } from "./shared";
 import { Roles, UserModel } from "./user";
 
 export interface ApiError<T = any> {
@@ -19,35 +19,29 @@ export interface ApiResponse<T = any, E = any> {
 export type PrioritiesExtended = Priorities | AllOptionInt;
 export type RolesExtended = Roles | AllOptionString;
 
-export type GetCardsFilters = {
+export type GetCardsFilters = DateRange & {
   ownerId?: string;
   category?: IdLabel | null;
   search?: string;
   includeLearned?: boolean;
   mistakesThreshold?: string;
-  from?: Date;
-  to?: Date;
   priority?: PrioritiesExtended;
   page?: number;
   pageSize?: number;
 };
 
-export type GetCategoriesFilters = {
+export type GetCategoriesFilters = DateRange & {
   search?: string;
-  from?: Date;
-  to?: Date;
   numberOfCards?: string;
   page?: number;
   pageSize?: number;
 };
 
-export type GetPracticeTimelineFilters = {
+export type GetPracticeTimelineFilters = DateRange & {
   action?: StatisticsActionTypeExtended;
-  from?: Date;
-  to?: Date;
 };
 
-export type GetUsersFilters = {
+export type GetUsersFilters = DateRange & {
   search?: string;
   searchExact?: string;
   role?: RolesExtended;
@@ -58,6 +52,14 @@ export type GetUsersFilters = {
   currentStreak?: string;
   page?: number;
   pageSize?: number;
+};
+
+export type GetUserDynamicsFilters = DateRange & {
+  role?: Roles;
+};
+
+export type GetCardDynamicsFilters = DateRange & {
+  priority?: Priorities;
 };
 
 export enum STATISTICS_ACTIONS {

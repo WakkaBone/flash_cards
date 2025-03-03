@@ -9,3 +9,10 @@ export enum AllOptionInt {
 export enum AllOptionString {
   All = "",
 }
+
+export type CounterByDate = Record<string, number>;
+
+export type DateRange = {
+  from?: Date;
+  to?: Date;
+};

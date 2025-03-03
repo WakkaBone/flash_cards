@@ -25,7 +25,7 @@ import {
   STATISTICS_ACTIONS,
 } from "../constants";
 import {
-  CardAdditionDynamicsFilters,
+  GetCardDynamicsFilters,
   GetCardsDynamicsDto,
   Statistics,
   StatisticsAdmin,
@@ -37,13 +37,11 @@ import { searchFilterCallback } from "../utils/search-util";
 import { UserModel } from "../models/user";
 import { DateRange } from "../models/shared";
 
-export type GetCardsFilters = {
+export type GetCardsFilters = DateRange & {
   category?: string;
   search?: string;
   searchExact?: string;
   includeLearned?: boolean;
-  from?: Date;
-  to?: Date;
   mistakesThreshold?: number;
   priority?: Priorities;
   page?: number;
@@ -345,7 +343,7 @@ export const CardsService = {
   },
 
   getCardsDynamics: async function (
-    filters: CardAdditionDynamicsFilters
+    filters: GetCardDynamicsFilters
   ): Promise<GetCardsDynamicsDto> {
     const cards = (await this.getCards(filters)).map((card: CardModelDto) => ({
       ...card,

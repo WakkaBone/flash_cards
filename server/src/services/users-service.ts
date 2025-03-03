@@ -30,16 +30,15 @@ import { CardsService, GetPracticeTimelineFilters } from "./cards-service";
 import { searchFilterCallback } from "../utils/search-util";
 import {
   GetUsersDynamicsDto,
-  UserAdditionDynamicsFilters,
+  GetUserDynamicsFilters,
 } from "../models/statistics";
+import { DateRange } from "../models/shared";
 
-export type GetUsersFilters = {
+export type GetUsersFilters = DateRange & {
   search?: string;
   searchExact?: string;
   role?: Roles;
   numberOfCards?: number;
-  from?: Date;
-  to?: Date;
   longestStreak?: number;
   currentStreak?: number;
   page?: number;
@@ -212,7 +211,7 @@ export const UsersService = {
     return {
       longestStreak: user.longestStreak,
       currentStreak: streakExpired ? 0 : user.currentStreak,
-      lastPractice: lastPractice,
+      lastPractice,
     };
   },
 
@@ -247,7 +246,7 @@ export const UsersService = {
   },
 
   getUserDynamics: async function (
-    filters: UserAdditionDynamicsFilters
+    filters: GetUserDynamicsFilters
   ): Promise<GetUsersDynamicsDto> {
     const users: UserModelDto[] = await this.getUsers(filters);
 

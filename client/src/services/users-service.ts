@@ -5,13 +5,14 @@ import {
   ApiResponse,
   BulkDeleteUsersPayload,
   GetPracticeTimelineFilters,
+  GetUserDynamicsFilters,
   GetUsersFilters,
   UpdateUserPayload,
 } from "../models/api";
 import { buildUrl } from "../utils/url-util";
 import { handleError } from "../utils/error-handler";
 import { CategoryModel } from "../models/category";
-import { TimelinePoint } from "../models/statistics";
+import { GetUsersDynamicsDto, TimelinePoint } from "../models/statistics";
 
 const apiPostfix = "/users";
 
@@ -70,6 +71,16 @@ export const UsersService = {
     const response = await httpClient.get<
       ApiResponse<TimelinePoint[]>,
       AxiosPromise<ApiResponse<TimelinePoint[]>> | AxiosError<ApiResponse>
+    >(url);
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
+  },
+
+  async getUsersDynamics(filters: GetUserDynamicsFilters) {
+    const url = buildUrl(`${apiPostfix}/dynamics`, filters);
+    const response = await httpClient.get<
+      ApiResponse<GetUsersDynamicsDto>,
+      AxiosPromise<ApiResponse<GetUsersDynamicsDto>> | AxiosError<ApiResponse>
     >(url);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;

@@ -1,4 +1,5 @@
 import { STATISTICS_ACTIONS } from "./api";
+import { CounterByDate } from "./shared";
 
 export enum StatisticsCounters {
   totalCards = "totalCards",
@@ -47,3 +48,10 @@ export type TimelinePoint = {
   cardId: string;
   action: STATISTICS_ACTIONS;
 };
+
+export type GetUsersDynamicsDto = {
+  createdAt: CounterByDate;
+  lastPractice: CounterByDate;
+};
+
+export type GetCardsDynamicsDto = GetUsersDynamicsDto;

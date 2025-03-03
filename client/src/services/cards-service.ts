@@ -5,12 +5,17 @@ import {
   ApiResponse,
   BulkDeleteCardsPayload,
   BulkMarkLearnedPayload,
+  GetCardDynamicsFilters,
   GetCardsFilters,
   STATISTICS_ACTIONS,
   UpdateCardPayload,
 } from "../models/api";
 import { CardModel } from "../models/card";
-import { Statistics, StatisticsAdmin } from "../models/statistics";
+import {
+  GetCardsDynamicsDto,
+  Statistics,
+  StatisticsAdmin,
+} from "../models/statistics";
 import { buildUrl } from "../utils/url-util";
 import { handleError } from "../utils/error-handler";
 import { compileGetCardsFilters } from "../utils/mappers";
@@ -132,6 +137,16 @@ export const CardsService = {
       ApiResponse<Statistics>,
       AxiosPromise<ApiResponse<StatisticsAdmin>> | AxiosError<ApiResponse>
     >(`${apiPostfix}/statistics-admin`);
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
+  },
+
+  async getCardsDynamics(filters: GetCardDynamicsFilters) {
+    const url = buildUrl(`${apiPostfix}/dynamics`, filters);
+    const response = await httpClient.get<
+      ApiResponse<GetCardsDynamicsDto>,
+      AxiosPromise<ApiResponse<GetCardsDynamicsDto>> | AxiosError<ApiResponse>
+    >(url);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
   },

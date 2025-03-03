@@ -26,6 +26,8 @@ import { useAddCategory } from "./categories/use-add-category";
 import { useDeleteCategory } from "./categories/use-delete-category";
 import { useGetCategories } from "./categories/use-get-categories";
 import { useUpdateCategory } from "./categories/use-update-category";
+import { useUsersDynamics } from "./users/use-users-dynamics";
+import { useCardsDynamics } from "./cards/use-cards-dynamics";
 
 export {
   useAddCard,
@@ -34,6 +36,7 @@ export {
   useAppVersions,
   useAuth,
   useBulkActions,
+  useCardsDynamics,
   useCardsTableFilters,
   useCategoriesTableFilters,
   useDebounce,
@@ -54,6 +57,7 @@ export {
   useTimer,
   useUpdateCard,
   useUpdateCategory,
+  useUsersDynamics,
   useUpdateUser,
   useUsersTableFilters,
 };
