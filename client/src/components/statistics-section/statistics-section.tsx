@@ -13,7 +13,7 @@ export const StatisticsSection = () => {
 
   return (
     <CollapsibleSection
-      buttonText="Counters"
+      buttonText="My Counters"
       buttonProps={{ startIcon: <BarChartRounded /> }}
     >
       {!isFetched ? (

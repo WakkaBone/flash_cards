@@ -12,10 +12,15 @@ export const StatisticsPage = () => {
   return (
     <Box>
       <PageTitle>Statistics</PageTitle>
-      {isAdmin && <AdminStatisticsSection />}
       <StatisticsSection />
       <PracticeTimeline />
-      {isAdmin && <Dynamics />}
+      {!isAdmin ? null : (
+        <>
+          <Box mb={5} />
+          <AdminStatisticsSection />
+          <Dynamics />
+        </>
+      )}
     </Box>
   );
 };

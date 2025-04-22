@@ -1,36 +1,37 @@
 import { Box, Button, Stack } from "@mui/material";
 import { useEffect } from "react";
 import deepEqual from "deep-equal";
-import { useScreenSize, usePracticeTimelineFilters } from "../../hooks";
+import { useCardsTableFilters, useScreenSize } from "../../hooks";
 import { DateTimeRangePicker } from "../date-time-range-picker/date-time-range-picker";
 import { FilterAlt } from "@mui/icons-material";
 import { CollapsibleSection } from "../collapsible/collapsible-section";
-import { StatisticsActionsSelect } from "../statistic-action-select/statistic-action-select";
-import { GetPracticeTimelineFilters } from "../../models/api";
+import { GetCardDynamicsFilters } from "../../models/api";
+import { PrioritySelect } from "../priority-select/priority-select";
 
 export enum FilterTypes {
   DateRange = "dateRange",
-  Action = "action",
+  Priority = "priority",
 }
 
-type PracticeTimelineFiltersPropsType = {
-  filters: GetPracticeTimelineFilters;
-  onChange: (filters: GetPracticeTimelineFilters) => void;
+type GetCardsDynamicsFiltersPropsType = {
+  filters: GetCardDynamicsFilters;
+  onChange: (filters: GetCardDynamicsFilters) => void;
   enabledFilters?: FilterTypes[];
 };
 
-export const PracticeTimelineFilters = ({
+export const CardsDynamicsFilters = ({
   onChange,
   filters: initialFilters,
-  enabledFilters = [FilterTypes.Action, FilterTypes.DateRange],
-}: PracticeTimelineFiltersPropsType) => {
+  enabledFilters = [FilterTypes.Priority, FilterTypes.DateRange],
+}: GetCardsDynamicsFiltersPropsType) => {
   const { isMobile } = useScreenSize();
 
-  const { filters, handleActionType, handleDateRange, handleReset } =
-    usePracticeTimelineFilters(initialFilters);
+  const { filters, handlePriority, handleDateRange, handleReset } =
+    useCardsTableFilters(initialFilters);
 
   useEffect(() => {
-    if (!deepEqual(filters, initialFilters)) onChange(filters);
+    if (!deepEqual(filters, initialFilters))
+      onChange(filters as GetCardDynamicsFilters);
   }, [filters, initialFilters, onChange]);
 
   return (
@@ -46,15 +47,16 @@ export const PracticeTimelineFilters = ({
           padding: 2,
         }}
       >
-        {enabledFilters.includes(FilterTypes.Action) && (
+        {enabledFilters.includes(FilterTypes.Priority) && (
           <Stack
             direction="row"
             spacing={1}
             sx={{ width: isMobile ? "100%" : "200%" }}
           >
-            <StatisticsActionsSelect
-              value={filters.action}
-              onChange={handleActionType}
+            <PrioritySelect
+              showAll
+              value={filters.priority}
+              onChange={handlePriority}
             />
           </Stack>
         )}

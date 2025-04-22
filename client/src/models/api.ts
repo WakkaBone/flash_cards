@@ -55,11 +55,11 @@ export type GetUsersFilters = DateRange & {
 };
 
 export type GetUserDynamicsFilters = DateRange & {
-  role?: Roles;
+  role?: RolesExtended;
 };
 
 export type GetCardDynamicsFilters = DateRange & {
-  priority?: Priorities;
+  priority?: PrioritiesExtended;
 };
 
 export enum STATISTICS_ACTIONS {

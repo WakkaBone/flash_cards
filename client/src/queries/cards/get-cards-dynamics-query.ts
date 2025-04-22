@@ -9,4 +9,5 @@ export const getCardsDynamicsQuery = (
   initialData: { isSuccess: false, data: { createdAt: {}, lastPractice: {} } },
   queryKey: ["cards-dynamics", filters],
   queryFn: async () => await CardsService.getCardsDynamics(filters),
+  enabled: Object.keys(filters).length > 0,
 });

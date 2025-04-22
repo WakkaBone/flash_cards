@@ -9,4 +9,5 @@ export const getUsersDynamicsQuery = (
   initialData: { isSuccess: false, data: { createdAt: {}, lastPractice: {} } },
   queryKey: ["users-dynamics", filters],
   queryFn: async () => await UsersService.getUsersDynamics(filters),
+  enabled: Object.keys(filters).length > 0,
 });
