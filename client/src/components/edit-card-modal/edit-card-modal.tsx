@@ -9,6 +9,7 @@ import { CardModel } from "../../models/card";
 import { EditCardForm, EditCardFormType } from "./edit-card-form";
 import { useForm } from "react-hook-form";
 import { useUpdateCard } from "../../hooks";
+import { useEffect } from "react";
 
 type EditCardModalPropsType = {
   open: boolean;
@@ -33,6 +34,16 @@ export const EditCardModal = ({
       priority: card.priority,
     },
   });
+
+  useEffect(() => {
+    formProps.reset({
+      category: card.category,
+      english: card.english,
+      hebrew: card.hebrew,
+      details: card.details,
+      priority: card.priority,
+    });
+  }, [card, formProps]);
 
   const onSave = async (formValues: EditCardFormType) => {
     const payload = { ...card, ...formValues };

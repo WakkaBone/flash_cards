@@ -15,7 +15,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
-import { ACCESS_TOKEN_KEY, COLLECTIONS } from "../constants";
+import { ACCESS_TOKEN_KEY, COLLECTIONS, REFRESH_TOKEN_KEY } from "../constants";
 import {
   Roles,
   TimelinePoint,
@@ -191,7 +191,10 @@ export const UsersService = {
   },
 
   getUserFromToken: (req: Request) => {
-    const token = req.cookies[ACCESS_TOKEN_KEY];
+    let token = req.cookies[ACCESS_TOKEN_KEY];
+
+    if (!token) token = req.cookies[REFRESH_TOKEN_KEY];
+
     if (!token) throw new Error("Token is missing");
 
     const decoded = decodeToken(token);
