@@ -102,7 +102,12 @@ export const mapUserToTableRow = (user: UserModel): UsersTableRowType => ({
 
 export const mapAddCardFormToPayload = (
   formData: AddCardFormType
-): AddCardPayload => ({ ...formData, category: formData.category.id });
+): AddCardPayload => ({
+  ...formData,
+  english: formData.english.trim(),
+  hebrew: formData.hebrew.trim(),
+  category: formData.category.id,
+});
 
 export const mapCategoryToSelectOption = ({
   id,

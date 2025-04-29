@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { updateCardMutation } from "../../mutations/cards";
 import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
 import { toastError } from "../../utils/error-handler";
+import { TOAST_CONTAINERS_IDS } from "../../constants";
 
 export const useUpdateCard = () => {
   const queryClient = useQueryClient();
@@ -15,7 +16,16 @@ export const useUpdateCard = () => {
   ) =>
     mutate(card, {
       onSuccess: (...args) => {
-        toast("Card updated successfully", { type: "success" });
+        const toastContainers = [
+          TOAST_CONTAINERS_IDS.card,
+          TOAST_CONTAINERS_IDS.cardsTable,
+        ];
+        toastContainers.forEach((containerId) => {
+          toast("Card updated successfully", {
+            type: "success",
+            containerId,
+          });
+        });
         queryClient.invalidateQueries({ queryKey: ["cards"] });
         options?.onSuccess?.(...args);
       },

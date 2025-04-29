@@ -27,6 +27,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { CardSkeletonLoader } from "./card-skeleton-loader";
 import { CenteredLoader } from "../loader/loader";
 import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
+import { TOAST_CONTAINERS_IDS } from "../../constants";
 
 type WordCardPropsType = {
   mode: PracticeModes;
@@ -266,7 +267,7 @@ export const WordCard = ({
         position: "relative",
       }}
     >
-      <ToastContainer />
+      <ToastContainer containerId={TOAST_CONTAINERS_IDS.card} />
       <CardContent
         sx={
           isMobile

@@ -7,6 +7,7 @@ import { IdLabel } from "../../models/shared";
 import { Priorities } from "../../models/card";
 import { PrioritySelect } from "../priority-select/priority-select";
 import { useEffect } from "react";
+import { TOAST_CONTAINERS_IDS } from "../../constants";
 
 export type EditCardFormType = {
   category: IdLabel;
@@ -114,7 +115,7 @@ export const EditCardForm = ({ formProps }: EditCardFormPropsType) => {
           )}
         />
       </Stack>
-      <ToastContainer />
+      <ToastContainer containerId={TOAST_CONTAINERS_IDS.editCard} />
     </>
   );
 };

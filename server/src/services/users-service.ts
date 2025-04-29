@@ -15,7 +15,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
-import { ACCESS_TOKEN_KEY, COLLECTIONS } from "../constants";
+import { ACCESS_TOKEN_KEY, COLLECTIONS, REFRESH_TOKEN_KEY } from "../constants";
 import {
   Roles,
   TimelinePoint,
@@ -25,17 +25,20 @@ import {
 } from "../models/user";
 import { Request } from "express";
 import { decodeToken, JwtPayload } from "../utils/jwt-util";
-import { calculateDaysDiff } from "../utils/date-time";
+import { calculateDaysDiff, getCountByDate } from "../utils/date-time";
 import { CardsService, GetPracticeTimelineFilters } from "./cards-service";
 import { searchFilterCallback } from "../utils/search-util";
+import {
+  GetUsersDynamicsDto,
+  GetUserDynamicsFilters,
+} from "../models/statistics";
+import { DateRange } from "../models/shared";
 
-export type GetUsersFilters = {
+export type GetUsersFilters = DateRange & {
   search?: string;
   searchExact?: string;
   role?: Roles;
   numberOfCards?: number;
-  from?: Date;
-  to?: Date;
   longestStreak?: number;
   currentStreak?: number;
   page?: number;
@@ -188,7 +191,7 @@ export const UsersService = {
   },
 
   getUserFromToken: (req: Request) => {
-    const token = req.cookies[ACCESS_TOKEN_KEY];
+    let token = req.cookies[ACCESS_TOKEN_KEY] || req.cookies[REFRESH_TOKEN_KEY];
     if (!token) throw new Error("Token is missing");
 
     const decoded = decodeToken(token);
@@ -208,7 +211,7 @@ export const UsersService = {
     return {
       longestStreak: user.longestStreak,
       currentStreak: streakExpired ? 0 : user.currentStreak,
-      lastPractice: lastPractice,
+      lastPractice,
     };
   },
 
@@ -240,5 +243,19 @@ export const UsersService = {
       ...point,
       dateTime: point.dateTime.toDate().toISOString(),
     }));
+  },
+
+  getUserDynamics: async function (
+    filters: GetUserDynamicsFilters
+  ): Promise<GetUsersDynamicsDto> {
+    const users: UserModelDto[] = await this.getUsers(filters);
+
+    const groupedByCreationDate = getCountByDate(users, "createdAt");
+    const groupedByLastPracticeDate = getCountByDate(users, "lastPractice");
+
+    return {
+      createdAt: groupedByCreationDate,
+      lastPractice: groupedByLastPracticeDate,
+    };
   },
 };

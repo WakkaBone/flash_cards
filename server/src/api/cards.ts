@@ -3,7 +3,6 @@ import {
   addCardController,
   deleteCardController,
   getCardsController,
-  getTimelineController,
   markLearnedController,
   updateCardController,
   updateStatisticsController,
@@ -13,6 +12,7 @@ import {
   addCardPrecheckController,
   bulkDeleteCardsController,
   bulkMarkLearnedController,
+  getCardsDynamicsController,
 } from "../controllers/cards";
 import {
   addCardValidator,
@@ -57,6 +57,6 @@ router.get(
   [isAdminValidation],
   getAdminStatisticsController
 );
-router.get("/timeline", getTimelineController);
+router.get("/dynamics", isAdminValidation, getCardsDynamicsController);
 
 export default router;

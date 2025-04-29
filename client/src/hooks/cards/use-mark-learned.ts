@@ -4,6 +4,7 @@ import { markCardLearnedMutation } from "../../mutations/cards";
 import { toast } from "react-toastify";
 import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
 import { toastError } from "../../utils/error-handler";
+import { TOAST_CONTAINERS_IDS } from "../../constants";
 
 export const useMarkCardLearned = () => {
   const queryClient = useQueryClient();
@@ -19,7 +20,16 @@ export const useMarkCardLearned = () => {
       { cardId },
       {
         onSuccess: (...args) => {
-          toast("Card marked as learned", { type: "success" });
+          const toastContainers = [
+            TOAST_CONTAINERS_IDS.card,
+            TOAST_CONTAINERS_IDS.cardsTable,
+          ];
+          toastContainers.forEach((containerId) => {
+            toast("Card marked as learned", {
+              type: "success",
+              containerId,
+            });
+          });
           queryClient.invalidateQueries({ queryKey: ["cards"] });
           options?.onSuccess?.(...args);
         },

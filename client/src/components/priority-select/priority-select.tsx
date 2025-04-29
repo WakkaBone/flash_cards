@@ -21,10 +21,11 @@ export const PrioritySelect = ({
   return (
     <FormControl fullWidth>
       <InputLabel id="priority-select-label">Priority</InputLabel>
-      <Select<PrioritiesExtended>
+      <Select
         labelId="priority-select-label"
         id="priority-select"
         {...props}
+        value={props.value ?? ""}
       >
         {!!showAll && <MenuItem value={AllOptionInt.All}>All</MenuItem>}
         {priorities.map((priority) => (

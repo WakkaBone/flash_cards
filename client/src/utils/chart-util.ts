@@ -9,3 +9,16 @@ export const increasedLegendSpacingPlugin = {
     };
   },
 };
+
+export const sharedDatasetStyles = {
+  fill: false,
+  tension: 0.1,
+  pointRadius: 5,
+};
+
+export const getSharedChartStyles = (
+  isMobile: boolean
+): React.CSSProperties => ({
+  minHeight: isMobile ? "20vh" : "unset",
+  marginTop: "2rem",
+});

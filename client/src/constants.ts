@@ -16,6 +16,18 @@ export const MAIN_CATEGORIES = {
   other: "4",
 };
 
+export const TOAST_CONTAINERS_IDS = {
+  addCard: "add-card",
+  card: "card",
+  cardsTable: "cards-table",
+  categoriesTable: "categories-table",
+  editCard: "edit-card",
+  myAccount: "my-account",
+  usersTable: "users-table",
+  auth: "auth",
+  signup: "signup",
+};
+
 export const USERNAME_RULES = /^[A-Za-z0-9]+$/;
 export const PASSWORD_RULES =
   /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+={}\[\]:;"'<>,.?/\\|`~\-]{8,}$/;

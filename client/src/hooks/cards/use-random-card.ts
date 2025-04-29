@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
 import { PracticeFilersType } from "../../pages/practice-page";
 import { toastError } from "../../utils/error-handler";
+import { TOAST_CONTAINERS_IDS } from "../../constants";
 
 export const useRandomCard = (filters: PracticeFilersType) => {
   const queryClient = useQueryClient();
@@ -42,6 +43,7 @@ export const useRandomCard = (filters: PracticeFilersType) => {
             toast(isCorrect ? "Correct!" : "Wrong!", {
               type: isCorrect ? "success" : "error",
               autoClose: 500,
+              containerId: TOAST_CONTAINERS_IDS.card,
             });
           options?.onSuccess?.(data, variables, context);
         },

@@ -1,4 +1,4 @@
-import { Box, Button, Stack, TextField } from "@mui/material";
+import { Button, Stack, TextField } from "@mui/material";
 import { Controller, UseFormReturn, useWatch } from "react-hook-form";
 import { useEffect } from "react";
 import { useScreenSize } from "../../hooks";
@@ -44,14 +44,7 @@ export const MyAccountForm = ({
 
   return (
     <form>
-      <Box
-        sx={{
-          marginBottom: 2,
-          display: "flex",
-          gap: 1,
-          flexDirection: isMobile ? "column" : "row",
-        }}
-      >
+      <Stack direction={isMobile ? "column" : "row"} spacing={2} mb={2}>
         <Controller
           name="username"
           rules={{ required: "Username is required", ...usernameValidator }}
@@ -78,7 +71,7 @@ export const MyAccountForm = ({
             )
             .join("")}
         />
-      </Box>
+      </Stack>
       {changePassword && (
         <Stack direction={isMobile ? "column" : "row"} spacing={1} mt={4}>
           <Controller

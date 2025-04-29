@@ -8,6 +8,7 @@ import { ToastContainer } from "react-toastify";
 import { CardsFilters } from "../cards-filters/cards-filters";
 import { cardsTableColumns } from "./columns";
 import { BulkActions } from "./bulk-actions";
+import { TOAST_CONTAINERS_IDS } from "../../constants";
 
 export type CardsTableRowType = {
   id: string;
@@ -66,7 +67,7 @@ export const CardsTable = () => {
         columns={isMobile ? cardsTableColumns.slice(0, 3) : cardsTableColumns}
         disableRowSelectionOnClick
       />
-      <ToastContainer />
+      <ToastContainer containerId={TOAST_CONTAINERS_IDS.cardsTable} />
     </>
   );
 };

@@ -9,9 +9,12 @@ import { getPracticeTimelineQuery } from "../../queries/cards";
 import { statisticsActionMapper } from "../../utils/mappers";
 import { ChartData, ChartOptions } from "chart.js";
 import { useScreenSize } from "../use-screen-size";
-import { increasedLegendSpacingPlugin } from "../../utils/chart-util";
-
-const formatDate = (date: Date) => date.toISOString().split("T")[0];
+import {
+  getSharedChartStyles,
+  increasedLegendSpacingPlugin,
+  sharedDatasetStyles,
+} from "../../utils/chart-util";
+import { formatDateForChart } from "../../utils/date-time";
 
 const defaultFrom = new Date();
 defaultFrom.setDate(defaultFrom.getDate() - 7);
@@ -28,7 +31,7 @@ const groupDataByDate = (
 
   points.forEach((item) => {
     const actionDate = new Date(item.dateTime);
-    const formattedDate = formatDate(new Date(item.dateTime));
+    const formattedDate = formatDateForChart(new Date(item.dateTime));
 
     if (actionDate >= from && actionDate <= to) {
       if (!actionCount[formattedDate]) {
@@ -56,7 +59,7 @@ const prepareChartData = (
   let currentDate = from;
 
   while (currentDate <= to) {
-    const formattedDate = formatDate(currentDate);
+    const formattedDate = formatDateForChart(currentDate);
     labels.push(formattedDate);
     correctValues.push(actionCount[formattedDate]?.correct || 0);
     wrongValues.push(actionCount[formattedDate]?.wrong || 0);
@@ -70,12 +73,6 @@ const getTooltipLabel = (number: number, isCorrect: boolean) =>
   `${number} card${number === 1 ? " was" : "s were"} guessed ${
     isCorrect ? "correctly" : "wrong"
   }`;
-
-const sharedDatasetStyles = {
-  fill: false,
-  tension: 0.1,
-  pointRadius: 5,
-};
 
 export const usePracticeTimelineChart = (
   filters: GetPracticeTimelineFilters
@@ -154,10 +151,7 @@ export const usePracticeTimelineChart = (
     },
   };
 
-  const chartStyles: React.CSSProperties = {
-    minHeight: isMobile ? "20vh" : "unset",
-    marginTop: "2rem",
-  };
+  const chartStyles = getSharedChartStyles(isMobile);
 
   const plugins = [increasedLegendSpacingPlugin];
 

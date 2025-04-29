@@ -18,12 +18,11 @@ import { COLLECTIONS, MAIN_CATEGORIES } from "../constants";
 import { CategoryDto, CategoryModel } from "../models/category";
 import { CardsService } from "./cards-service";
 import { searchFilterCallback } from "../utils/search-util";
+import { DateRange } from "../models/shared";
 
-export type GetCategoriesFilters = {
+export type GetCategoriesFilters = DateRange & {
   search?: string;
   searchExact?: string;
-  from?: Date;
-  to?: Date;
   numberOfCards?: number;
   page?: number;
   pageSize?: number;

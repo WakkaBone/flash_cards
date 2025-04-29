@@ -5,16 +5,16 @@ import {
   ApiResponse,
   BulkDeleteCardsPayload,
   BulkMarkLearnedPayload,
+  GetCardDynamicsFilters,
   GetCardsFilters,
-  GetPracticeTimelineFilters,
   STATISTICS_ACTIONS,
   UpdateCardPayload,
 } from "../models/api";
 import { CardModel } from "../models/card";
 import {
+  GetCardsDynamicsDto,
   Statistics,
   StatisticsAdmin,
-  TimelinePoint,
 } from "../models/statistics";
 import { buildUrl } from "../utils/url-util";
 import { handleError } from "../utils/error-handler";
@@ -141,11 +141,11 @@ export const CardsService = {
     return response.data;
   },
 
-  async getPracticeTimeline(filters: GetPracticeTimelineFilters) {
-    const url = buildUrl(`${apiPostfix}/timeline`, filters);
+  async getCardsDynamics(filters: GetCardDynamicsFilters) {
+    const url = buildUrl(`${apiPostfix}/dynamics`, filters);
     const response = await httpClient.get<
-      ApiResponse<TimelinePoint[]>,
-      AxiosPromise<ApiResponse<TimelinePoint[]>> | AxiosError<ApiResponse>
+      ApiResponse<GetCardsDynamicsDto>,
+      AxiosPromise<ApiResponse<GetCardsDynamicsDto>> | AxiosError<ApiResponse>
     >(url);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;

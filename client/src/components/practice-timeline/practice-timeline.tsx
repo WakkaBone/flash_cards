@@ -16,7 +16,7 @@ export const PracticeTimeline = () => {
 
   return (
     <CollapsibleSection
-      buttonText="Practice Timeline"
+      buttonText="My Practice Timeline"
       buttonProps={{ startIcon: <TimelineOutlined /> }}
     >
       <PracticeTimelineFilters

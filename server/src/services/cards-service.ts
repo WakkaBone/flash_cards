@@ -24,20 +24,24 @@ import {
   MIN_EASE_COEFFICIENT,
   STATISTICS_ACTIONS,
 } from "../constants";
-import { Statistics, StatisticsAdmin } from "../models/statistics";
+import {
+  GetCardDynamicsFilters,
+  GetCardsDynamicsDto,
+  Statistics,
+  StatisticsAdmin,
+} from "../models/statistics";
 import { CategoriesService } from "./categories-service";
 import { UsersService } from "./users-service";
-import { getNextReviewDate } from "../utils/date-time";
+import { getNextReviewDate, getCountByDate } from "../utils/date-time";
 import { searchFilterCallback } from "../utils/search-util";
 import { UserModel } from "../models/user";
+import { DateRange } from "../models/shared";
 
-export type GetCardsFilters = {
+export type GetCardsFilters = DateRange & {
   category?: string;
   search?: string;
   searchExact?: string;
   includeLearned?: boolean;
-  from?: Date;
-  to?: Date;
   mistakesThreshold?: number;
   priority?: Priorities;
   page?: number;
@@ -45,9 +49,7 @@ export type GetCardsFilters = {
   ownerId?: string;
 };
 
-export type GetPracticeTimelineFilters = {
-  from?: Date;
-  to?: Date;
+export type GetPracticeTimelineFilters = DateRange & {
   action?: STATISTICS_ACTIONS;
 };
 
@@ -338,6 +340,25 @@ export const CardsService = {
       //remove the card only if it belongs only to the deleted user
       if (card.ownerIds.length === 1) await this.deleteCard(card.id);
     });
+  },
+
+  getCardsDynamics: async function (
+    filters: GetCardDynamicsFilters
+  ): Promise<GetCardsDynamicsDto> {
+    const cards = (await this.getCards(filters)).map((card: CardModelDto) => ({
+      ...card,
+      lastReviewDate:
+        card.lastReviewDate &&
+        (card.lastReviewDate as Timestamp).toDate().toISOString(),
+    }));
+
+    const groupedByCreationDate = getCountByDate(cards, "createdAt");
+    const groupedByLastPracticeDate = getCountByDate(cards, "lastReviewDate");
+
+    return {
+      createdAt: groupedByCreationDate,
+      lastPractice: groupedByLastPracticeDate,
+    };
   },
 
   sortBySRS: (cards: CardModelDto[]): CardModelDto[] => {

@@ -25,8 +25,10 @@ const mapDataToEntries = (
       (isAdmin
         ? StatisticsCountersAdmin.lastPractice
         : StatisticsCounters.lastPractice) &&
-    isValidDate((value as string).split("-")[0])
-      ? format((value as string).split("-")[0], "dd/MM/yyyy HH:mm")
+    isValidDate((value as string).split(" - ")[0])
+      ? `${format((value as string).split(" - ")[0], "dd/MM/yyyy HH:mm")}${
+          isAdmin ? " - " + (value as string).split(" - ")[1] : ""
+        }`
       : value?.toString(),
     isAdmin
       ? adminStatisticsLabelsMapper[key as StatisticsCountersAdmin]?.toString()

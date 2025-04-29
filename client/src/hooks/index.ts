@@ -26,6 +26,7 @@ import { useAddCategory } from "./categories/use-add-category";
 import { useDeleteCategory } from "./categories/use-delete-category";
 import { useGetCategories } from "./categories/use-get-categories";
 import { useUpdateCategory } from "./categories/use-update-category";
+import { useDynamicsCharts } from "./use-dynamics-charts";
 
 export {
   useAddCard,
@@ -40,6 +41,7 @@ export {
   useDeleteCard,
   useDeleteCategory,
   useDeleteUsers,
+  useDynamicsCharts,
   useGetCards,
   useGetCategories,
   useGetUsers,
