@@ -4,21 +4,10 @@ import { GetUsersFilters, RolesExtended } from "../../models/api";
 import { SelectChangeEvent } from "@mui/material";
 import { Roles } from "../../models/user";
 import { AllOptionString } from "../../models/shared";
-import { FilterTypes } from "../../components/users-table/users-filters";
 
 export const defaultFilters = { role: AllOptionString.All };
 
-export const useUsersTableFilters = (
-  initialFilters: GetUsersFilters,
-  enabledFilters = [
-    FilterTypes.Search,
-    FilterTypes.DateRange,
-    FilterTypes.CurrentStreak,
-    FilterTypes.LongestSteak,
-    FilterTypes.NumberOfCards,
-    FilterTypes.Role,
-  ]
-) => {
+export const useUsersTableFilters = (initialFilters: GetUsersFilters) => {
   const [filters, setFilters] = useState<GetUsersFilters>(initialFilters);
   const [search, setSearch] = useState<string>(initialFilters.search || "");
   const [currentStreak, setCurrentStreak] = useState<string | undefined>(
@@ -37,36 +26,32 @@ export const useUsersTableFilters = (
   const debouncedCurrentStreak = useDebounce(currentStreak, 500);
 
   useEffect(() => {
-    if (!enabledFilters?.includes(FilterTypes.Search)) return;
     setFilters((prevFilters) => ({
       ...prevFilters,
       search: debouncedSearch,
     }));
-  }, [debouncedSearch, enabledFilters]);
+  }, [debouncedSearch]);
 
   useEffect(() => {
-    if (!enabledFilters?.includes(FilterTypes.NumberOfCards)) return;
     setFilters((prevFilters) => ({
       ...prevFilters,
       numberOfCards: debouncedNumberOfCards,
     }));
-  }, [debouncedNumberOfCards, enabledFilters]);
+  }, [debouncedNumberOfCards]);
 
   useEffect(() => {
-    if (!enabledFilters?.includes(FilterTypes.CurrentStreak)) return;
     setFilters((prevFilters) => ({
       ...prevFilters,
       currentStreak: debouncedCurrentStreak,
     }));
-  }, [debouncedCurrentStreak, enabledFilters]);
+  }, [debouncedCurrentStreak]);
 
   useEffect(() => {
-    if (!enabledFilters?.includes(FilterTypes.LongestSteak)) return;
     setFilters((prevFilters) => ({
       ...prevFilters,
       longestStreak: debouncedLongestStreak,
     }));
-  }, [debouncedLongestStreak, enabledFilters]);
+  }, [debouncedLongestStreak]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) =>
     setSearch(event.target.value);

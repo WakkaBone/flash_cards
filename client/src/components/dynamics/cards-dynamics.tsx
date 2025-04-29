@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { GetCardDynamicsFilters } from "../../models/api";
 import { useDynamicsCharts } from "../../hooks";
 import { Line } from "react-chartjs-2";

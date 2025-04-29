@@ -41,7 +41,7 @@ function App() {
                   </ProtectedRoute>
                 }
               >
-                <Route path="/" element={<CardsPage />} />
+                <Route index element={<CardsPage />} />
                 <Route path={ROUTES.addCard} element={<AddCardPage />} />
                 <Route path={ROUTES.practice} element={<PracticePage />} />
                 <Route path={ROUTES.categories} element={<CategoriesPage />} />

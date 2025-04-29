@@ -4,24 +4,13 @@ import { GetCardsFilters, PrioritiesExtended } from "../../models/api";
 import { CategoryOptionType } from "../../components/category-select/category-select";
 import { SelectChangeEvent } from "@mui/material";
 import { AllOptionInt } from "../../models/shared";
-import { FilterTypes } from "../../components/cards-filters/cards-filters";
 
 export const defaultFilters: Partial<GetCardsFilters> = {
   includeLearned: false,
   priority: AllOptionInt.All,
 };
 
-export const useCardsTableFilters = (
-  initialFilters: GetCardsFilters,
-  enabledFilters = [
-    FilterTypes.Search,
-    FilterTypes.DateRange,
-    FilterTypes.Category,
-    FilterTypes.IncludeLearned,
-    FilterTypes.MistakesThreshold,
-    FilterTypes.Priority,
-  ]
-) => {
+export const useCardsTableFilters = (initialFilters: GetCardsFilters) => {
   const [filters, setFilters] = useState<GetCardsFilters>(initialFilters);
   const [search, setSearch] = useState<string>(initialFilters.search || "");
   const [mistakesThreshold, setMistakesThreshold] = useState<
@@ -32,20 +21,18 @@ export const useCardsTableFilters = (
   const debouncedMistakesThreshold = useDebounce(mistakesThreshold, 500);
 
   useEffect(() => {
-    if (!enabledFilters?.includes(FilterTypes.Search)) return;
     setFilters((prevFilters) => ({
       ...prevFilters,
       search: debouncedSearch,
     }));
-  }, [debouncedSearch, enabledFilters]);
+  }, [debouncedSearch]);
 
   useEffect(() => {
-    if (!enabledFilters?.includes(FilterTypes.MistakesThreshold)) return;
     setFilters((prevFilters) => ({
       ...prevFilters,
       mistakesThreshold: debouncedMistakesThreshold,
     }));
-  }, [debouncedMistakesThreshold, enabledFilters]);
+  }, [debouncedMistakesThreshold]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) =>
     setSearch(event.target.value);

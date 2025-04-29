@@ -27,7 +27,7 @@ export const UsersDynamicsFilters = ({
   const { isMobile } = useScreenSize();
 
   const { filters, handleRole, handleDateRange, handleReset } =
-    useUsersTableFilters(initialFilters, enabledFilters);
+    useUsersTableFilters(initialFilters);
 
   useEffect(() => {
     if (!deepEqual(filters, initialFilters)) {
