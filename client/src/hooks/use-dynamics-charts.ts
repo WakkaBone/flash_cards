@@ -29,7 +29,7 @@ const prepareChartData = (
   const labels = [];
   const createdAtValues = [];
   const lastPracticeValues = [];
-  let currentDate = from || defaultFrom;
+  let currentDate = new Date(from || defaultFrom);
 
   while (currentDate <= (to || defaultTo)) {
     const formattedDate = formatDateForChart(currentDate);

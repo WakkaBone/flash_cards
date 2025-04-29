@@ -14,11 +14,9 @@ export const getCardsDynamicChartDefaultFilters =
   });
 
 export const CardsDynamics = () => {
-  const [filters, setFilters] = useState<GetCardDynamicsFilters>({});
-
-  useEffect(() => {
-    setFilters(getCardsDynamicChartDefaultFilters());
-  }, []);
+  const [filters, setFilters] = useState<GetCardDynamicsFilters>(
+    getCardsDynamicChartDefaultFilters()
+  );
 
   const {
     cardsDynamics: { chartData, chartOptions, chartStyles, plugins },

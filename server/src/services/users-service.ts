@@ -191,10 +191,7 @@ export const UsersService = {
   },
 
   getUserFromToken: (req: Request) => {
-    let token = req.cookies[ACCESS_TOKEN_KEY];
-
-    if (!token) token = req.cookies[REFRESH_TOKEN_KEY];
-
+    let token = req.cookies[ACCESS_TOKEN_KEY] || req.cookies[REFRESH_TOKEN_KEY];
     if (!token) throw new Error("Token is missing");
 
     const decoded = decodeToken(token);

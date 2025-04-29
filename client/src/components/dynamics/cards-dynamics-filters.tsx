@@ -27,7 +27,7 @@ export const CardsDynamicsFilters = ({
   const { isMobile } = useScreenSize();
 
   const { filters, handlePriority, handleDateRange, handleReset } =
-    useCardsTableFilters(initialFilters);
+    useCardsTableFilters(initialFilters, enabledFilters);
 
   useEffect(() => {
     if (!deepEqual(filters, initialFilters))
