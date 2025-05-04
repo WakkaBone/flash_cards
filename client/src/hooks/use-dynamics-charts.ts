@@ -98,7 +98,7 @@ const getDynamicsChartOptions = (
         callbacks: {
           label: function (tooltipItem) {
             const { datasetIndex, raw } = tooltipItem;
-            const action = datasetIndex === 0 ? "practiced" : "added";
+            const action = datasetIndex === 0 ? "practiced" : "registered";
 
             return getTooltipLabel(
               raw as number,

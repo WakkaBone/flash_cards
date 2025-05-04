@@ -248,10 +248,19 @@ export const UsersService = {
   getUserDynamics: async function (
     filters: GetUserDynamicsFilters
   ): Promise<GetUsersDynamicsDto> {
-    const users: UserModelDto[] = await this.getUsers(filters);
+    const users: UserModelDto[] = await this.getUsers({
+      ...filters,
+      from: undefined,
+      to: undefined,
+    });
+    const range = { from: filters.from, to: filters.to };
 
-    const groupedByCreationDate = getCountByDate(users, "createdAt");
-    const groupedByLastPracticeDate = getCountByDate(users, "lastPractice");
+    const groupedByCreationDate = getCountByDate(users, "createdAt", range);
+    const groupedByLastPracticeDate = getCountByDate(
+      users,
+      "lastPractice",
+      range
+    );
 
     return {
       createdAt: groupedByCreationDate,

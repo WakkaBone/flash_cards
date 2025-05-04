@@ -27,7 +27,7 @@ export const cardsTableColumns: GridColDef<CardsTableRowType>[] = [
   {
     field: "actions",
     headerName: "",
-    flex: 1,
+    flex: 2,
     renderCell: (params) => params.value,
   },
 ];

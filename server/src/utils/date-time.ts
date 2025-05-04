@@ -17,12 +17,19 @@ export function getNextReviewDate(lastReviewDate: Timestamp, interval: number) {
 
 export const getCountByDate = <T extends { [key: string]: any }>(
   entities: T[],
-  field: keyof T
+  field: keyof T,
+  range?: { from: Date; to: Date }
 ): CounterByDate =>
   entities.reduce((acc, entity) => {
     const fieldExists = !!entity[field];
     const isDate = fieldExists && !isNaN(Date.parse(entity[field]));
     const dateString = isDate && entity[field].split("T")[0];
-    dateString && (acc[dateString] = (acc[dateString] || 0) + 1);
+    const isInRange = !range
+      ? true
+      : dateString &&
+        range &&
+        range.from <= new Date(dateString) &&
+        new Date(dateString) <= range.to;
+    dateString && isInRange && (acc[dateString] = (acc[dateString] || 0) + 1);
     return acc;
   }, {} as CounterByDate);
