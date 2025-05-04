@@ -5,15 +5,37 @@ import { STATISTICS_ACTIONS } from "../../constants";
 import { UsersService } from "../../services/users-service";
 import { isAdmin } from "../../utils/roles-util";
 
+const HEBREW_REGEX = /^[\u0590-\u05FF\s]+$/;
+const ENGLISH_REGEX = /^[A-Za-z\s]+$/;
+
+export const isHebrew = (string: string) => HEBREW_REGEX.test(string);
+export const isEnglish = (string: string) => ENGLISH_REGEX.test(string);
+
 export const englishValidation = body("english")
   .isString()
   .notEmpty()
-  .withMessage("English translation is required");
+  .withMessage("English translation is required")
+  .custom((value) => {
+    if (!isEnglish(value)) {
+      throw new Error(
+        "English translation must contain only English letters and spaces"
+      );
+    }
+    return true;
+  });
 
 export const hebrewValidation = body("hebrew")
   .isString()
   .notEmpty()
-  .withMessage("Hebrew translation is required");
+  .withMessage("Hebrew translation is required")
+  .custom((value) => {
+    if (!isHebrew(value)) {
+      throw new Error(
+        "Hebrew translation must contain only Hebrew letters and spaces"
+      );
+    }
+    return true;
+  });
 
 export const isLearnedValidation = body("isLearned").isBoolean();
 

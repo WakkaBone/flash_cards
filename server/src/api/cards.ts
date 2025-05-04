@@ -13,6 +13,7 @@ import {
   bulkDeleteCardsController,
   bulkMarkLearnedController,
   getCardsDynamicsController,
+  importCsvController,
 } from "../controllers/cards";
 import {
   addCardValidator,
@@ -25,6 +26,7 @@ import {
   updateStatisticsValidator,
 } from "../validators";
 import { isAdminValidation } from "../validators/shared";
+import multer from "multer";
 
 const router = Router();
 
@@ -58,5 +60,8 @@ router.get(
   getAdminStatisticsController
 );
 router.get("/dynamics", isAdminValidation, getCardsDynamicsController);
+
+const upload = multer({ dest: "uploads/" });
+router.post("/import/csv", upload.single("csv"), importCsvController); //TODO: add validator
 
 export default router;

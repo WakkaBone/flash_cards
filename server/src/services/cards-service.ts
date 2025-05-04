@@ -13,7 +13,6 @@ import {
   Timestamp,
   getDoc,
   serverTimestamp,
-  QueryDocumentSnapshot,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { CardModel, CardModelDto, Priorities } from "../models/card";
@@ -30,12 +29,12 @@ import {
   Statistics,
   StatisticsAdmin,
 } from "../models/statistics";
-import { CategoriesService } from "./categories-service";
 import { UsersService } from "./users-service";
 import { getNextReviewDate, getCountByDate } from "../utils/date-time";
 import { searchFilterCallback } from "../utils/search-util";
 import { UserModel } from "../models/user";
 import { DateRange } from "../models/shared";
+import { mapCardToCardDto } from "../utils/mappers-util";
 
 export type GetCardsFilters = DateRange & {
   category?: string;
@@ -51,23 +50,6 @@ export type GetCardsFilters = DateRange & {
 
 export type GetPracticeTimelineFilters = DateRange & {
   action?: STATISTICS_ACTIONS;
-};
-
-const mapCardToCardDto = async (
-  doc: QueryDocumentSnapshot
-): Promise<CardModelDto> => {
-  const cardData = doc.data() as CardModel;
-
-  const category = await CategoriesService.getCategoryById(cardData.category);
-
-  const cardDto: CardModelDto = {
-    id: doc.id,
-    ...cardData,
-    category: { id: cardData.category, label: category.label },
-    createdAt: cardData.createdAt.toDate().toISOString(),
-  };
-
-  return cardDto;
 };
 
 export const CardsService = {

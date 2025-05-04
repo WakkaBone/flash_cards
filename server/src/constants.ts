@@ -33,3 +33,12 @@ export const MAX_EASE_COEFFICIENT = 2.5;
 export const PASSWORD_RULES =
   /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+={}\[\]:;"'<>,.?/\\|`~\-]{8,}$/;
 export const USERNAME_RULES = /^[A-Za-z0-9]+$/;
+
+export const CSV_FIELD_NAMES = {
+  english: "English",
+  hebrew: "Hebrew",
+  category: "Category",
+  details: "Details",
+  priority: "Priority",
+  isLearned: "Is Learned",
+};
