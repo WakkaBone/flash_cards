@@ -2,10 +2,11 @@ import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
 import { CardsService } from "../../services/cards-service";
 import { isValid } from "../../utils/validation-util";
-import { serverTimestamp, Timestamp } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore";
 import { CategoriesService } from "../../services/categories-service";
 import { CardModel, Priorities } from "../../models/card";
 import { UsersService } from "../../services/users-service";
+import { getInitialSrsValues } from "../../utils/mappers-util";
 
 type CreateCardBody = {
   category: string;
@@ -24,13 +25,6 @@ export const addCardController = async (
 
     const user = UsersService.getUserFromToken(req);
 
-    const initialSrsValues = {
-      easinessFactor: 2.5,
-      interval: 1,
-      repetitions: 1,
-      lastReviewDate: serverTimestamp(),
-    };
-
     const card: CardModel = {
       category,
       english,
@@ -40,7 +34,7 @@ export const addCardController = async (
       statistics: { wrong: 0, correct: 0 },
       isLearned: false,
       createdAt: Timestamp.now(),
-      ...initialSrsValues,
+      ...getInitialSrsValues(),
       ownerIds: [user.id],
     };
     await CardsService.addCard(card);

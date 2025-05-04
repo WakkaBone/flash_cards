@@ -8,6 +8,7 @@ import { getCardsController } from "./get-cards-controller";
 import { getCardsDynamicsController } from "./get-dynamics-controller";
 import { getRandomCardController } from "./get-random-card-controller";
 import { getStatisticsController } from "./get-statistics-controller";
+import { importCsvController } from "./import-csv-controller";
 import { markLearnedController } from "./mark-learned-controller";
 import { updateCardController } from "./update-card-controller";
 import { updateStatisticsController } from "./update-statistics-controller";
@@ -23,6 +24,7 @@ export {
   getRandomCardController,
   getStatisticsController,
   getAdminStatisticsController,
+  importCsvController,
   markLearnedController,
   updateCardController,
   updateStatisticsController,

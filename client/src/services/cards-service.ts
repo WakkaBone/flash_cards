@@ -150,4 +150,14 @@ export const CardsService = {
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
   },
+
+  async importCsv(formData: FormData) {
+    const response = await httpClient.post<ApiResponse>(
+      `${apiPostfix}/import/csv`,
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
+  },
 };
