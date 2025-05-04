@@ -345,15 +345,25 @@ export const CardsService = {
   getCardsDynamics: async function (
     filters: GetCardDynamicsFilters
   ): Promise<GetCardsDynamicsDto> {
-    const cards = (await this.getCards(filters)).map((card: CardModelDto) => ({
+    const cards = (
+      await this.getCards({ ...filters, from: undefined, to: undefined })
+    ).map((card: CardModelDto) => ({
       ...card,
       lastReviewDate:
         card.lastReviewDate &&
         (card.lastReviewDate as Timestamp).toDate().toISOString(),
     }));
+    const range =
+      filters.from && filters.to
+        ? { from: filters.from, to: filters.to }
+        : undefined;
 
-    const groupedByCreationDate = getCountByDate(cards, "createdAt");
-    const groupedByLastPracticeDate = getCountByDate(cards, "lastReviewDate");
+    const groupedByCreationDate = getCountByDate(cards, "createdAt", range);
+    const groupedByLastPracticeDate = getCountByDate(
+      cards,
+      "lastReviewDate",
+      range
+    );
 
     return {
       createdAt: groupedByCreationDate,

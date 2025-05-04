@@ -253,7 +253,10 @@ export const UsersService = {
       from: undefined,
       to: undefined,
     });
-    const range = { from: filters.from, to: filters.to };
+    const range =
+      filters.from && filters.to
+        ? { from: filters.from, to: filters.to }
+        : undefined;
 
     const groupedByCreationDate = getCountByDate(users, "createdAt", range);
     const groupedByLastPracticeDate = getCountByDate(
