@@ -27,6 +27,7 @@ import {
 } from "../validators";
 import { isAdminValidation } from "../validators/shared";
 import multer from "multer";
+import cors from "cors";
 
 const router = Router();
 
@@ -62,6 +63,7 @@ router.get(
 router.get("/dynamics", isAdminValidation, getCardsDynamicsController);
 
 const upload = multer({ dest: "uploads/" });
+router.options("/import/csv", cors());
 router.post("/import/csv", upload.single("csv"), importCsvController); //TODO: add validator
 
 export default router;
