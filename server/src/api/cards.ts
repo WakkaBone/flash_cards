@@ -62,8 +62,8 @@ router.get(
 );
 router.get("/dynamics", isAdminValidation, getCardsDynamicsController);
 
-const upload = multer({ dest: "uploads/" });
-router.options("/import/csv", cors());
-router.post("/import/csv", upload.single("csv"), importCsvController); //TODO: add validator
+// const upload = multer({ dest: "uploads/" });
+// router.options("/import/csv", cors());
+// router.post("/import/csv", upload.single("csv"), importCsvController); //TODO: add validator
 
 export default router;
