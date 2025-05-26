@@ -16,6 +16,11 @@ export interface ApiResponse<T = any, E = any> {
   error?: ApiError<E>;
 }
 
+export type GetRandomCardResponse = ApiResponse<{
+  card: CardModel | null;
+  options?: string[];
+}>;
+
 export type PrioritiesExtended = Priorities | AllOptionInt;
 export type RolesExtended = Roles | AllOptionString;
 

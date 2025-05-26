@@ -35,6 +35,7 @@ import { searchFilterCallback } from "../utils/search-util";
 import { UserModel } from "../models/user";
 import { DateRange } from "../models/shared";
 import { mapCardToCardDto } from "../utils/mappers-util";
+import { shuffleArray } from "../utils/array-util";
 
 export type GetCardsFilters = DateRange & {
   category?: string;
@@ -351,6 +352,21 @@ export const CardsService = {
       createdAt: groupedByCreationDate,
       lastPractice: groupedByLastPracticeDate,
     };
+  },
+
+  getOptions: async function (
+    card: CardModelDto,
+    eth: boolean
+  ): Promise<string[]> {
+    const sameCategoryCards = (await this.getCards({
+      category: card.category.id,
+    })) as CardModelDto[];
+    const result = shuffleArray(sameCategoryCards)
+      .filter(({ english }) => english !== card.english)
+      .slice(0, 3)
+      .map(({ hebrew, english }) => (eth ? hebrew : english));
+
+    return result;
   },
 
   sortBySRS: (cards: CardModelDto[]): CardModelDto[] => {

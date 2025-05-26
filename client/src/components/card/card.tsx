@@ -28,6 +28,8 @@ import { CardSkeletonLoader } from "./card-skeleton-loader";
 import { CenteredLoader } from "../loader/loader";
 import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
 import { TOAST_CONTAINERS_IDS } from "../../constants";
+import { Options } from "./options";
+import { shuffleArray } from "../../utils/array-util";
 
 type WordCardPropsType = {
   mode: PracticeModes;
@@ -39,6 +41,7 @@ type WordCardPropsType = {
   };
   cardProps: {
     cardData?: CardModel | null;
+    options: string[];
     isLoadingCard: boolean;
     isFetchingCard: boolean;
     getAnotherCard: () => Promise<void>;
@@ -67,8 +70,17 @@ export const WordCard = ({
   const { stopTimer, resumeTimer, restartTimer, timerSessionActive } =
     timerProps;
 
+  //eth - english to hebrew
+  const eth = [PracticeModes.eth, PracticeModes.ethOptions].includes(mode);
+
+  const hasOptions = [
+    PracticeModes.ethOptions,
+    PracticeModes.hteOptions,
+  ].includes(mode);
+
   const {
     cardData,
+    options,
     isLoadingCard,
     isFetchingCard,
     getAnotherCard,
@@ -101,12 +113,11 @@ export const WordCard = ({
 
   const isCorrectAnswer = useCallback(() => {
     if (!card) return;
-    const correctAnswer =
-      mode === PracticeModes.eth ? card.hebrew : card.english;
+    const correctAnswer = eth ? card.hebrew : card.english;
     return (
       translation.trim().toLowerCase() === correctAnswer.trim().toLowerCase()
     );
-  }, [mode, card, translation]);
+  }, [card, translation, eth]);
 
   const handleCheckTranslation = useCallback(() => {
     if (!card || mode === PracticeModes.browse || !translation) return;
@@ -118,7 +129,7 @@ export const WordCard = ({
       {
         onSuccess: () => {
           if (!isCorrect) return;
-          const timeBeforeGetNextCard = 2000;
+          const timeBeforeGetNextCard = 2500;
           setShowTranslation(true);
           setTimeout(() => getNextCard(), timeBeforeGetNextCard);
         },
@@ -139,6 +150,22 @@ export const WordCard = ({
     updateCardStats(STATISTICS_ACTIONS.Wrong, { hideToast: true });
   }, [updateCardStats]);
 
+  const handleSelectOption = useCallback(
+    (option: string) => {
+      if (!hasOptions) return;
+      setTranslation(option);
+    },
+    [hasOptions]
+  );
+
+  const allOptions = useMemo(() => {
+    if (!hasOptions) return [];
+
+    const correctOption =
+      card?.[PracticeModes.ethOptions === mode ? "hebrew" : "english"] || "";
+    return shuffleArray([...options, correctOption]);
+  }, [card, mode, options, hasOptions]);
+
   const getCardBodyByMode = useCallback(() => {
     switch (mode) {
       case PracticeModes.eth:
@@ -155,12 +182,31 @@ export const WordCard = ({
             onChange={(e) => setTranslation(e.target.value)}
           />
         );
+      case PracticeModes.ethOptions:
+      case PracticeModes.hteOptions: {
+        return (
+          <Options
+            options={allOptions}
+            onSelect={handleSelectOption}
+            selected={translation}
+            isLoading={isUpdatingStats}
+          />
+        );
+      }
       case PracticeModes.browse:
         return (
           <TextField value={card?.english} sx={{ pointerEvents: "none" }} />
         );
     }
-  }, [mode, card, showTranslation, translation]);
+  }, [
+    mode,
+    card,
+    showTranslation,
+    translation,
+    allOptions,
+    handleSelectOption,
+    isUpdatingStats,
+  ]);
 
   useEffect(() => setTranslation(""), [showTranslation]);
 
@@ -181,31 +227,40 @@ export const WordCard = ({
     isFetchingCard;
 
   const getCardActionsByMode = useCallback(() => {
+    const CheckButton = () => (
+      <Button
+        {...buttonStyles}
+        loading={isUpdatingStats}
+        disabled={!translation || showTranslation || isLoading}
+        onClick={handleCheckTranslation}
+        endIcon={<QuestionMarkRounded />}
+      >
+        Check
+      </Button>
+    );
+    const ForgotButton = () => (
+      <Button
+        {...buttonStyles}
+        disabled={showTranslation || isLoading}
+        loading={isUpdatingStats}
+        onClick={handleToggleTranslation}
+        endIcon={<SentimentVeryDissatisfiedRounded />}
+      >
+        Forgot
+      </Button>
+    );
     switch (mode) {
       case PracticeModes.eth:
       case PracticeModes.hte:
         return (
-          <Stack direction="row">
-            <Button
-              {...buttonStyles}
-              loading={isUpdatingStats}
-              disabled={!translation || showTranslation || isLoading}
-              onClick={handleCheckTranslation}
-              endIcon={<QuestionMarkRounded />}
-            >
-              Check
-            </Button>
-            <Button
-              {...buttonStyles}
-              disabled={showTranslation || isLoading}
-              loading={isUpdatingStats}
-              onClick={handleToggleTranslation}
-              endIcon={<SentimentVeryDissatisfiedRounded />}
-            >
-              Forgot
-            </Button>
-          </Stack>
+          <>
+            <CheckButton />
+            <ForgotButton />
+          </>
         );
+      case PracticeModes.ethOptions:
+      case PracticeModes.hteOptions:
+        return <CheckButton />;
     }
   }, [
     buttonStyles,
@@ -260,7 +315,7 @@ export const WordCard = ({
     <Card
       variant="outlined"
       sx={{
-        height: isPortrait ? "50vh" : "70vh",
+        height: isPortrait ? "60vh" : "70vh",
         display: "flex",
         flexDirection: "column",
         alignContent: "space-between",
@@ -290,7 +345,7 @@ export const WordCard = ({
               Word
             </Typography>
             <Typography variant="h5" component="div">
-              {mode === PracticeModes.eth ? card.english : card.hebrew}
+              {eth ? card.english : card.hebrew}
             </Typography>
             <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
               {card.category.label}
@@ -319,7 +374,7 @@ export const WordCard = ({
         }}
       >
         <Stack direction={isMobile ? "column" : "row"}>
-          {getCardActionsByMode()}
+          <Stack direction="row">{getCardActionsByMode()}</Stack>
           <Stack direction="row">
             <Button
               {...buttonStyles}

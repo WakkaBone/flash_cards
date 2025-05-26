@@ -1,13 +1,13 @@
 import { DefinedInitialDataOptions } from "@tanstack/react-query";
-import { ApiResponse } from "../../models/api";
-import { CardModel } from "../../models/card";
+import { GetRandomCardResponse } from "../../models/api";
 import { CardsService } from "../../services/cards-service";
-import { PracticeFilersType } from "../../pages/practice-page";
+import { PracticeFilersType, PracticeModes } from "../../pages/practice-page";
 
 export const getRandomCardQuery = (
-  filters: PracticeFilersType
-): DefinedInitialDataOptions<ApiResponse<CardModel | null>> => ({
+  filters: PracticeFilersType,
+  mode: PracticeModes
+): DefinedInitialDataOptions<GetRandomCardResponse> => ({
   initialData: { isSuccess: false },
   queryKey: ["random-card"],
-  queryFn: async () => await CardsService.getRandomCard(filters),
+  queryFn: async () => await CardsService.getRandomCard(filters, mode),
 });

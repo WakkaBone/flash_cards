@@ -19,6 +19,7 @@ import {
 import { buildUrl } from "../utils/url-util";
 import { handleError } from "../utils/error-handler";
 import { compileGetCardsFilters } from "../utils/mappers";
+import { PracticeModes } from "../pages/practice-page";
 
 const apiPostfix = "/cards";
 
@@ -33,11 +34,11 @@ export const CardsService = {
     return response.data;
   },
 
-  async getRandomCard(filters: GetCardsFilters) {
-    const url = buildUrl(
-      `${apiPostfix}/random`,
-      compileGetCardsFilters(filters)
-    );
+  async getRandomCard(filters: GetCardsFilters, mode: PracticeModes) {
+    const url = buildUrl(`${apiPostfix}/random`, {
+      ...compileGetCardsFilters(filters),
+      mode,
+    });
     const response = await httpClient.get<
       ApiResponse<CardModel | null>,
       AxiosPromise<ApiResponse<CardModel | null>> | AxiosError<ApiResponse>

@@ -22,8 +22,10 @@ import { UsersTableRowType } from "../components/users-table/users-table";
 import { ActionsCell as ActionsCellUsers } from "../components/users-table/actions-cell";
 
 export const practiceModeMapper: Record<PracticeModes, string> = {
-  [PracticeModes.eth]: "English to Hebrew",
-  [PracticeModes.hte]: "Hebrew to English",
+  [PracticeModes.eth]: "English to Hebrew Text Input",
+  [PracticeModes.hte]: "Hebrew to English Text Input",
+  [PracticeModes.ethOptions]: "English to Hebrew Select Option",
+  [PracticeModes.hteOptions]: "Hebrew to English Select Option",
   [PracticeModes.browse]: "Browse",
 };
 
