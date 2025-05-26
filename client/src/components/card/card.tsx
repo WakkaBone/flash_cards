@@ -65,7 +65,7 @@ export const WordCard = ({
   timerProps,
   cardProps,
 }: WordCardPropsType) => {
-  const { isMobile, isPortrait } = useScreenSize();
+  const { isMobile } = useScreenSize();
 
   const { stopTimer, resumeTimer, restartTimer, timerSessionActive } =
     timerProps;
@@ -315,7 +315,6 @@ export const WordCard = ({
     <Card
       variant="outlined"
       sx={{
-        height: isPortrait ? "60vh" : "70vh",
         display: "flex",
         flexDirection: "column",
         alignContent: "space-between",
@@ -368,8 +367,6 @@ export const WordCard = ({
       <CardActions
         sx={{
           justifyContent: isMobile ? "center" : "start",
-          position: "absolute",
-          bottom: 0,
           width: "100%",
         }}
       >

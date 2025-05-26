@@ -8,8 +8,10 @@ import { CardModel } from "../../models/card";
 import { createCSV, downloadCsv } from "../../utils/export-util";
 import { priorityMapper } from "../../utils/mappers";
 import { Add, ImportExport } from "@mui/icons-material";
+import { useScreenSize } from "../../hooks";
 
 export const CardsHeader = () => {
+  const { isMobile } = useScreenSize();
   const navigate = useNavigate();
   const handleAdd = () => navigate(ROUTES.addCard);
   const queryClient = useQueryClient();
@@ -54,10 +56,10 @@ export const CardsHeader = () => {
         variant="contained"
         onClick={handleExport}
       >
-        Export to CSV
+        Export {isMobile ? "CSV" : "to CSV"}
       </Button>
       <Button startIcon={<Add />} variant="contained" onClick={handleAdd}>
-        Add Card
+        Add {isMobile ? "" : "Card"}
       </Button>
     </TableHeader>
   );
