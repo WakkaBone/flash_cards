@@ -16,6 +16,8 @@ import { toastError } from "../utils/error-handler";
 export enum PracticeModes {
   eth,
   hte,
+  ethOptions,
+  hteOptions,
   browse,
 }
 
@@ -34,12 +36,13 @@ export const PracticePage = () => {
 
   const {
     cardData,
+    options,
     getAnotherCard,
     isFetching: isFetchingCard,
     isLoading: isLoadingCard,
     updateCardStats,
     updateStatsRest: { isPending: isUpdatingStats },
-  } = useRandomCard(filters);
+  } = useRandomCard(filters, practiceMode);
 
   const {
     displayedCountdown,
@@ -124,6 +127,7 @@ export const PracticePage = () => {
         }}
         cardProps={{
           cardData,
+          options,
           isLoadingCard,
           isFetchingCard,
           getAnotherCard,

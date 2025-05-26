@@ -1,23 +1,33 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ApiResponse, STATISTICS_ACTIONS } from "../../models/api";
-import { CardModel } from "../../models/card";
+import {
+  ApiResponse,
+  GetRandomCardResponse,
+  STATISTICS_ACTIONS,
+} from "../../models/api";
 import { getRandomCardQuery } from "../../queries/cards";
 import { useEffect, useState } from "react";
 import { updateCardStatsMutation } from "../../mutations/cards";
 import { toast } from "react-toastify";
 import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
-import { PracticeFilersType } from "../../pages/practice-page";
+import { PracticeFilersType, PracticeModes } from "../../pages/practice-page";
 import { toastError } from "../../utils/error-handler";
 import { TOAST_CONTAINERS_IDS } from "../../constants";
 
-export const useRandomCard = (filters: PracticeFilersType) => {
+export const useRandomCard = (
+  filters: PracticeFilersType,
+  mode: PracticeModes
+) => {
   const queryClient = useQueryClient();
   const [cardId, setCardId] = useState<string>("");
-  const { data, isLoading, isFetching } = useQuery<
-    ApiResponse<CardModel | null>
-  >(getRandomCardQuery(filters));
+  const { data, isLoading, isFetching, refetch } =
+    useQuery<GetRandomCardResponse>(getRandomCardQuery(filters, mode));
 
-  const cardData = data?.data;
+  useEffect(() => {
+    refetch();
+  }, [mode, refetch]);
+
+  const cardData = data?.data?.card;
+  const options = data?.data?.options || [];
 
   useEffect(() => {
     cardData && setCardId(cardData.id);
@@ -60,6 +70,7 @@ export const useRandomCard = (filters: PracticeFilersType) => {
 
   return {
     cardData,
+    options,
     isLoading,
     isFetching,
     getAnotherCard: () =>

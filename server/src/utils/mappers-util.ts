@@ -65,6 +65,23 @@ export const mapCsvEntryToCardModel = async (
   if (!categories.length)
     throw new Error(`Category ${card[CSV_FIELD_NAMES.category]} doesn't exist`);
 
+  //validate priority
+  if (
+    card[CSV_FIELD_NAMES.priority] &&
+    !priorityReverseMapper[card[CSV_FIELD_NAMES.priority]]
+  )
+    throw new Error(`Priority ${card[CSV_FIELD_NAMES.priority]} doesn't exist`);
+
+  //validate isLearned
+  if (
+    card[CSV_FIELD_NAMES.isLearned] &&
+    card[CSV_FIELD_NAMES.isLearned] !== "TRUE" &&
+    card[CSV_FIELD_NAMES.isLearned] !== "FALSE"
+  )
+    throw new Error(
+      `${card[CSV_FIELD_NAMES.isLearned]} is not a valid value for Is Learned`
+    );
+
   //validate uniqueness
   const sameWords = await CardsService.getCards({
     ownerId: userId,
@@ -79,7 +96,7 @@ export const mapCsvEntryToCardModel = async (
     hebrew: card[CSV_FIELD_NAMES.hebrew],
     details: card[CSV_FIELD_NAMES.details] || "",
     statistics: { wrong: 0, correct: 0 },
-    isLearned: !!card[CSV_FIELD_NAMES.isLearned],
+    isLearned: card[CSV_FIELD_NAMES.isLearned] === "TRUE",
     priority: card[CSV_FIELD_NAMES.priority]
       ? priorityReverseMapper[card[CSV_FIELD_NAMES.priority]]
       : Priorities.Medium,

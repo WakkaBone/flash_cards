@@ -6,6 +6,14 @@ import { CardModelDto } from "../../models/card";
 import { UsersService } from "../../services/users-service";
 import { getOwnershipFilter } from "../../utils/roles-util";
 
+enum PracticeModes {
+  eth,
+  hte,
+  ethOptions,
+  hteOptions,
+  browse,
+}
+
 type GetRandomCardQueryParams = {
   category?: string;
   includeLearned?: string;
@@ -13,16 +21,24 @@ type GetRandomCardQueryParams = {
   priority?: string;
   from?: string;
   to?: string;
+  mode?: string;
 };
 
 export const getRandomCardController = async (
   req: Request<null, ApiResponse, null, GetRandomCardQueryParams>,
-  res: Response<ApiResponse<CardModelDto>>
+  res: Response<ApiResponse<{ card: CardModelDto; options?: string[] }>>
 ) => {
   if (!isValid(req, res)) return;
   try {
-    const { category, includeLearned, mistakesThreshold, priority, from, to } =
-      req.query;
+    const {
+      category,
+      includeLearned,
+      mistakesThreshold,
+      priority,
+      from,
+      to,
+      mode,
+    } = req.query;
 
     const user = UsersService.getUserFromToken(req);
 
@@ -52,7 +68,23 @@ export const getRandomCardController = async (
     const userId = UsersService.getUserFromToken(req).id;
     userId && (await UsersService.updateLastPractice(userId));
 
-    res.status(200).json({ isSuccess: true, data: card });
+    const shouldIncludeOptions =
+      mode !== undefined &&
+      [PracticeModes.ethOptions, PracticeModes.hteOptions].includes(+mode);
+    const options = shouldIncludeOptions
+      ? await CardsService.getOptions(
+          card,
+          mode && +mode === PracticeModes.ethOptions
+        )
+      : undefined;
+
+    res.status(200).json({
+      isSuccess: true,
+      data: {
+        card,
+        options,
+      },
+    });
   } catch (error) {
     res.status(500).json({
       isSuccess: false,
