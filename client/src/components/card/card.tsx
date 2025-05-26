@@ -30,6 +30,7 @@ import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
 import { TOAST_CONTAINERS_IDS } from "../../constants";
 import { Options } from "./options";
 import { shuffleArray } from "../../utils/array-util";
+import { HotkeysLegend } from "./hotkeys-legend";
 
 type WordCardPropsType = {
   mode: PracticeModes;
@@ -299,10 +300,19 @@ export const WordCard = ({
     resumeTimer();
   };
 
+  //bind hotkeys
   useHotkeys("right", () => getNextCard(), [getNextCard]);
   useHotkeys("Enter", () => handleCheckTranslation(), {
     enableOnFormTags: true,
   });
+  useHotkeys("1", () => hasOptions && handleSelectOption(allOptions[0]));
+  useHotkeys("2", () => hasOptions && handleSelectOption(allOptions[1]));
+  useHotkeys("3", () => hasOptions && handleSelectOption(allOptions[2]));
+  useHotkeys("4", () => hasOptions && handleSelectOption(allOptions[3]));
+  useHotkeys("e", () => cardData && onOpenEditModal());
+  useHotkeys("d", () => cardData && handleDeleteCard());
+  useHotkeys("l", () => cardData && handleMarkAsLearned());
+  useHotkeys("f", () => cardData && !hasOptions && handleToggleTranslation());
 
   if (card === undefined || isLoadingCard) return <CenteredLoader />;
 
@@ -372,7 +382,7 @@ export const WordCard = ({
           width: "100%",
         }}
       >
-        <Stack direction={isMobile ? "column" : "row"}>
+        <Stack direction={isMobile ? "column" : "row"} sx={{ width: "100%" }}>
           <Stack direction="row">{getCardActionsByMode()}</Stack>
           <Stack direction="row">
             <Button
@@ -413,6 +423,7 @@ export const WordCard = ({
               Delete
             </Button>
           </Stack>
+          {!isMobile && <HotkeysLegend />}
         </Stack>
       </CardActions>
       <EditCardModal
