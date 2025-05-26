@@ -4,7 +4,7 @@ import {
   StatisticsCounters,
   StatisticsCountersAdmin,
 } from "../models/statistics";
-import { PracticeModes } from "../pages/practice-page";
+import { PracticeModes } from "../models/practice-modes";
 import { ActionsCell as ActionsCellCards } from "../components/cards-table/actions-cell";
 import { CategoryModel } from "../models/category";
 import { CategoriesTableRowType } from "../components/categories-table/categories-table";
@@ -22,10 +22,10 @@ import { UsersTableRowType } from "../components/users-table/users-table";
 import { ActionsCell as ActionsCellUsers } from "../components/users-table/actions-cell";
 
 export const practiceModeMapper: Record<PracticeModes, string> = {
-  [PracticeModes.eth]: "English to Hebrew Text Input",
-  [PracticeModes.hte]: "Hebrew to English Text Input",
-  [PracticeModes.ethOptions]: "English to Hebrew Select Option",
-  [PracticeModes.hteOptions]: "Hebrew to English Select Option",
+  [PracticeModes.ethInput]: "English to Hebrew Text Input",
+  [PracticeModes.hteInput]: "Hebrew to English Text Input",
+  [PracticeModes.ethSelect]: "English to Hebrew Multi Option",
+  [PracticeModes.hteSelect]: "Hebrew to English Multi Option",
   [PracticeModes.browse]: "Browse",
 };
 

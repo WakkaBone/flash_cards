@@ -12,14 +12,7 @@ import {
   FilterTypes,
 } from "../components/cards-filters/cards-filters";
 import { toastError } from "../utils/error-handler";
-
-export enum PracticeModes {
-  eth,
-  hte,
-  ethOptions,
-  hteOptions,
-  browse,
-}
+import { PracticeModes } from "../models/practice-modes";
 
 export type PracticeFilersType = Omit<GetCardsFilters, "search">;
 

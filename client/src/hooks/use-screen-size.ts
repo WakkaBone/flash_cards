@@ -6,8 +6,8 @@ const useScreenSize = () => {
   const isTablet = useMediaQuery(theme.breakpoints.down("md"));
   const isPortrait = useMediaQuery("(orientation: portrait)");
   const isLandscape = useMediaQuery("(orientation: landscape)");
-  const burgerBreakpoint = useMediaQuery("(max-width: 1500px)");
-  return { isMobile, isTablet, isPortrait, isLandscape, burgerBreakpoint };
+
+  return { isMobile, isTablet, isPortrait, isLandscape };
 };
 
 export { useScreenSize };

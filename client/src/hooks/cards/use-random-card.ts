@@ -5,13 +5,14 @@ import {
   STATISTICS_ACTIONS,
 } from "../../models/api";
 import { getRandomCardQuery } from "../../queries/cards";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { updateCardStatsMutation } from "../../mutations/cards";
 import { toast } from "react-toastify";
 import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
-import { PracticeFilersType, PracticeModes } from "../../pages/practice-page";
+import { PracticeFilersType } from "../../pages/practice-page";
 import { toastError } from "../../utils/error-handler";
 import { TOAST_CONTAINERS_IDS } from "../../constants";
+import { PracticeModes } from "../../models/practice-modes";
 
 export const useRandomCard = (
   filters: PracticeFilersType,
@@ -22,7 +23,12 @@ export const useRandomCard = (
   const { data, isLoading, isFetching, refetch } =
     useQuery<GetRandomCardResponse>(getRandomCardQuery(filters, mode));
 
+  const firstOpenRef = useRef(true);
   useEffect(() => {
+    if (firstOpenRef.current) {
+      firstOpenRef.current = false;
+      return;
+    }
     refetch();
   }, [mode, refetch]);
 

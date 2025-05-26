@@ -37,9 +37,13 @@ export const CardsTable = () => {
 
   const paginationProps = useTablePagination();
 
-  //TODO: make grid more responsive
-
   const [rowsSelected, setRowsSelected] = useState<GridRowSelectionModel>([]);
+
+  const columns = isMobile
+    ? cardsTableColumns.slice(0, 3)
+    : isTablet
+    ? cardsTableColumns.slice(0, 7)
+    : cardsTableColumns;
 
   return (
     <>
@@ -64,7 +68,7 @@ export const CardsTable = () => {
           },
         }}
         rows={rows}
-        columns={isMobile ? cardsTableColumns.slice(0, 3) : cardsTableColumns}
+        columns={columns}
         disableRowSelectionOnClick
       />
       <ToastContainer containerId={TOAST_CONTAINERS_IDS.cardsTable} />

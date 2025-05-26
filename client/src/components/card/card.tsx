@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { PracticeModes } from "../../pages/practice-page";
+import { PracticeModes } from "../../models/practice-modes";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ApiResponse, STATISTICS_ACTIONS } from "../../models/api";
 import { ToastContainer } from "react-toastify";
@@ -71,11 +71,11 @@ export const WordCard = ({
     timerProps;
 
   //eth - english to hebrew
-  const eth = [PracticeModes.eth, PracticeModes.ethOptions].includes(mode);
+  const eth = [PracticeModes.ethInput, PracticeModes.ethSelect].includes(mode);
 
   const hasOptions = [
-    PracticeModes.ethOptions,
-    PracticeModes.hteOptions,
+    PracticeModes.ethSelect,
+    PracticeModes.hteSelect,
   ].includes(mode);
 
   const {
@@ -162,17 +162,19 @@ export const WordCard = ({
     if (!hasOptions) return [];
 
     const correctOption =
-      card?.[PracticeModes.ethOptions === mode ? "hebrew" : "english"] || "";
+      card?.[PracticeModes.ethSelect === mode ? "hebrew" : "english"] || "";
     return shuffleArray([...options, correctOption]);
   }, [card, mode, options, hasOptions]);
 
   const getCardBodyByMode = useCallback(() => {
     switch (mode) {
-      case PracticeModes.eth:
-      case PracticeModes.hte:
+      case PracticeModes.ethInput:
+      case PracticeModes.hteInput:
         return showTranslation ? (
           <TextField
-            value={card?.[PracticeModes.eth === mode ? "hebrew" : "english"]}
+            value={
+              card?.[PracticeModes.ethInput === mode ? "hebrew" : "english"]
+            }
             disabled
           />
         ) : (
@@ -182,8 +184,8 @@ export const WordCard = ({
             onChange={(e) => setTranslation(e.target.value)}
           />
         );
-      case PracticeModes.ethOptions:
-      case PracticeModes.hteOptions: {
+      case PracticeModes.ethSelect:
+      case PracticeModes.hteSelect: {
         return (
           <Options
             options={allOptions}
@@ -250,16 +252,16 @@ export const WordCard = ({
       </Button>
     );
     switch (mode) {
-      case PracticeModes.eth:
-      case PracticeModes.hte:
+      case PracticeModes.ethInput:
+      case PracticeModes.hteInput:
         return (
           <>
             <CheckButton />
             <ForgotButton />
           </>
         );
-      case PracticeModes.ethOptions:
-      case PracticeModes.hteOptions:
+      case PracticeModes.ethSelect:
+      case PracticeModes.hteSelect:
         return <CheckButton />;
     }
   }, [

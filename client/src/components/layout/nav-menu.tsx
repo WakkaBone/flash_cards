@@ -169,15 +169,15 @@ const MenuList = ({ closeDrawer }: { closeDrawer?: () => void }) => {
   );
 };
 
-const BurgerMenu = () => {
+export const BurgerMenu = () => {
   const [open, setOpen] = useState(false);
   const handleToggleDrawer = () => setOpen(!open);
+  const { isMobile } = useScreenSize();
 
   return (
     <>
-      <Box m={2}>
+      <Box m={isMobile ? 0.5 : 2}>
         <IconButton
-          edge="start"
           color="inherit"
           aria-label="menu"
           onClick={handleToggleDrawer}
@@ -190,10 +190,4 @@ const BurgerMenu = () => {
       </Drawer>
     </>
   );
-};
-
-export const NavMenu = () => {
-  const { burgerBreakpoint } = useScreenSize();
-  if (burgerBreakpoint) return <BurgerMenu />;
-  return <MenuList />;
 };

@@ -3,17 +3,18 @@ import { CardsTableRowType } from "./cards-table";
 import { format } from "date-fns";
 
 export const cardsTableColumns: GridColDef<CardsTableRowType>[] = [
-  { field: "english", headerName: "English" },
-  { field: "hebrew", headerName: "Hebrew" },
+  { field: "english", headerName: "English", flex: 0.5 },
+  { field: "hebrew", headerName: "Hebrew", flex: 0.5 },
   {
     field: "priority",
     headerName: "Priority",
     renderCell: (params) => params.value,
+    flex: 0.5,
   },
-  { field: "category", headerName: "Category" },
-  { field: "correct", headerName: "Correct" },
-  { field: "wrong", headerName: "Wrong" },
-  { field: "isLearned", headerName: "Is Learned" },
+  { field: "category", headerName: "Category", flex: 0.5 },
+  { field: "correct", headerName: "Correct", flex: 0.5 },
+  { field: "wrong", headerName: "Wrong", flex: 0.5 },
+  { field: "isLearned", headerName: "Is Learned", flex: 0.5 },
   {
     field: "createdAt",
     valueGetter: (value) => new Date(value),

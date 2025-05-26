@@ -6,11 +6,11 @@ import { CardModelDto } from "../../models/card";
 import { UsersService } from "../../services/users-service";
 import { getOwnershipFilter } from "../../utils/roles-util";
 
-enum PracticeModes {
-  eth,
-  hte,
-  ethOptions,
-  hteOptions,
+export enum PracticeModes {
+  ethInput,
+  hteInput,
+  ethSelect,
+  hteSelect,
   browse,
 }
 
@@ -70,11 +70,11 @@ export const getRandomCardController = async (
 
     const shouldIncludeOptions =
       mode !== undefined &&
-      [PracticeModes.ethOptions, PracticeModes.hteOptions].includes(+mode);
+      [PracticeModes.ethSelect, PracticeModes.hteSelect].includes(+mode);
     const options = shouldIncludeOptions
       ? await CardsService.getOptions(
           card,
-          mode && +mode === PracticeModes.ethOptions
+          mode && +mode === PracticeModes.ethSelect
         )
       : undefined;
 
