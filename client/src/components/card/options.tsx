@@ -1,5 +1,6 @@
-import { Box, Card, Stack } from "@mui/material";
+import { Box, Card, CardContent, Stack, Typography } from "@mui/material";
 import { useScreenSize } from "../../hooks";
+import { UtterButton } from "./utter-button";
 
 const selectedOptionStyles = {
   backgroundColor: "primary.main",
@@ -10,12 +11,14 @@ type OptionsPropsType = {
   onSelect: (option: string) => void;
   selected: string;
   isLoading: boolean;
+  eth: boolean;
 };
 export const Options = ({
   options,
   onSelect,
   selected,
   isLoading,
+  eth,
 }: OptionsPropsType) => {
   const { isMobile } = useScreenSize();
 
@@ -51,7 +54,20 @@ export const Options = ({
             }
           >
             <Card onClick={() => onSelect(option)} sx={cardStyles}>
-              {option}
+              <CardContent
+                sx={{
+                  p: 0,
+                  pb: "0 !important",
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: isMobile ? "center" : "start",
+                  alignItems: "center",
+                }}
+              >
+                <Typography>
+                  {option} {eth && <UtterButton text={option} />}
+                </Typography>
+              </CardContent>
             </Card>
           </Box>
         );

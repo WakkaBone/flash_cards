@@ -12,12 +12,7 @@ import { PracticeModes } from "../../models/practice-modes";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ApiResponse, STATISTICS_ACTIONS } from "../../models/api";
 import { ToastContainer } from "react-toastify";
-import {
-  useMarkCardLearned,
-  useDeleteCard,
-  useScreenSize,
-  useTTS,
-} from "../../hooks";
+import { useMarkCardLearned, useDeleteCard, useScreenSize } from "../../hooks";
 import { EditCardModal } from "../edit-card-modal/edit-card-modal";
 import {
   DeleteForeverRounded,
@@ -26,7 +21,6 @@ import {
   SentimentVeryDissatisfiedRounded,
   TaskAltRounded,
   NavigateNextRounded,
-  VolumeUp,
 } from "@mui/icons-material";
 import { CardModel } from "../../models/card";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -37,6 +31,7 @@ import { TOAST_CONTAINERS_IDS } from "../../constants";
 import { Options } from "./options";
 import { shuffleArray } from "../../utils/array-util";
 import { HotkeysLegend } from "./hotkeys-legend";
+import { UtterButton } from "./utter-button";
 
 type WordCardPropsType = {
   mode: PracticeModes;
@@ -201,6 +196,7 @@ export const WordCard = ({
             onSelect={handleSelectOption}
             selected={translation}
             isLoading={isUpdatingStats}
+            eth={eth}
           />
         );
       }
@@ -217,6 +213,7 @@ export const WordCard = ({
     allOptions,
     handleSelectOption,
     isUpdatingStats,
+    eth,
   ]);
 
   useEffect(() => setTranslation(""), [showTranslation]);
@@ -328,11 +325,6 @@ export const WordCard = ({
     hotkeysConfig[key as keyof typeof hotkeysConfig]?.()
   );
 
-  const { supportsHebrew, tts, isUttering } = useTTS();
-  const playTTS = useCallback(() => {
-    card?.hebrew && tts(card?.hebrew);
-  }, [card?.hebrew, tts]);
-
   if (card === undefined || isLoadingCard) return <CenteredLoader />;
 
   if (card === null)
@@ -376,23 +368,11 @@ export const WordCard = ({
             </Typography>
             <Typography variant="h5" component="div">
               {eth ? card.english : card.hebrew}{" "}
-              {supportsHebrew &&
-                [
-                  PracticeModes.browse,
-                  PracticeModes.hteInput,
-                  PracticeModes.hteSelect,
-                ].includes(mode) && (
-                  <VolumeUp
-                    onClick={playTTS}
-                    sx={{
-                      cursor: "pointer",
-                      verticalAlign: "middle",
-                      opacity: !isUttering ? 1 : 0.5,
-                      pointerEvents: !isUttering ? "auto" : "none",
-                    }}
-                    fontSize="small"
-                  />
-                )}
+              {[
+                PracticeModes.browse,
+                PracticeModes.hteInput,
+                PracticeModes.hteSelect,
+              ].includes(mode) && <UtterButton text={card.hebrew} />}
             </Typography>
             <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
               {card.category.label}
