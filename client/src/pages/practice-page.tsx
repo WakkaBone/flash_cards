@@ -13,6 +13,7 @@ import {
 } from "../components/cards-filters/cards-filters";
 import { toastError } from "../utils/error-handler";
 import { PracticeModes } from "../models/practice-modes";
+import { PracticeIntervalInput } from "../components/practice-interval-input/practice-interval-input";
 
 export type PracticeFilersType = Omit<GetCardsFilters, "search">;
 
@@ -20,10 +21,14 @@ const defaultFilters = {
   includeLearned: false,
 };
 
+const DEFAULT_INTERVAL = 3;
+
 export const PracticePage = () => {
   const { isMobile } = useScreenSize();
 
   const [practiceMode, setPracticeMode] = useState(PracticeModes.browse);
+
+  const [interval, setInterval] = useState(DEFAULT_INTERVAL);
 
   const [filters, setFilters] = useState<PracticeFilersType>(defaultFilters);
 
@@ -88,6 +93,12 @@ export const PracticePage = () => {
           value={practiceMode}
           onChange={handleChangePracticeMode}
         />
+        {practiceMode !== PracticeModes.browse && (
+          <PracticeIntervalInput
+            interval={interval}
+            setInterval={setInterval}
+          />
+        )}
         <Timer
           handleTimerDurationChange={handleTimerDurationChange}
           handleStartTimer={handleStartTimer}
@@ -112,6 +123,7 @@ export const PracticePage = () => {
       />
       <WordCard
         mode={practiceMode}
+        interval={interval}
         timerProps={{
           stopTimer: pause,
           resumeTimer: resume,

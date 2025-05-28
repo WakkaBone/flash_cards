@@ -61,6 +61,7 @@ export const Timer = (props: TimerPropsType) => {
       sx={{
         alignItems: "start",
         mb: 1,
+        width: "100%",
       }}
     >
       <FormControlLabel

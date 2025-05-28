@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   ButtonOwnProps,
   Card,
@@ -32,9 +33,11 @@ import { Options } from "./options";
 import { shuffleArray } from "../../utils/array-util";
 import { HotkeysLegend } from "./hotkeys-legend";
 import { UtterButton } from "./utter-button";
+import { IntervalCountdown } from "./interval-countdown";
 
 type WordCardPropsType = {
   mode: PracticeModes;
+  interval: number;
   timerProps: {
     stopTimer: () => void;
     resumeTimer: () => void;
@@ -64,6 +67,7 @@ type WordCardPropsType = {
 
 export const WordCard = ({
   mode,
+  interval,
   timerProps,
   cardProps,
 }: WordCardPropsType) => {
@@ -94,6 +98,8 @@ export const WordCard = ({
   const { deleteCard, isPending: isDeletingCard } = useDeleteCard();
 
   const [card, setCard] = useState<CardModel | undefined | null>(cardData);
+
+  const [inTransition, setInTransition] = useState<boolean>(false);
 
   useEffect(() => {
     cardData && setCard(cardData);
@@ -131,15 +137,19 @@ export const WordCard = ({
       {
         onSuccess: () => {
           if (!isCorrect) return;
-          const timeBeforeGetNextCard = 2500;
           setShowTranslation(true);
-          setTimeout(() => getNextCard(), timeBeforeGetNextCard);
+          setInTransition(true);
+          setTimeout(() => {
+            getNextCard();
+            setInTransition(false);
+          }, interval * 1000);
         },
       }
     );
   }, [
     card,
     mode,
+    interval,
     translation,
     updateCardStats,
     getNextCard,
@@ -232,7 +242,8 @@ export const WordCard = ({
     isDeletingCard ||
     isUpdatingStats ||
     isLoadingCard ||
-    isFetchingCard;
+    isFetchingCard ||
+    inTransition;
 
   const getCardActionsByMode = useCallback(() => {
     const CheckButton = () => (
@@ -309,16 +320,17 @@ export const WordCard = ({
   const hotkeysConfig = {
     ...(() =>
       Array.from({ length: 4 }, (_, i) => i + 1).reduce((acc, num) => {
-        acc[num.toString()] = () => handleSelectOption(allOptions[num - 1]);
+        acc[num.toString()] = () =>
+          !isLoading && handleSelectOption(allOptions[num - 1]);
         return acc;
       }, {} as Record<string, () => void>))(),
-    e: () => card && onOpenEditModal(),
-    d: () => handleDeleteCard(),
-    l: () => handleMarkAsLearned(),
-    f: () => card && !hasOptions && handleToggleTranslation(),
+    e: () => !isLoading && card && onOpenEditModal(),
+    d: () => !isLoading && handleDeleteCard(),
+    l: () => !isLoading && handleMarkAsLearned(),
+    f: () => !isLoading && card && !hasOptions && handleToggleTranslation(),
   };
-  useHotkeys("right", () => getNextCard(), [getNextCard]);
-  useHotkeys("Enter", () => handleCheckTranslation(), {
+  useHotkeys("right", () => !isLoading && getNextCard(), [getNextCard]);
+  useHotkeys("Enter", () => !isLoading && handleCheckTranslation(), {
     enableOnFormTags: true,
   });
   useHotkeys(Object.keys(hotkeysConfig), ({ key }) =>
@@ -381,7 +393,7 @@ export const WordCard = ({
             {(mode === PracticeModes.browse || showTranslation) &&
               card.details && (
                 <Typography
-                  variant="caption"
+                  variant="body2"
                   gutterBottom
                   sx={{ display: "block", whiteSpace: "pre-wrap" }}
                   mt={2}
@@ -389,6 +401,11 @@ export const WordCard = ({
                   {card.details}
                 </Typography>
               )}
+            {inTransition && mode !== PracticeModes.browse && (
+              <Box mt={2}>
+                <IntervalCountdown seconds={interval} />
+              </Box>
+            )}
           </>
         )}
       </CardContent>
