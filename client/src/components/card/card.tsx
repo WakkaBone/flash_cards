@@ -372,17 +372,18 @@ export const WordCard = ({
             </Typography>
             <Typography variant="h5" component="div">
               {eth ? card.english : card.hebrew}{" "}
-              {[
-                PracticeModes.browse,
-                PracticeModes.hteInput,
-                PracticeModes.hteSelect,
-              ].includes(mode) && (
-                <VolumeUp
-                  onClick={playTTS}
-                  sx={{ cursor: "pointer" }}
-                  fontSize="small"
-                />
-              )}
+              {supportsHebrew &&
+                [
+                  PracticeModes.browse,
+                  PracticeModes.hteInput,
+                  PracticeModes.hteSelect,
+                ].includes(mode) && (
+                  <VolumeUp
+                    onClick={playTTS}
+                    sx={{ cursor: "pointer", verticalAlign: "middle" }}
+                    fontSize="small"
+                  />
+                )}
             </Typography>
             <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
               {card.category.label}

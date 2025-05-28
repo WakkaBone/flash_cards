@@ -1,10 +1,21 @@
 import { GridColDef } from "@mui/x-data-grid";
 import { CardsTableRowType } from "./cards-table";
 import { format } from "date-fns";
+import { useTTS } from "../../hooks/cards/use-tts";
+
+const HebrewCell = ({ string }: { string: string }) => {
+  const { supportsHebrew, tts } = useTTS();
+  return <span onClick={() => supportsHebrew && tts(string)}>{string}</span>;
+};
 
 export const cardsTableColumns: GridColDef<CardsTableRowType>[] = [
   { field: "english", headerName: "English", flex: 0.5 },
-  { field: "hebrew", headerName: "Hebrew", flex: 0.5 },
+  {
+    field: "hebrew",
+    headerName: "Hebrew",
+    flex: 0.5,
+    renderCell: (params) => <HebrewCell string={params.value} />,
+  },
   {
     field: "priority",
     headerName: "Priority",
