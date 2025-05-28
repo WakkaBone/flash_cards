@@ -21,6 +21,7 @@ import {
   SentimentVeryDissatisfiedRounded,
   TaskAltRounded,
   NavigateNextRounded,
+  VolumeUp,
 } from "@mui/icons-material";
 import { CardModel } from "../../models/card";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -31,6 +32,7 @@ import { TOAST_CONTAINERS_IDS } from "../../constants";
 import { Options } from "./options";
 import { shuffleArray } from "../../utils/array-util";
 import { HotkeysLegend } from "./hotkeys-legend";
+import { useTTS } from "../../hooks/cards/use-tts";
 
 type WordCardPropsType = {
   mode: PracticeModes;
@@ -154,6 +156,8 @@ export const WordCard = ({
   const handleSelectOption = useCallback(
     (option: string) => {
       if (!hasOptions) return;
+      document.activeElement instanceof HTMLElement &&
+        document.activeElement.blur();
       setTranslation(option);
     },
     [hasOptions]
@@ -301,18 +305,29 @@ export const WordCard = ({
   };
 
   //bind hotkeys
+  const hotkeysConfig = {
+    ...(() =>
+      Array.from({ length: 4 }, (_, i) => i + 1).reduce((acc, num) => {
+        acc[num.toString()] = () => handleSelectOption(allOptions[num - 1]);
+        return acc;
+      }, {} as Record<string, () => void>))(),
+    e: () => card && onOpenEditModal(),
+    d: () => handleDeleteCard(),
+    l: () => handleMarkAsLearned(),
+    f: () => card && !hasOptions && handleToggleTranslation(),
+  };
   useHotkeys("right", () => getNextCard(), [getNextCard]);
   useHotkeys("Enter", () => handleCheckTranslation(), {
     enableOnFormTags: true,
   });
-  useHotkeys("1", () => hasOptions && handleSelectOption(allOptions[0]));
-  useHotkeys("2", () => hasOptions && handleSelectOption(allOptions[1]));
-  useHotkeys("3", () => hasOptions && handleSelectOption(allOptions[2]));
-  useHotkeys("4", () => hasOptions && handleSelectOption(allOptions[3]));
-  useHotkeys("e", () => cardData && onOpenEditModal());
-  useHotkeys("d", () => cardData && handleDeleteCard());
-  useHotkeys("l", () => cardData && handleMarkAsLearned());
-  useHotkeys("f", () => cardData && !hasOptions && handleToggleTranslation());
+  useHotkeys(Object.keys(hotkeysConfig), ({ key }) =>
+    hotkeysConfig[key as keyof typeof hotkeysConfig]?.()
+  );
+
+  const { supportsHebrew, tts } = useTTS();
+  const playTTS = useCallback(() => {
+    card?.hebrew && tts(card?.hebrew);
+  }, [card?.hebrew, tts]);
 
   if (card === undefined || isLoadingCard) return <CenteredLoader />;
 
@@ -356,7 +371,18 @@ export const WordCard = ({
               Word
             </Typography>
             <Typography variant="h5" component="div">
-              {eth ? card.english : card.hebrew}
+              {eth ? card.english : card.hebrew}{" "}
+              {[
+                PracticeModes.browse,
+                PracticeModes.hteInput,
+                PracticeModes.hteSelect,
+              ].includes(mode) && (
+                <VolumeUp
+                  onClick={playTTS}
+                  sx={{ cursor: "pointer" }}
+                  fontSize="small"
+                />
+              )}
             </Typography>
             <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
               {card.category.label}
