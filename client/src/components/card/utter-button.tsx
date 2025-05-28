@@ -7,7 +7,7 @@ export const UtterButton = ({ text }: { text: string }) => {
 
   const playTTS = useCallback(() => text && tts(text), [text, tts]);
 
-  return !supportsHebrew ? (
+  return supportsHebrew ? (
     <VolumeUp
       onClick={playTTS}
       sx={{
