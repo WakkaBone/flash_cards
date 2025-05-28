@@ -25,8 +25,8 @@ import { CSV_HEADERS } from "./export-util";
 export const practiceModeMapper: Record<PracticeModes, string> = {
   [PracticeModes.ethInput]: "English to Hebrew Text Input",
   [PracticeModes.hteInput]: "Hebrew to English Text Input",
-  [PracticeModes.ethSelect]: "English to Hebrew Multi Option",
-  [PracticeModes.hteSelect]: "Hebrew to English Multi Option",
+  [PracticeModes.ethSelect]: "English to Hebrew Multi Choice",
+  [PracticeModes.hteSelect]: "Hebrew to English Multi Choice",
   [PracticeModes.browse]: "Browse",
 };
 
