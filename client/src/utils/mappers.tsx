@@ -20,6 +20,7 @@ import { PriorityCell } from "../components/cards-table/priority-cell";
 import { Roles, UserModel } from "../models/user";
 import { UsersTableRowType } from "../components/users-table/users-table";
 import { ActionsCell as ActionsCellUsers } from "../components/users-table/actions-cell";
+import { CSV_HEADERS } from "./export-util";
 
 export const practiceModeMapper: Record<PracticeModes, string> = {
   [PracticeModes.ethInput]: "English to Hebrew Text Input",
@@ -100,6 +101,16 @@ export const mapUserToTableRow = (user: UserModel): UsersTableRowType => ({
   lastPractice: user.lastPractice,
   longestStreak: user.longestStreak,
   actions: <ActionsCellUsers user={user} />,
+});
+
+export const mapCardToCsvEntry = (card: CardModel) => ({
+  [CSV_HEADERS[0]]: card.english,
+  [CSV_HEADERS[1]]: card.hebrew,
+  [CSV_HEADERS[2]]: priorityMapper[card.priority],
+  [CSV_HEADERS[3]]: card.category.label,
+  [CSV_HEADERS[4]]: card.statistics.correct,
+  [CSV_HEADERS[5]]: card.statistics.wrong,
+  [CSV_HEADERS[6]]: card.isLearned ? "Yes" : "No",
 });
 
 export const mapAddCardFormToPayload = (

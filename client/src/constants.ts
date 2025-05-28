@@ -27,7 +27,3 @@ export const TOAST_CONTAINERS_IDS = {
   auth: "auth",
   signup: "signup",
 };
-
-export const USERNAME_RULES = /^[A-Za-z0-9]+$/;
-export const PASSWORD_RULES =
-  /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+={}\[\]:;"'<>,.?/\\|`~\-]{8,}$/;

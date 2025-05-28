@@ -1,7 +1,7 @@
 import { GridColDef } from "@mui/x-data-grid";
 import { CardsTableRowType } from "./cards-table";
 import { format } from "date-fns";
-import { useTTS } from "../../hooks/cards/use-tts";
+import { useTTS } from "../../hooks";
 
 const HebrewCell = ({ string }: { string: string }) => {
   const { supportsHebrew, tts } = useTTS();

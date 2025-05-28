@@ -1,3 +1,13 @@
+export const CSV_HEADERS = [
+  "English",
+  "Hebrew",
+  "Priority",
+  "Category",
+  "Correct",
+  "Wrong",
+  "Is Learned",
+];
+
 export function createCSV<K extends string>(
   headers: readonly K[],
   data: Array<Record<K, any>>

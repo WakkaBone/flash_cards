@@ -5,8 +5,8 @@ import { TableHeader } from "../table-header/table-header";
 import { useQueryClient } from "@tanstack/react-query";
 import { ApiResponse } from "../../models/api";
 import { CardModel } from "../../models/card";
-import { createCSV, downloadCsv } from "../../utils/export-util";
-import { priorityMapper } from "../../utils/mappers";
+import { createCSV, CSV_HEADERS, downloadCsv } from "../../utils/export-util";
+import { mapCardToCsvEntry } from "../../utils/mappers";
 import { Add, ImportExport } from "@mui/icons-material";
 import { useScreenSize } from "../../hooks";
 
@@ -26,26 +26,8 @@ export const CardsHeader = () => {
     const { data: queryData } = latestQuery[1] as ApiResponse<CardModel[]>;
     if (!queryData) return;
 
-    const headers = [
-      "English",
-      "Hebrew",
-      "Priority",
-      "Category",
-      "Correct",
-      "Wrong",
-      "Is Learned",
-    ];
-    const mappedData = queryData.map((card) => ({
-      [headers[0]]: card.english,
-      [headers[1]]: card.hebrew,
-      [headers[2]]: priorityMapper[card.priority],
-      [headers[3]]: card.category.label,
-      [headers[4]]: card.statistics.correct,
-      [headers[5]]: card.statistics.wrong,
-      [headers[6]]: card.isLearned ? "Yes" : "No",
-    }));
-
-    const csvBlob = createCSV(headers, mappedData);
+    const mappedData = queryData.map((card) => mapCardToCsvEntry(card));
+    const csvBlob = createCSV(CSV_HEADERS, mappedData);
     downloadCsv(csvBlob, "Cards");
   };
 

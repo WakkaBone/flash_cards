@@ -1,5 +1,3 @@
-import { PASSWORD_RULES, USERNAME_RULES } from "../constants";
-
 const HEBREW_REGEX = /^[\u0590-\u05FF\s]+$/;
 const ENGLISH_REGEX = /^[A-Za-z\s]+$/;
 
@@ -12,6 +10,10 @@ export const hebrewValidator = {
 export const englishValidator = {
   isEnglish: (value: string) => isEnglish(value) || "Text must be in English",
 };
+
+const USERNAME_RULES = /^[A-Za-z0-9]+$/;
+const PASSWORD_RULES =
+  /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+={}\[\]:;"'<>,.?/\\|`~\-]{8,}$/;
 
 export const usernameValidator = {
   pattern: {

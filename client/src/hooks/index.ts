@@ -27,6 +27,7 @@ import { useDeleteCategory } from "./categories/use-delete-category";
 import { useGetCategories } from "./categories/use-get-categories";
 import { useUpdateCategory } from "./categories/use-update-category";
 import { useDynamicsCharts } from "./use-dynamics-charts";
+import { useTTS } from "./use-tts";
 
 export {
   useAddCard,
@@ -54,6 +55,7 @@ export {
   useTablePagination,
   useScreenSize,
   useTimer,
+  useTTS,
   useUpdateCard,
   useUpdateCategory,
   useUpdateUser,
