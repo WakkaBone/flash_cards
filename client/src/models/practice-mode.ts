@@ -5,3 +5,8 @@ export enum PracticeModes {
   hteSelect,
   browse,
 }
+
+export type PracticeSettingsType = {
+  interval: number;
+  voiceEnabled: boolean;
+};

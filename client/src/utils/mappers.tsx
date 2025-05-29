@@ -4,7 +4,7 @@ import {
   StatisticsCounters,
   StatisticsCountersAdmin,
 } from "../models/statistics";
-import { PracticeModes } from "../models/practice-modes";
+import { PracticeModes } from "../models/practice-mode";
 import { ActionsCell as ActionsCellCards } from "../components/cards-table/actions-cell";
 import { CategoryModel } from "../models/category";
 import { CategoriesTableRowType } from "../components/categories-table/categories-table";

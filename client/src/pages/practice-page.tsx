@@ -3,17 +3,17 @@ import { SelectChangeEvent, Stack } from "@mui/material";
 
 import { WordCard } from "../components/card/card";
 import { PageTitle } from "../components/layout/page-title";
-import { Timer } from "../components/card/timer";
 import { PracticeModeSelect } from "../components/practice-mode-select/practice-mode-select";
-import { useTimer, useScreenSize, useRandomCard } from "../hooks";
+import { useTimer, useRandomCard, useTTS } from "../hooks";
 import { GetCardsFilters, STATISTICS_ACTIONS } from "../models/api";
 import {
   CardsFilters,
   FilterTypes,
 } from "../components/cards-filters/cards-filters";
 import { toastError } from "../utils/error-handler";
-import { PracticeModes } from "../models/practice-modes";
-import { PracticeIntervalInput } from "../components/practice-interval-input/practice-interval-input";
+import { PracticeModes, PracticeSettingsType } from "../models/practice-mode";
+import { PracticeSettings } from "../components/practice-settings/practice-settings";
+import { TOAST_CONTAINERS_IDS } from "../constants";
 
 export type PracticeFilersType = Omit<GetCardsFilters, "search">;
 
@@ -24,11 +24,12 @@ const defaultFilters = {
 const DEFAULT_INTERVAL = 3;
 
 export const PracticePage = () => {
-  const { isMobile } = useScreenSize();
-
   const [practiceMode, setPracticeMode] = useState(PracticeModes.browse);
 
-  const [interval, setInterval] = useState(DEFAULT_INTERVAL);
+  const [settings, setSettings] = useState<PracticeSettingsType>({
+    interval: DEFAULT_INTERVAL,
+    voiceEnabled: true,
+  });
 
   const [filters, setFilters] = useState<PracticeFilersType>(defaultFilters);
 
@@ -58,24 +59,30 @@ export const PracticePage = () => {
     onExpire: onTimerExpire,
   });
 
+  const { tts } = useTTS();
+
   const handleChangePracticeMode = (e: SelectChangeEvent<unknown>) => {
     setPracticeMode(e.target.value as PracticeModes);
     handleStopTimer();
   };
 
-  const getNextCard = () => getAnotherCard().then(() => restart());
+  const getNextCard = () => {
+    if (settings.voiceEnabled && cardData?.hebrew) tts(cardData.hebrew);
+    getAnotherCard().then(() => restart());
+  };
 
   function onTimerExpire() {
     if (!cardData) return;
-    if (practiceMode === PracticeModes.browse) {
-      getNextCard();
-      return;
-    }
+    if (practiceMode === PracticeModes.browse) return getNextCard();
 
-    toastError({ message: `Time's up!` }, { autoClose: 100 });
+    toastError(
+      { message: `Time's up!` },
+      { autoClose: 100, containerId: TOAST_CONTAINERS_IDS.card }
+    );
     updateCardStats(STATISTICS_ACTIONS.Wrong, {
       onSuccess: () => getNextCard(),
-      onError: () => toastError(),
+      onError: () =>
+        toastError(undefined, { containerId: TOAST_CONTAINERS_IDS.card }),
       hideToast: true,
     });
   }
@@ -83,33 +90,27 @@ export const PracticePage = () => {
   return (
     <>
       <PageTitle>Practice</PageTitle>
-      <Stack
-        spacing={2}
-        alignItems="start"
-        direction={isMobile ? "column" : "row"}
-        mb={2}
-      >
+      <Stack mb={2}>
         <PracticeModeSelect
           value={practiceMode}
           onChange={handleChangePracticeMode}
         />
-        {practiceMode !== PracticeModes.browse && (
-          <PracticeIntervalInput
-            interval={interval}
-            setInterval={setInterval}
-          />
-        )}
-        <Timer
-          handleTimerDurationChange={handleTimerDurationChange}
-          handleStartTimer={handleStartTimer}
-          handleStopTimer={handleStopTimer}
-          isRunning={isRunning}
-          timerDuration={timerDuration}
-          timerSessionActive={timerSessionActive}
-          displayedCountdown={displayedCountdown}
-          handleIsEnabled={handleIsEnabled}
-        />
       </Stack>
+      <PracticeSettings
+        settings={settings}
+        setSettings={setSettings}
+        practiceMode={practiceMode}
+        timerProps={{
+          handleTimerDurationChange,
+          handleStartTimer,
+          handleStopTimer,
+          isRunning,
+          timerDuration,
+          timerSessionActive,
+          displayedCountdown,
+          handleIsEnabled,
+        }}
+      />
       <CardsFilters
         filters={filters}
         onChange={setFilters}
@@ -123,7 +124,7 @@ export const PracticePage = () => {
       />
       <WordCard
         mode={practiceMode}
-        interval={interval}
+        settings={settings}
         timerProps={{
           stopTimer: pause,
           resumeTimer: resume,
