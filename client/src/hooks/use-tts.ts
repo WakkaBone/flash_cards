@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 const HEBREW_CODE = "he-IL";
+const ENGLISH_CODE = "en-US";
 
 const useTTS = () => {
   const [isUttering, setIsUttering] = useState(false);
@@ -26,7 +27,25 @@ const useTTS = () => {
     [supportsHebrew]
   );
 
-  return { supportsHebrew, tts, isUttering };
+  const ttsWithTranslation = useCallback(
+    ({ hebrew, english }: { hebrew: string; english: string }) => {
+      if (!supportsHebrew) return;
+
+      const utteranceHebrew = new SpeechSynthesisUtterance(hebrew);
+      utteranceHebrew.lang = HEBREW_CODE;
+      utteranceHebrew.onstart = () => setIsUttering(true);
+      utteranceHebrew.onend = () => {
+        const utteranceEnglish = new SpeechSynthesisUtterance(english);
+        utteranceEnglish.lang = ENGLISH_CODE;
+        utteranceEnglish.onend = () => setIsUttering(false);
+        speechSynthesis.speak(utteranceEnglish);
+      };
+      speechSynthesis.speak(utteranceHebrew);
+    },
+    [supportsHebrew]
+  );
+
+  return { supportsHebrew, tts, ttsWithTranslation, isUttering };
 };
 
 export { useTTS };

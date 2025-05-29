@@ -30,6 +30,8 @@ export const PracticeSettings = ({
     setSettings({ ...settings, interval: interval });
   const setVoiceEnabled = (voiceEnabled: boolean) =>
     setSettings({ ...settings, voiceEnabled: voiceEnabled });
+  const setVoiceWithTranslation = (voiceWithTranslation: boolean) =>
+    setSettings({ ...settings, voiceWithTranslation: voiceWithTranslation });
 
   return (
     <CollapsibleSection
@@ -56,6 +58,8 @@ export const PracticeSettings = ({
             <PracticeVoiceEnabledToggle
               voiceEnabled={settings.voiceEnabled}
               setVoiceEnabled={setVoiceEnabled}
+              voiceWithTranslation={!!settings.voiceWithTranslation}
+              setVoiceWithTranslation={setVoiceWithTranslation}
             />
           </Box>
         )}

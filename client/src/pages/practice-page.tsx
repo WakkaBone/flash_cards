@@ -59,7 +59,7 @@ export const PracticePage = () => {
     onExpire: onTimerExpire,
   });
 
-  const { tts } = useTTS();
+  const { tts, ttsWithTranslation } = useTTS();
 
   const handleChangePracticeMode = (e: SelectChangeEvent<unknown>) => {
     setPracticeMode(e.target.value as PracticeModes);
@@ -67,7 +67,13 @@ export const PracticePage = () => {
   };
 
   const getNextCard = () => {
-    if (settings.voiceEnabled && cardData?.hebrew) tts(cardData.hebrew);
+    if (settings.voiceEnabled && cardData)
+      settings.voiceWithTranslation
+        ? ttsWithTranslation({
+            hebrew: cardData.hebrew,
+            english: cardData.english,
+          })
+        : tts(cardData.hebrew);
     getAnotherCard().then(() => restart());
   };
 

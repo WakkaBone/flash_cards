@@ -9,4 +9,5 @@ export enum PracticeModes {
 export type PracticeSettingsType = {
   interval: number;
   voiceEnabled: boolean;
+  voiceWithTranslation?: boolean;
 };

@@ -80,12 +80,12 @@ export const WordCard = ({
   cardProps,
 }: WordCardPropsType) => {
   const { isMobile } = useScreenSize();
-  const { tts } = useTTS();
+  const { tts, ttsWithTranslation } = useTTS();
 
   const { stopTimer, resumeTimer, restartTimer, timerSessionActive } =
     timerProps;
 
-  const { interval, voiceEnabled } = settings;
+  const { interval, voiceEnabled, voiceWithTranslation } = settings;
 
   //eth - english to hebrew
   const eth = [PracticeModes.ethInput, PracticeModes.ethSelect].includes(mode);
@@ -126,15 +126,20 @@ export const WordCard = ({
   }, [cardData?.id]);
 
   const getNextCard = useCallback(() => {
-    if (voiceEnabled && card?.hebrew) tts(card.hebrew);
+    if (voiceEnabled && card)
+      voiceWithTranslation
+        ? ttsWithTranslation({ hebrew: card.hebrew, english: card.english })
+        : tts(card.hebrew);
     getAnotherCard().then(() => timerSessionActive && restartTimer());
   }, [
     getAnotherCard,
     restartTimer,
     timerSessionActive,
     voiceEnabled,
+    voiceWithTranslation,
     tts,
-    card?.hebrew,
+    ttsWithTranslation,
+    card,
   ]);
 
   const isCorrectAnswer = useCallback(() => {
