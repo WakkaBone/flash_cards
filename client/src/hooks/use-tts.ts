@@ -1,14 +1,16 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const HEBREW_CODE = "he-IL";
 
 const useTTS = () => {
   const [isUttering, setIsUttering] = useState(false);
+  const [supportsHebrew, setSupportsHebrew] = useState(false);
 
-  const supportsHebrew = useMemo(
-    () => speechSynthesis.getVoices().some(({ lang }) => lang === HEBREW_CODE),
-    []
-  );
+  const availableVoices = speechSynthesis.getVoices();
+
+  useEffect(() => {
+    setSupportsHebrew(availableVoices.some(({ lang }) => lang === HEBREW_CODE));
+  }, [availableVoices]);
 
   const tts = useCallback(
     (string: string) => {

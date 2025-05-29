@@ -5,11 +5,13 @@ import {
   Button,
   FormControlLabel,
   Stack,
-  Tooltip,
+  Typography,
+  ButtonOwnProps,
 } from "@mui/material";
 import { Timer as TimerIcon } from "@mui/icons-material";
+import { useScreenSize } from "../../hooks";
 
-type TimerPropsType = {
+export type TimerPropsType = {
   isRunning: boolean;
   handleIsEnabled: (state: boolean) => void;
   timerDuration: string;
@@ -26,7 +28,8 @@ const MIN_SECONDS = 5;
 const MAX_SECONDS = 60;
 
 export const Timer = (props: TimerPropsType) => {
-  const [isTimerEnabled, setIsTimerEnabled] = useState(false);
+  const { isMobile } = useScreenSize();
+  const [isTimerEnabled, setIsTimerEnabled] = useState(!!props.isRunning);
 
   const {
     isRunning,
@@ -55,13 +58,18 @@ export const Timer = (props: TimerPropsType) => {
   const handleTimerEnabledCheckbox = (e: React.ChangeEvent<HTMLInputElement>) =>
     setIsTimerEnabled(e.target.checked);
 
+  const buttonSharedStyles: ButtonOwnProps = {
+    sx: buttonStyles,
+    size: "small",
+    variant: "contained",
+  };
+
   return (
     <Stack
       direction="row"
       sx={{
-        alignItems: "start",
+        alignItems: "center",
         mb: 1,
-        width: "100%",
       }}
     >
       <FormControlLabel
@@ -73,17 +81,19 @@ export const Timer = (props: TimerPropsType) => {
           />
         }
         label={
-          <Tooltip title="Timer">
-            <TimerIcon />
-          </Tooltip>
+          <Typography>
+            <TimerIcon sx={{ verticalAlign: "middle" }} fontSize="small" />{" "}
+            {isMobile ? "" : "Timer"}
+          </Typography>
         }
       />
 
       <Stack
         direction="row"
+        ml={1}
         gap={1}
         sx={{
-          alignItems: "start",
+          alignItems: "center",
           visibility: isTimerEnabled ? "visible" : "hidden",
         }}
       >
@@ -102,21 +112,19 @@ export const Timer = (props: TimerPropsType) => {
         />
         {timerSessionActive ? (
           <Button
-            variant="contained"
+            {...buttonSharedStyles}
             color="warning"
             disabled={!isRunning || invalidTimerDurationValue}
             onClick={handleStopTimer}
-            sx={buttonStyles}
           >
             Stop
           </Button>
         ) : (
           <Button
-            variant="contained"
+            {...buttonSharedStyles}
             color="primary"
             disabled={isRunning || invalidTimerDurationValue || !timerDuration}
             onClick={handleStartTimer}
-            sx={buttonStyles}
           >
             Start
           </Button>

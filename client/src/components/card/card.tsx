@@ -9,11 +9,19 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { PracticeModes } from "../../models/practice-modes";
+import {
+  PracticeModes,
+  PracticeSettingsType,
+} from "../../models/practice-mode";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ApiResponse, STATISTICS_ACTIONS } from "../../models/api";
 import { ToastContainer } from "react-toastify";
-import { useMarkCardLearned, useDeleteCard, useScreenSize } from "../../hooks";
+import {
+  useMarkCardLearned,
+  useDeleteCard,
+  useScreenSize,
+  useTTS,
+} from "../../hooks";
 import { EditCardModal } from "../edit-card-modal/edit-card-modal";
 import {
   DeleteForeverRounded,
@@ -37,7 +45,7 @@ import { IntervalCountdown } from "./interval-countdown";
 
 type WordCardPropsType = {
   mode: PracticeModes;
-  interval: number;
+  settings: PracticeSettingsType;
   timerProps: {
     stopTimer: () => void;
     resumeTimer: () => void;
@@ -67,14 +75,17 @@ type WordCardPropsType = {
 
 export const WordCard = ({
   mode,
-  interval,
+  settings,
   timerProps,
   cardProps,
 }: WordCardPropsType) => {
   const { isMobile } = useScreenSize();
+  const { tts } = useTTS();
 
   const { stopTimer, resumeTimer, restartTimer, timerSessionActive } =
     timerProps;
+
+  const { interval, voiceEnabled } = settings;
 
   //eth - english to hebrew
   const eth = [PracticeModes.ethInput, PracticeModes.ethSelect].includes(mode);
@@ -114,10 +125,17 @@ export const WordCard = ({
     setShowTranslation(false);
   }, [cardData?.id]);
 
-  const getNextCard = useCallback(
-    () => getAnotherCard().then(() => timerSessionActive && restartTimer()),
-    [getAnotherCard, restartTimer, timerSessionActive]
-  );
+  const getNextCard = useCallback(() => {
+    if (voiceEnabled && card?.hebrew) tts(card.hebrew);
+    getAnotherCard().then(() => timerSessionActive && restartTimer());
+  }, [
+    getAnotherCard,
+    restartTimer,
+    timerSessionActive,
+    voiceEnabled,
+    tts,
+    card?.hebrew,
+  ]);
 
   const isCorrectAnswer = useCallback(() => {
     if (!card) return;

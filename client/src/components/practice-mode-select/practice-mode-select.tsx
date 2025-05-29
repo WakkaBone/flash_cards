@@ -5,7 +5,7 @@ import {
   Select,
   SelectProps,
 } from "@mui/material";
-import { PracticeModes } from "../../models/practice-modes";
+import { PracticeModes } from "../../models/practice-mode";
 import { practiceModeMapper } from "../../utils/mappers";
 
 export const PracticeModeSelect = (props: SelectProps) => {

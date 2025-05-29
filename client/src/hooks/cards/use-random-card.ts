@@ -12,7 +12,7 @@ import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
 import { PracticeFilersType } from "../../pages/practice-page";
 import { toastError } from "../../utils/error-handler";
 import { TOAST_CONTAINERS_IDS } from "../../constants";
-import { PracticeModes } from "../../models/practice-modes";
+import { PracticeModes } from "../../models/practice-mode";
 
 export const useRandomCard = (
   filters: PracticeFilersType,

@@ -19,7 +19,7 @@ import {
 import { buildUrl } from "../utils/url-util";
 import { handleError } from "../utils/error-handler";
 import { compileGetCardsFilters } from "../utils/mappers";
-import { PracticeModes } from "../models/practice-modes";
+import { PracticeModes } from "../models/practice-mode";
 
 const apiPostfix = "/cards";
 
