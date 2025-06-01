@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { deleteCardMutation } from "../../mutations/cards";
 import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
 import { toastError } from "../../utils/error-handler";
-import { TOAST_CONTAINERS_IDS } from "../../constants";
+import { QUERY_KEYS, TOAST_CONTAINERS_IDS } from "../../constants";
 
 export const useDeleteCard = () => {
   const queryClient = useQueryClient();
@@ -29,7 +29,10 @@ export const useDeleteCard = () => {
               containerId,
             });
           });
-          queryClient.invalidateQueries({ queryKey: ["cards"] });
+          const queriesToInvalidate = [QUERY_KEYS.cards, QUERY_KEYS.randomCard];
+          queriesToInvalidate.forEach((queryKey) => {
+            queryClient.invalidateQueries({ queryKey: [queryKey] });
+          });
           options?.onSuccess?.(...args);
         },
         onError: (...args) => {

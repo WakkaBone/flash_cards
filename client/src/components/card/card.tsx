@@ -315,19 +315,15 @@ export const WordCard = ({
     isUpdatingStats,
   ]);
 
-  const handleMarkAsLearned = useCallback(() => {
-    if (!card) return;
-    markCardLearned(card.id, {
-      onSuccess: () => getNextCard(),
-    });
-  }, [markCardLearned, getNextCard, card]);
+  const handleMarkAsLearned = useCallback(
+    () => card && markCardLearned(card.id),
+    [markCardLearned, card]
+  );
 
-  const handleDeleteCard = useCallback(() => {
-    if (!card) return;
-    deleteCard(card.id, {
-      onSuccess: () => getNextCard(),
-    });
-  }, [deleteCard, getNextCard, card]);
+  const handleDeleteCard = useCallback(
+    () => card && deleteCard(card.id),
+    [deleteCard, card]
+  );
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const onOpenEditModal = () => {
@@ -336,7 +332,7 @@ export const WordCard = ({
   };
   const onCloseEditModal = () => {
     setIsEdit(false);
-    resumeTimer();
+    timerProps.timerSessionActive && resumeTimer();
   };
 
   //bind hotkeys

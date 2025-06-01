@@ -5,6 +5,7 @@ import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
 import { toastError } from "../../utils/error-handler";
 import { updateUserMutation } from "../../mutations/users";
 import { useAuthContext } from "../../context/auth-context";
+import { QUERY_KEYS } from "../../constants";
 
 export const useUpdateUser = () => {
   const queryClient = useQueryClient();
@@ -24,7 +25,7 @@ export const useUpdateUser = () => {
       onSuccess: (...args) => {
         args[0].isSuccess &&
           toast("User updated successfully", { type: "success" });
-        queryClient.invalidateQueries({ queryKey: ["users"] });
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.users] });
         options?.onSuccess?.(...args);
       },
       onError: (...args) => {

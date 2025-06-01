@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
 import { toastError } from "../../utils/error-handler";
 import { updateCategoryMutation } from "../../mutations/categories";
-import { MAIN_CATEGORIES } from "../../constants";
+import { MAIN_CATEGORIES, QUERY_KEYS } from "../../constants";
 
 export const useUpdateCategory = () => {
   const queryClient = useQueryClient();
@@ -25,7 +25,10 @@ export const useUpdateCategory = () => {
       onSuccess: (...args) => {
         args[0].isSuccess &&
           toast("Category updated successfully", { type: "success" });
-        queryClient.invalidateQueries({ queryKey: ["categories"] });
+        const queriesToInvalidate = [QUERY_KEYS.categories, QUERY_KEYS.cards];
+        queriesToInvalidate.forEach((queryKey) => {
+          queryClient.invalidateQueries({ queryKey: [queryKey] });
+        });
         options?.onSuccess?.(...args);
       },
       onError: (...args) => {

@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { toastError } from "../utils/error-handler";
 import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
 import { ApiResponse } from "../models/api";
+import { QUERY_KEYS } from "../constants";
 
 export const useBulkActions = () => {
   const queryClient = useQueryClient();
@@ -28,7 +29,7 @@ export const useBulkActions = () => {
       {
         onSuccess: (...args) => {
           toast("Cards deleted", { type: "success" });
-          queryClient.invalidateQueries({ queryKey: ["cards"] });
+          queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.cards] });
           options?.onSuccess?.(...args);
         },
         onError: (...args) => {
@@ -51,7 +52,7 @@ export const useBulkActions = () => {
       {
         onSuccess: (...args) => {
           toast("Cards marked as learned", { type: "success" });
-          queryClient.invalidateQueries({ queryKey: ["cards"] });
+          queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.cards] });
           options?.onSuccess?.(...args);
         },
         onError: (...args) => {

@@ -4,6 +4,7 @@ import { AddCategoryPayload, ApiResponse } from "../../models/api";
 import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
 import { toast } from "react-toastify";
 import { toastError } from "../../utils/error-handler";
+import { QUERY_KEYS } from "../../constants";
 
 export const useAddCategory = () => {
   const queryClient = useQueryClient();
@@ -17,7 +18,7 @@ export const useAddCategory = () => {
       onSuccess: (...args) => {
         args[0].isSuccess &&
           toast("Category added successfully", { type: "success" });
-        queryClient.invalidateQueries({ queryKey: ["categories"] });
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.categories] });
         options?.onSuccess?.(...args);
       },
       onError: (...args) => {

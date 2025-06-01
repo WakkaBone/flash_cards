@@ -4,7 +4,7 @@ import { markCardLearnedMutation } from "../../mutations/cards";
 import { toast } from "react-toastify";
 import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
 import { toastError } from "../../utils/error-handler";
-import { TOAST_CONTAINERS_IDS } from "../../constants";
+import { QUERY_KEYS, TOAST_CONTAINERS_IDS } from "../../constants";
 
 export const useMarkCardLearned = () => {
   const queryClient = useQueryClient();
@@ -30,7 +30,10 @@ export const useMarkCardLearned = () => {
               containerId,
             });
           });
-          queryClient.invalidateQueries({ queryKey: ["cards"] });
+          const queriesToInvalidate = [QUERY_KEYS.cards, QUERY_KEYS.randomCard];
+          queriesToInvalidate.forEach((queryKey) => {
+            queryClient.invalidateQueries({ queryKey: [queryKey] });
+          });
           options?.onSuccess?.(...args);
         },
         onError: (...args) => {

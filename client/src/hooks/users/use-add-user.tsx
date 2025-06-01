@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { toastError } from "../../utils/error-handler";
 import { addUserMutation } from "../../mutations/users";
 import { useAuthContext } from "../../context/auth-context";
+import { QUERY_KEYS } from "../../constants";
 
 export const useAddUser = () => {
   const { isAdmin } = useAuthContext();
@@ -24,7 +25,7 @@ export const useAddUser = () => {
       onSuccess: (...args) => {
         args[0].isSuccess &&
           toast("User added successfully", { type: "success" });
-        queryClient.invalidateQueries({ queryKey: ["users"] });
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.users] });
         options?.onSuccess?.(...args);
       },
       onError: (...args) => {

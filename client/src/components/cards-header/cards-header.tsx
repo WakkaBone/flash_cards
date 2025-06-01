@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { ROUTES } from "../../constants";
+import { QUERY_KEYS, ROUTES } from "../../constants";
 import { TableHeader } from "../table-header/table-header";
 import { useQueryClient } from "@tanstack/react-query";
 import { ApiResponse } from "../../models/api";
@@ -18,7 +18,7 @@ export const CardsHeader = () => {
 
   const handleExport = () => {
     const data = queryClient.getQueriesData({
-      queryKey: ["cards"],
+      queryKey: [QUERY_KEYS.cards],
       exact: false,
     });
     const latestQuery = data[data.length - 1];

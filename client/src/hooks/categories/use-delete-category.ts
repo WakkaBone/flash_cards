@@ -7,7 +7,7 @@ import {
   bulkDeleteCategoriesMutation,
   deleteCategoryMutation,
 } from "../../mutations/categories";
-import { MAIN_CATEGORIES } from "../../constants";
+import { MAIN_CATEGORIES, QUERY_KEYS } from "../../constants";
 
 export const useDeleteCategory = () => {
   const queryClient = useQueryClient();
@@ -36,7 +36,10 @@ export const useDeleteCategory = () => {
       {
         onSuccess: (...args) => {
           toast("Category deleted", { type: "success" });
-          queryClient.invalidateQueries({ queryKey: ["categories"] });
+          const queriesToInvalidate = [QUERY_KEYS.categories, QUERY_KEYS.cards];
+          queriesToInvalidate.forEach((queryKey) => {
+            queryClient.invalidateQueries({ queryKey: [queryKey] });
+          });
           options?.onSuccess?.(...args);
         },
         onError: (...args) => {
@@ -70,7 +73,7 @@ export const useDeleteCategory = () => {
       {
         onSuccess: (...args) => {
           toast("Categories deleted", { type: "success" });
-          queryClient.invalidateQueries({ queryKey: ["categories"] });
+          queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.categories] });
           options?.onSuccess?.(...args);
         },
         onError: (...args) => {

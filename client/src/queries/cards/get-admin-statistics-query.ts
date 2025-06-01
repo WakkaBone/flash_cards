@@ -2,6 +2,7 @@ import { DefinedInitialDataOptions } from "@tanstack/react-query";
 import { ApiResponse } from "../../models/api";
 import { CardsService } from "../../services/cards-service";
 import { StatisticsAdmin } from "../../models/statistics";
+import { QUERY_KEYS } from "../../constants";
 
 export const getAdminStatisticsQuery = ({
   enabled,
@@ -22,6 +23,6 @@ export const getAdminStatisticsQuery = ({
     },
   },
   enabled,
-  queryKey: ["statistics-admin"],
+  queryKey: [QUERY_KEYS.statisticsAdmin],
   queryFn: async () => await CardsService.getAdminStatistics(),
 });

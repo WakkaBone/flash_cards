@@ -27,3 +27,16 @@ export const TOAST_CONTAINERS_IDS = {
   auth: "auth",
   signup: "signup",
 };
+
+export const QUERY_KEYS = {
+  cards: "cards",
+  randomCard: "random-card",
+  statistics: "statistics",
+  statisticsAdmin: "statistics-admin",
+  cardsDynamics: "cards-dynamics",
+  usersDynamics: "users-dynamics",
+  timeline: "timeline",
+  categories: "categories",
+  users: "users",
+  serverVersion: "server-app-version",
+};

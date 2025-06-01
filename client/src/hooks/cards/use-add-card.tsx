@@ -14,6 +14,7 @@ import {
   ConfirmationModalTypes,
 } from "../../components/confirmation-modal/confirmation-modal";
 import { ErrorCodes, toastError } from "../../utils/error-handler";
+import { QUERY_KEYS } from "../../constants";
 
 const ConfirmAddWordModalMessage = ({
   similarWords,
@@ -45,7 +46,7 @@ export const useAddCard = () => {
     addMutation(card, {
       onSuccess: (...args) => {
         toast("Card added successfully", { type: "success" });
-        queryClient.invalidateQueries({ queryKey: ["cards"] });
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.cards] });
         options?.onSuccess?.(...args);
       },
       onError: (...args) => {

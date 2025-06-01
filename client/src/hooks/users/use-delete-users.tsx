@@ -8,6 +8,7 @@ import {
   deleteUserMutation,
 } from "../../mutations/users";
 import { useAuthContext } from "../../context/auth-context";
+import { QUERY_KEYS } from "../../constants";
 
 export const useDeleteUsers = () => {
   const queryClient = useQueryClient();
@@ -37,7 +38,7 @@ export const useDeleteUsers = () => {
       {
         onSuccess: (...args) => {
           toast("User deleted", { type: "success" });
-          queryClient.invalidateQueries({ queryKey: ["users"] });
+          queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.users] });
           options?.onSuccess?.(...args);
         },
         onError: (...args) => {
@@ -76,7 +77,7 @@ export const useDeleteUsers = () => {
       {
         onSuccess: (...args) => {
           toast("Users deleted", { type: "success" });
-          queryClient.invalidateQueries({ queryKey: ["users"] });
+          queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.users] });
           options?.onSuccess?.(...args);
         },
         onError: (...args) => {

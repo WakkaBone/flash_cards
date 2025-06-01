@@ -8,8 +8,13 @@ import {
 import { CardModel } from "../../models/card";
 import { EditCardForm, EditCardFormType } from "./edit-card-form";
 import { useForm } from "react-hook-form";
-import { useUpdateCard } from "../../hooks";
-import { useEffect } from "react";
+import {
+  useDeleteCard,
+  usePopoverConfirmation,
+  useUpdateCard,
+} from "../../hooks";
+import { useCallback, useEffect } from "react";
+import { PopoverConfirmation } from "../popover-confirmation/popover-confirmation";
 
 type EditCardModalPropsType = {
   open: boolean;
@@ -56,6 +61,16 @@ export const EditCardModal = ({
     });
   };
 
+  const { deleteCard, isPending: isDeletePending } = useDeleteCard();
+  const handleDeleteCard = useCallback(
+    () => deleteCard(card.id, { onSuccess: onClose }),
+    [deleteCard, card, onClose]
+  );
+  const { confirmationProps, handleOpen, showConfirmation } =
+    usePopoverConfirmation();
+
+  const isLoading = isPending || isDeletePending;
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Edit Card</DialogTitle>
@@ -64,17 +79,36 @@ export const EditCardModal = ({
           <EditCardForm formProps={formProps} />
         </DialogContent>
         <DialogActions>
+          <Button
+            onClick={(e) => {
+              handleOpen(
+                e,
+                handleDeleteCard,
+                "Are you sure you want to delete this card?"
+              );
+            }}
+            loading={isLoading}
+            color="error"
+          >
+            Delete
+          </Button>
           <Button onClick={onClose} color="primary">
             Cancel
           </Button>
           <Button
-            loading={isPending}
+            loading={isLoading}
             disabled={!formProps.formState.isDirty}
             type="submit"
             color="primary"
           >
             Save
           </Button>
+          {confirmationProps && (
+            <PopoverConfirmation
+              {...confirmationProps}
+              open={showConfirmation}
+            />
+          )}
         </DialogActions>
       </form>
     </Dialog>

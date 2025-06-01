@@ -5,13 +5,13 @@ import {
   STATISTICS_ACTIONS,
 } from "../../models/api";
 import { getRandomCardQuery } from "../../queries/cards";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { updateCardStatsMutation } from "../../mutations/cards";
 import { toast } from "react-toastify";
 import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
 import { PracticeFilersType } from "../../pages/practice-page";
 import { toastError } from "../../utils/error-handler";
-import { TOAST_CONTAINERS_IDS } from "../../constants";
+import { QUERY_KEYS, TOAST_CONTAINERS_IDS } from "../../constants";
 import { PracticeModes } from "../../models/practice-mode";
 
 export const useRandomCard = (
@@ -20,17 +20,9 @@ export const useRandomCard = (
 ) => {
   const queryClient = useQueryClient();
   const [cardId, setCardId] = useState<string>("");
-  const { data, isLoading, isFetching, refetch } =
-    useQuery<GetRandomCardResponse>(getRandomCardQuery(filters, mode));
-
-  const firstOpenRef = useRef(true);
-  useEffect(() => {
-    if (firstOpenRef.current) {
-      firstOpenRef.current = false;
-      return;
-    }
-    refetch();
-  }, [mode, refetch]);
+  const { data, isLoading, isFetching } = useQuery<GetRandomCardResponse>(
+    getRandomCardQuery(filters, mode)
+  );
 
   const cardData = data?.data?.card;
   const options = data?.data?.options || [];
@@ -80,7 +72,7 @@ export const useRandomCard = (
     isLoading,
     isFetching,
     getAnotherCard: () =>
-      queryClient.invalidateQueries({ queryKey: ["random-card"] }),
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.randomCard] }),
     updateCardStats,
     updateStatsRest,
   };

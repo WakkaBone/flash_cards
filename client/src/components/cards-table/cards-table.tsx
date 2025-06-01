@@ -9,6 +9,8 @@ import { CardsFilters } from "../cards-filters/cards-filters";
 import { cardsTableColumns } from "./columns";
 import { BulkActions } from "./bulk-actions";
 import { TOAST_CONTAINERS_IDS } from "../../constants";
+import { EditCardModal } from "../edit-card-modal/edit-card-modal";
+import { CardModel } from "../../models/card";
 
 export type CardsTableRowType = {
   id: string;
@@ -45,6 +47,14 @@ export const CardsTable = () => {
     ? cardsTableColumns.slice(0, 7)
     : cardsTableColumns;
 
+  const allowEditOnClick = isMobile || isTablet;
+  const [isEdit, setIsEdit] = useState(false);
+  const [card, setCard] = useState<CardModel | undefined>();
+  const onCloseEditModal = () => setCard(undefined);
+  useEffect(() => {
+    allowEditOnClick && setIsEdit(!!card);
+  }, [allowEditOnClick, card]);
+
   return (
     <>
       <CardsFilters filters={filters} onChange={setFilters} />
@@ -70,7 +80,15 @@ export const CardsTable = () => {
         rows={rows}
         columns={columns}
         disableRowSelectionOnClick
+        onRowClick={({ row }) => {
+          if (!allowEditOnClick) return;
+          const selectedCard = data.data?.find(({ id }) => row.id === id);
+          selectedCard && setCard(selectedCard);
+        }}
       />
+      {allowEditOnClick && card && (
+        <EditCardModal open={isEdit} card={card} onClose={onCloseEditModal} />
+      )}
       <ToastContainer containerId={TOAST_CONTAINERS_IDS.cardsTable} />
     </>
   );

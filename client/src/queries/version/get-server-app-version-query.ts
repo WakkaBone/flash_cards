@@ -1,11 +1,12 @@
 import { DefinedInitialDataOptions } from "@tanstack/react-query";
 import { ApiResponse } from "../../models/api";
 import { VersionsService } from "../../services/version-service";
+import { QUERY_KEYS } from "../../constants";
 
 export const getServerAppVersionQuery = (): DefinedInitialDataOptions<
   ApiResponse<string>
 > => ({
   initialData: { isSuccess: false },
-  queryKey: ["server-app-version"],
+  queryKey: [QUERY_KEYS.serverVersion],
   queryFn: async () => await VersionsService.getServerAppVersion(),
 });

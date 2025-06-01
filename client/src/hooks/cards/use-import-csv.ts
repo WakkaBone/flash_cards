@@ -4,6 +4,7 @@ import { importCsvMutation } from "../../mutations/cards";
 import { toast } from "react-toastify";
 import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
 import { toastError } from "../../utils/error-handler";
+import { QUERY_KEYS } from "../../constants";
 
 export const useImportCsv = () => {
   const queryClient = useQueryClient();
@@ -20,7 +21,7 @@ export const useImportCsv = () => {
           type: "success",
         });
 
-        queryClient.invalidateQueries({ queryKey: ["cards"] });
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.cards] });
         options?.onSuccess?.(...args);
       },
       onError: (...args) => {
