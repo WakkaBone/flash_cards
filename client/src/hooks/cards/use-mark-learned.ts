@@ -14,10 +14,11 @@ export const useMarkCardLearned = () => {
   );
   const markCardLearned = (
     cardId: string,
+    shouldMarkAsLearned: boolean,
     options?: MutateOptionsEnhanced<ApiResponse, unknown, { cardId: string }>
   ) =>
     mutateMarkLearned(
-      { cardId },
+      { cardId, shouldMarkAsLearned },
       {
         onSuccess: (...args) => {
           const toastContainers = [
@@ -25,10 +26,15 @@ export const useMarkCardLearned = () => {
             TOAST_CONTAINERS_IDS.cardsTable,
           ];
           toastContainers.forEach((containerId) => {
-            toast("Card marked as learned", {
-              type: "success",
-              containerId,
-            });
+            toast(
+              shouldMarkAsLearned
+                ? "Card marked as learned"
+                : "Card marked as not learned",
+              {
+                type: "success",
+                containerId,
+              }
+            );
           });
           const queriesToInvalidate = [QUERY_KEYS.cards, QUERY_KEYS.randomCard];
           queriesToInvalidate.forEach((queryKey) => {

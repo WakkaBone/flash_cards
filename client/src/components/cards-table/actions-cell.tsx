@@ -3,6 +3,7 @@ import { CardModel } from "../../models/card";
 import {
   DeleteForeverRounded,
   EditRounded,
+  KeyboardReturn,
   TaskAltRounded,
 } from "@mui/icons-material";
 import { useCallback, useState } from "react";
@@ -16,8 +17,8 @@ export const ActionsCell = ({ card }: { card: CardModel }) => {
   const { markCardLearned, isPending: isMarkLearnedPending } =
     useMarkCardLearned();
   const handleMarkAsLearned = useCallback(
-    () => markCardLearned(card.id),
-    [markCardLearned, card]
+    () => markCardLearned(card.id, !isLearned),
+    [markCardLearned, card, isLearned]
   );
 
   const { deleteCard, isPending: isDeletePending } = useDeleteCard();
@@ -42,13 +43,13 @@ export const ActionsCell = ({ card }: { card: CardModel }) => {
         </Tooltip>
       </Button>
       <Button
-        disabled={isLearned}
         onClick={handleMarkAsLearned}
         loading={isMarkLearnedPending}
         size="small"
+        color={isLearned ? "error" : "primary"}
       >
-        <Tooltip title="Mark as learned">
-          <TaskAltRounded />
+        <Tooltip title={isLearned ? "Mark as not learned" : "Mark as learned"}>
+          {isLearned ? <KeyboardReturn /> : <TaskAltRounded />}
         </Tooltip>
       </Button>
       <EditCardModal open={isEdit} card={card} onClose={onCloseEditModal} />

@@ -49,7 +49,11 @@ router.patch(
   updateStatisticsValidator,
   updateStatisticsController
 );
-router.patch("/:id/learned", markLearnedValidator, markLearnedController);
+router.patch(
+  "/:id/learned/:shouldMarkAsLearned",
+  markLearnedValidator,
+  markLearnedController
+);
 
 // const upload = multer({ dest: "uploads/" });
 // router.options("/import/csv", cors());

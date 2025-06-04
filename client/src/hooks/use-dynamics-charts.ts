@@ -16,6 +16,7 @@ import {
   GetCardDynamicsFilters,
   GetUserDynamicsFilters,
 } from "../models/filters";
+import { removeFalsyValues } from "../utils/object-util";
 
 const prepareChartData = (
   data: GetCardsDynamicsDto = { createdAt: {}, lastPractice: {} },
@@ -125,11 +126,11 @@ export const useDynamicsCharts = (filters: {
   const { isMobile } = useScreenSize();
 
   const { data: cardsDynamics } = useQuery<ApiResponse<GetCardsDynamicsDto>>(
-    getCardsDynamicsQuery(cardsDynamicsFilters || {})
+    getCardsDynamicsQuery(removeFalsyValues(cardsDynamicsFilters || {}))
   );
 
   const { data: usersDynamics } = useQuery<ApiResponse<GetUsersDynamicsDto>>(
-    getUsersDynamicsQuery(usersDynamicsFilters || {})
+    getUsersDynamicsQuery(removeFalsyValues(usersDynamicsFilters || {}))
   );
 
   const {

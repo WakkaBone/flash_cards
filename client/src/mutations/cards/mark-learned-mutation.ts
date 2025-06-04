@@ -4,11 +4,13 @@ import { ApiResponse } from "../../models/api";
 
 type ArgsType = {
   cardId: string;
+  shouldMarkAsLearned: boolean;
 };
 export const markCardLearnedMutation: UseMutationOptions<
   ApiResponse,
   Error,
   ArgsType
 > = {
-  mutationFn: async ({ cardId }) => await CardsService.markLearned(cardId),
+  mutationFn: async ({ cardId, shouldMarkAsLearned }) =>
+    await CardsService.markLearned(cardId, shouldMarkAsLearned),
 };

@@ -16,7 +16,7 @@ export const bulkMarkLearnedController = async (
     ids.forEach(async (id) => {
       const card = await CardsService.getCardById(id);
       affectedCategories.add(card.category);
-      await CardsService.markLearned(id);
+      await CardsService.markLearned(id, true);
     });
 
     affectedCategories.forEach(async (category) => {

@@ -1,20 +1,12 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from "@mui/material";
+import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { CardModel } from "../../models/card";
 import { EditCardForm, EditCardFormType } from "./edit-card-form";
 import { useForm } from "react-hook-form";
-import {
-  useDeleteCard,
-  usePopoverConfirmation,
-  useUpdateCard,
-} from "../../hooks";
-import { useCallback, useEffect } from "react";
-import { PopoverConfirmation } from "../popover-confirmation/popover-confirmation";
+import { useUpdateCard } from "../../hooks";
+import { useEffect } from "react";
+import { format } from "date-fns";
+import { EditCardReadonlyData } from "./edit-card-readonly-data";
+import { EditCardModalActions } from "./edit-card-modal-actions";
 
 type EditCardModalPropsType = {
   open: boolean;
@@ -28,7 +20,13 @@ export const EditCardModal = ({
   onClose,
   onSuccess,
 }: EditCardModalPropsType) => {
-  const { updateCard, isPending } = useUpdateCard();
+  const createdAt = card.createdAt
+    ? format(new Date(card.createdAt), "dd/MM/yyyy HH:mm")
+    : "";
+  const lastPractice = card.lastReviewDate
+    ? format(new Date(card.lastReviewDate.seconds * 1000), "dd/MM/yyyy HH:mm")
+    : "";
+  const hasPracticed = lastPractice !== createdAt;
 
   const formProps = useForm<EditCardFormType>({
     defaultValues: {
@@ -37,6 +35,10 @@ export const EditCardModal = ({
       hebrew: card.hebrew,
       details: card.details,
       priority: card.priority,
+      createdAt: createdAt,
+      lastPractice: !hasPracticed ? "Not practiced" : lastPractice,
+      correctAnswers: card.statistics.correct,
+      wrongAnswers: card.statistics.wrong,
     },
   });
 
@@ -47,9 +49,14 @@ export const EditCardModal = ({
       hebrew: card.hebrew,
       details: card.details,
       priority: card.priority,
+      createdAt: createdAt,
+      lastPractice: !hasPracticed ? "Not practiced" : lastPractice,
+      correctAnswers: card.statistics.correct,
+      wrongAnswers: card.statistics.wrong,
     });
-  }, [card, formProps]);
+  }, [card, formProps, createdAt, hasPracticed, lastPractice]);
 
+  const { updateCard, isPending } = useUpdateCard();
   const onSave = async (formValues: EditCardFormType) => {
     const payload = { ...card, ...formValues };
     updateCard(payload, {
@@ -61,55 +68,20 @@ export const EditCardModal = ({
     });
   };
 
-  const { deleteCard, isPending: isDeletePending } = useDeleteCard();
-  const handleDeleteCard = useCallback(
-    () => deleteCard(card.id, { onSuccess: onClose }),
-    [deleteCard, card, onClose]
-  );
-  const { confirmationProps, handleOpen, showConfirmation } =
-    usePopoverConfirmation();
-
-  const isLoading = isPending || isDeletePending;
-
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Edit Card</DialogTitle>
       <form onSubmit={formProps.handleSubmit(onSave)} style={{ width: "100%" }}>
         <DialogContent>
+          <EditCardReadonlyData formProps={formProps} />
           <EditCardForm formProps={formProps} />
         </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={(e) => {
-              handleOpen(
-                e,
-                handleDeleteCard,
-                "Are you sure you want to delete this card?"
-              );
-            }}
-            loading={isLoading}
-            color="error"
-          >
-            Delete
-          </Button>
-          <Button onClick={onClose} color="primary">
-            Cancel
-          </Button>
-          <Button
-            loading={isLoading}
-            disabled={!formProps.formState.isDirty}
-            type="submit"
-            color="primary"
-          >
-            Save
-          </Button>
-          {confirmationProps && (
-            <PopoverConfirmation
-              {...confirmationProps}
-              open={showConfirmation}
-            />
-          )}
-        </DialogActions>
+        <EditCardModalActions
+          isFormDirty={formProps.formState.isDirty}
+          card={card}
+          onClose={onClose}
+          isUpdatePending={isPending}
+        />
       </form>
     </Dialog>
   );

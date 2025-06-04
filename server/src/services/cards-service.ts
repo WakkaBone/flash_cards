@@ -137,9 +137,12 @@ export const CardsService = {
     await updateDoc(cardRef, { lastReviewDate: serverTimestamp() });
   },
 
-  markLearned: async (id: string): Promise<void> => {
+  markLearned: async (
+    id: string,
+    shouldMarkAsLearned: boolean
+  ): Promise<void> => {
     const cardRef = doc(db, COLLECTIONS.cards, id);
-    await updateDoc(cardRef, { isLearned: true });
+    await updateDoc(cardRef, { isLearned: shouldMarkAsLearned });
   },
 
   deleteCard: async (id: string): Promise<void> => {

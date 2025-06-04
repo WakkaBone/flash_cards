@@ -21,4 +21,5 @@ export type CardModel = {
   createdAt: string;
   isLearned: boolean;
   priority: Priorities;
+  lastReviewDate?: { seconds: number; nanoseconds: number };
 };

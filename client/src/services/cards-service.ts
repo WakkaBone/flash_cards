@@ -70,11 +70,11 @@ export const CardsService = {
     return response.data;
   },
 
-  async markLearned(cardId: string) {
+  async markLearned(cardId: string, shouldMarkAsLearned: boolean) {
     const response = await httpClient.patch<
       ApiResponse,
       AxiosPromise<ApiResponse> | AxiosError<ApiResponse>
-    >(`${apiPostfix}/${cardId}/learned`);
+    >(`${apiPostfix}/${cardId}/learned/${shouldMarkAsLearned.toString()}`);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
   },

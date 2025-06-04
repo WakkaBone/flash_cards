@@ -15,6 +15,10 @@ export type EditCardFormType = {
   hebrew: string;
   details?: string;
   priority: Priorities;
+  createdAt: string;
+  lastPractice: string;
+  correctAnswers: number;
+  wrongAnswers: number;
 };
 
 type EditCardFormPropsType = {

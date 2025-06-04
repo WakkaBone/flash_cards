@@ -316,7 +316,7 @@ export const WordCard = ({
   ]);
 
   const handleMarkAsLearned = useCallback(
-    () => card && markCardLearned(card.id),
+    () => card && markCardLearned(card.id, true),
     [markCardLearned, card]
   );
 

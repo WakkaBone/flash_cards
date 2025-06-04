@@ -3,7 +3,7 @@ import { ApiResponse } from "../../models/api-response";
 import { CardsService, CategoriesService } from "../../services";
 import { isValid } from "../../utils/validation-util";
 
-type MarkLearnedParams = { id: string };
+type MarkLearnedParams = { id: string; shouldMarkAsLearned: string };
 export const markLearnedController = async (
   req: Request<MarkLearnedParams, ApiResponse>,
   res: Response<ApiResponse>
@@ -12,7 +12,8 @@ export const markLearnedController = async (
   try {
     const { id } = req.params;
     const card = await CardsService.getCardById(id);
-    await CardsService.markLearned(id);
+    const shouldMarkAsLearned = req.params.shouldMarkAsLearned === "true";
+    await CardsService.markLearned(id, shouldMarkAsLearned);
     await CategoriesService.updateUpdatedAt(card.category);
 
     res.status(200).json({ isSuccess: true });
