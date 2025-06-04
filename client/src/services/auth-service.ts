@@ -8,51 +8,54 @@ import {
   SignupPayload,
 } from "../models/api";
 import { handleError } from "../utils/error-handler";
+import { APIS } from "../constants";
 
-const apiPostfix = "/auth";
+export class AuthService {
+  private static apiPostfix = APIS.auth;
 
-export const AuthService = {
-  async login(credentials: LoginPayload) {
+  static async login(credentials: LoginPayload) {
     const response = await httpClient.post<
       ApiResponse<AuthUserModel>,
       AxiosPromise<ApiResponse>,
       LoginPayload
-    >(`${apiPostfix}/login`, credentials);
+    >(`${this.apiPostfix}/login`, credentials);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
-  },
+  }
 
-  async logout() {
-    const response = await httpClient.post<ApiResponse>(`${apiPostfix}/logout`);
-    if (response instanceof AxiosError) return handleError(response);
-    return response.data;
-  },
-
-  async checkAuth() {
-    const response = await httpClient.post<ApiResponse<AuthUserModel>>(
-      `${apiPostfix}/check-auth`
+  static async logout() {
+    const response = await httpClient.post<ApiResponse>(
+      `${this.apiPostfix}/logout`
     );
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
-  },
+  }
 
-  async signup(credentials: SignupPayload) {
+  static async checkAuth() {
+    const response = await httpClient.post<ApiResponse<AuthUserModel>>(
+      `${this.apiPostfix}/check-auth`
+    );
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
+  }
+
+  static async signup(credentials: SignupPayload) {
     const response = await httpClient.post<
       ApiResponse,
       AxiosPromise<ApiResponse>,
       SignupPayload
-    >(`${apiPostfix}/signup`, credentials);
+    >(`${this.apiPostfix}/signup`, credentials);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
-  },
+  }
 
-  async patchAccount(patchData: PatchAccountPayload) {
+  static async patchAccount(patchData: PatchAccountPayload) {
     const response = await httpClient.patch<
       ApiResponse,
       AxiosPromise<ApiResponse>,
       PatchAccountPayload
-    >(`${apiPostfix}/account`, patchData);
+    >(`${this.apiPostfix}/account`, patchData);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
-  },
-};
+  }
+}

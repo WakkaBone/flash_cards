@@ -3,19 +3,20 @@ import httpClient from "../http-client";
 import { ApiResponse } from "../models/api";
 import { getAppVersion } from "../utils/version";
 import { handleError } from "../utils/error-handler";
+import { APIS } from "../constants";
 
-const apiPostfix = "/version";
+export class VersionsService {
+  private static apiPostfix = APIS.version;
 
-export const VersionsService = {
-  getClientAppVersion() {
+  static getClientAppVersion() {
     return getAppVersion();
-  },
-  async getServerAppVersion() {
+  }
+  static async getServerAppVersion() {
     const response = await httpClient.get<
       ApiResponse<string>,
       AxiosPromise<ApiResponse<string>>
-    >(`${apiPostfix}`);
+    >(this.apiPostfix);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
-  },
-};
+  }
+}

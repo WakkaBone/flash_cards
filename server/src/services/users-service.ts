@@ -22,8 +22,8 @@ import { searchFilterCallback } from "../utils/search-util";
 import { mapUserToUserDto } from "../utils/mappers-util";
 import { GetUsersFilters } from "../models/filters";
 
-export const UsersService = {
-  getUsers: async function (filters: GetUsersFilters): Promise<UserModelDto[]> {
+export class UsersService {
+  static async getUsers(filters: GetUsersFilters): Promise<UserModelDto[]> {
     let queryRef = query(collection(db, COLLECTIONS.users));
     const queries = [];
 
@@ -74,24 +74,24 @@ export const UsersService = {
     }
 
     return users;
-  },
+  }
 
-  addUser: async function (user: UserModel): Promise<void> {
+  static async addUser(user: UserModel): Promise<void> {
     await addDoc(collection(db, COLLECTIONS.users), user);
-  },
+  }
 
-  deleteUser: async (id: string): Promise<void> => {
+  static async deleteUser(id: string): Promise<void> {
     const userRef = doc(db, COLLECTIONS.users, id);
     await deleteDoc(userRef);
-  },
+  }
 
-  getUserById: async (id: string) => {
+  static async getUserById(id: string): Promise<UserModel> {
     const userRef = doc(db, COLLECTIONS.users, id);
     const user = await getDoc(userRef);
     return user.data() as UserModel;
-  },
+  }
 
-  getUserByUsername: async (username: string) => {
+  static async getUserByUsername(username: string) {
     let queryRef = query(collection(db, COLLECTIONS.users));
     queryRef = query(queryRef, where("username", "==", username));
 
@@ -100,10 +100,10 @@ export const UsersService = {
       id: doc.id,
       ...(doc.data() as UserModel),
     }))[0];
-  },
+  }
 
-  updateLastPractice: async function (userId: string) {
-    const user: UserModel = await this.getUserById(userId);
+  static async updateLastPractice(userId: string): Promise<void> {
+    const user = await this.getUserById(userId);
     const userRef = doc(db, COLLECTIONS.users, userId);
 
     const currentStreak = user.currentStreak;
@@ -136,14 +136,14 @@ export const UsersService = {
       updates.longestStreak = newStreakValue;
 
     await updateDoc(userRef, updates);
-  },
+  }
 
-  updateUser: async function (userId: string, data: Partial<UserModel>) {
+  static async updateUser(userId: string, data: Partial<UserModel>) {
     const userRef = doc(db, COLLECTIONS.users, userId);
     await updateDoc(userRef, data);
-  },
+  }
 
-  getUserFromToken: (req: Request) => {
+  static getUserFromToken(req: Request): JwtPayload {
     let token = req.cookies[ACCESS_TOKEN_KEY] || req.cookies[REFRESH_TOKEN_KEY];
     if (!token) throw new Error("Token is missing");
 
@@ -151,5 +151,5 @@ export const UsersService = {
     if (!token) throw new Error("Failed to parse the token");
 
     return decoded as JwtPayload;
-  },
-};
+  }
+}

@@ -7,8 +7,8 @@ import { TimelinePoint } from "../models/user";
 import { MAIN_CATEGORIES, STATISTICS_ACTIONS } from "../constants";
 import { CategoriesService } from "./categories-service";
 
-export const PatchService = {
-  resetSrsProps: async function () {
+export class PatchService {
+  static async resetSrsProps() {
     const allCards = await CardsService.getCards({ includeLearned: true });
 
     const defaultValues = {
@@ -43,9 +43,9 @@ export const PatchService = {
         throw new Error(`Failed to update the card ${card.id}`);
       }
     });
-  },
+  }
 
-  resetPriority: async function () {
+  static async resetPriority() {
     const allCards = await CardsService.getCards({ includeLearned: true });
 
     allCards.forEach(async (card) => {
@@ -55,9 +55,9 @@ export const PatchService = {
         throw new Error(`Failed to update the card ${card.id}`);
       }
     });
-  },
+  }
 
-  resetUserTimeline: async function (req: Request) {
+  static async resetUserTimeline(req: Request) {
     const userId = UsersService.getUserFromToken(req).id;
     try {
       const cards = await CardsService.getCards({});
@@ -72,9 +72,9 @@ export const PatchService = {
     } catch (error) {
       throw new Error(`Failed to update the user ${userId}`);
     }
-  },
+  }
 
-  addOwnerIdToEntities: async function (req: Request) {
+  static async addOwnerIdToEntities(req: Request) {
     const userId = UsersService.getUserFromToken(req).id;
     const ownerIds = [userId];
 
@@ -100,5 +100,5 @@ export const PatchService = {
         throw new Error(`Failed to update the category ${category.id}`);
       }
     });
-  },
-};
+  }
+}

@@ -29,79 +29,71 @@ import { mapCardToCardDto } from "../utils/mappers-util";
 import { shuffleArray } from "../utils/array-util";
 import { GetCardsFilters } from "../models/filters";
 
-export const CardsService = {
-  getCards: async (filters: GetCardsFilters = {}): Promise<CardModelDto[]> => {
+export class CardsService {
+  static async getCards(
+    filters: GetCardsFilters = {}
+  ): Promise<CardModelDto[]> {
     let queryRef = query(collection(db, COLLECTIONS.cards));
     const queries = [];
 
-    if (filters.ownerId) {
+    if (filters.ownerId)
       queries.push(where("ownerIds", "array-contains", filters.ownerId));
-    }
 
-    if (filters.searchExact) {
+    if (filters.searchExact)
       queries.push(where("english", "==", filters.searchExact));
-    }
 
-    if (filters.from) {
+    if (filters.from)
       queries.push(where("createdAt", ">", Timestamp.fromDate(filters.from)));
-    }
-    if (filters.to) {
+    if (filters.to)
       queries.push(where("createdAt", "<", Timestamp.fromDate(filters.to)));
-    }
 
-    if (filters.includeLearned === false) {
+    if (filters.includeLearned === false)
       queries.push(where("isLearned", "==", false), orderBy("isLearned"));
-    }
-    if (filters.category) {
-      queries.push(where("category", "==", filters.category));
-    }
-    if (filters.mistakesThreshold) {
-      queries.push(where("statistics.wrong", ">=", filters.mistakesThreshold));
-    }
-    if (filters.priority) {
-      queries.push(where("priority", "==", filters.priority));
-    }
 
-    //TODO: pagination
-    if (filters.page && filters.pageSize) {
-      queries.push(limit(filters.pageSize));
-    }
+    if (filters.category)
+      queries.push(where("category", "==", filters.category));
+
+    if (filters.mistakesThreshold)
+      queries.push(where("statistics.wrong", ">=", filters.mistakesThreshold));
+
+    if (filters.priority)
+      queries.push(where("priority", "==", filters.priority));
+
+    if (filters.page && filters.pageSize) queries.push(limit(filters.pageSize));
 
     const { docs } = await getDocs(query(queryRef, ...queries));
 
-    const cards = await Promise.all(
-      docs.map(async (doc) => mapCardToCardDto(doc))
-    );
+    const cards = await Promise.all(docs.map((doc) => mapCardToCardDto(doc)));
 
     if (filters.search) {
       const searchableFields = ["english", "hebrew"];
       return cards.filter((card) =>
-        searchFilterCallback(filters.search, card, searchableFields)
+        searchFilterCallback(filters.search!, card, searchableFields)
       );
     }
 
     return cards;
-  },
+  }
 
-  getCardById: async (id: string): Promise<CardModel> => {
+  static async getCardById(id: string): Promise<CardModel> {
     const cardRef = doc(db, COLLECTIONS.cards, id);
     const card = await getDoc(cardRef);
     return card.data() as CardModel;
-  },
+  }
 
-  addCard: async (card: CardModel): Promise<void> => {
+  static async addCard(card: CardModel): Promise<void> {
     await addDoc(collection(db, COLLECTIONS.cards), card);
-  },
+  }
 
-  updateCard: async (id: string, card: Partial<CardModel>): Promise<void> => {
+  static async updateCard(id: string, card: Partial<CardModel>): Promise<void> {
     const cardRef = doc(db, COLLECTIONS.cards, id);
     await updateDoc(cardRef, card);
-  },
+  }
 
-  updateStatistics: async (
+  static async updateStatistics(
     id: string,
     action: STATISTICS_ACTIONS
-  ): Promise<void> => {
+  ): Promise<void> {
     const cardRef = doc(db, COLLECTIONS.cards, id);
     const card = await CardsService.getCardById(id);
 
@@ -130,27 +122,27 @@ export const CardsService = {
     );
 
     await updateDoc(cardRef, updates);
-  },
+  }
 
-  updateLastReviewedDate: async (id: string): Promise<void> => {
+  static async updateLastReviewedDate(id: string): Promise<void> {
     const cardRef = doc(db, COLLECTIONS.cards, id);
     await updateDoc(cardRef, { lastReviewDate: serverTimestamp() });
-  },
+  }
 
-  markLearned: async (
+  static async markLearned(
     id: string,
     shouldMarkAsLearned: boolean
-  ): Promise<void> => {
+  ): Promise<void> {
     const cardRef = doc(db, COLLECTIONS.cards, id);
     await updateDoc(cardRef, { isLearned: shouldMarkAsLearned });
-  },
+  }
 
-  deleteCard: async (id: string): Promise<void> => {
+  static async deleteCard(id: string): Promise<void> {
     const cardRef = doc(db, COLLECTIONS.cards, id);
     await deleteDoc(cardRef);
-  },
+  }
 
-  moveCardsToOtherCategory: async function (categoryId: string): Promise<void> {
+  static async moveCardsToOtherCategory(categoryId: string): Promise<void> {
     const allCardsWithCategory = await this.getCards({
       category: categoryId,
     });
@@ -161,9 +153,9 @@ export const CardsService = {
         category: MAIN_CATEGORIES.other,
       });
     });
-  },
+  }
 
-  deleteUsersCards: async function (userId: string) {
+  static async deleteUsersCards(userId: string): Promise<void> {
     const usersCards = await this.getCards({
       ownerId: userId,
     });
@@ -171,24 +163,21 @@ export const CardsService = {
       //remove the card only if it belongs only to the deleted user
       if (card.ownerIds.length === 1) await this.deleteCard(card.id);
     });
-  },
+  }
 
-  getOptions: async function (
-    card: CardModelDto,
-    eth: boolean
-  ): Promise<string[]> {
-    const sameCategoryCards = (await this.getCards({
+  static async getOptions(card: CardModelDto, eth: boolean): Promise<string[]> {
+    const sameCategoryCards = await this.getCards({
       category: card.category.id,
-    })) as CardModelDto[];
+    });
     const result = shuffleArray(sameCategoryCards)
       .filter(({ english }) => english !== card.english)
       .slice(0, 3)
       .map(({ hebrew, english }) => (eth ? hebrew : english));
 
     return result;
-  },
+  }
 
-  sortBySRS: (cards: CardModelDto[]): CardModelDto[] => {
+  static sortBySRS(cards: CardModelDto[]): CardModelDto[] {
     return cards.sort((a, b) => {
       const nextReviewA = getNextReviewDate(
         a.lastReviewDate as Timestamp,
@@ -217,5 +206,5 @@ export const CardsService = {
 
       return 0;
     });
-  },
-};
+  }
+}

@@ -15,55 +15,56 @@ import {
   GetPracticeTimelineFilters,
   GetUserDynamicsFilters,
 } from "../models/filters";
+import { APIS } from "../constants";
 
-const apiPostfix = "/statistics";
+export class StatisticsService {
+  private static apiPostfix = APIS.statistics;
 
-export const StatisticsService = {
-  async getPracticeTimeline(filters: GetPracticeTimelineFilters) {
-    const url = buildUrl(`${apiPostfix}/timeline`, filters);
+  static async getPracticeTimeline(filters: GetPracticeTimelineFilters) {
+    const url = buildUrl(`${this.apiPostfix}/timeline`, filters);
     const response = await httpClient.get<
       ApiResponse<TimelinePoint[]>,
       AxiosPromise<ApiResponse<TimelinePoint[]>> | AxiosError<ApiResponse>
     >(url);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
-  },
+  }
 
-  async getCardsDynamics(filters: GetCardDynamicsFilters) {
-    const url = buildUrl(`${apiPostfix}/cards-dynamics`, filters);
+  static async getCardsDynamics(filters: GetCardDynamicsFilters) {
+    const url = buildUrl(`${this.apiPostfix}/cards-dynamics`, filters);
     const response = await httpClient.get<
       ApiResponse<GetCardsDynamicsDto>,
       AxiosPromise<ApiResponse<GetCardsDynamicsDto>> | AxiosError<ApiResponse>
     >(url);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
-  },
+  }
 
-  async getUsersDynamics(filters: GetUserDynamicsFilters) {
-    const url = buildUrl(`${apiPostfix}/users-dynamics`, filters);
+  static async getUsersDynamics(filters: GetUserDynamicsFilters) {
+    const url = buildUrl(`${this.apiPostfix}/users-dynamics`, filters);
     const response = await httpClient.get<
       ApiResponse<GetUsersDynamicsDto>,
       AxiosPromise<ApiResponse<GetUsersDynamicsDto>> | AxiosError<ApiResponse>
     >(url);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
-  },
+  }
 
-  async getStatistics() {
+  static async getStatistics() {
     const response = await httpClient.get<
       ApiResponse<Statistics>,
       AxiosPromise<ApiResponse<Statistics>> | AxiosError<ApiResponse>
-    >(`${apiPostfix}/counters`);
+    >(`${this.apiPostfix}/counters`);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
-  },
+  }
 
-  async getAdminStatistics() {
+  static async getAdminStatistics() {
     const response = await httpClient.get<
       ApiResponse<Statistics>,
       AxiosPromise<ApiResponse<StatisticsAdmin>> | AxiosError<ApiResponse>
-    >(`${apiPostfix}/counters-admin`);
+    >(`${this.apiPostfix}/counters-admin`);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
-  },
-};
+  }
+}

@@ -40,3 +40,12 @@ export const QUERY_KEYS = {
   users: "users",
   serverVersion: "server-app-version",
 };
+
+export const APIS = {
+  auth: "/auth",
+  cards: "/cards",
+  statistics: "/statistics",
+  categories: "/categories",
+  users: "/users",
+  version: "/version",
+};

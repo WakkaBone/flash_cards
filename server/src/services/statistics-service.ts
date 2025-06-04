@@ -32,13 +32,20 @@ import { GetPracticeTimelineFilters } from "../models/filters";
 import { UsersService } from "./users-service";
 import { CardsService } from "./cards-service";
 
-export const StatisticsService = {
-  addTimelinePoint: async function (userId: string, newPoint: TimelinePoint) {
+export class StatisticsService {
+  static async addTimelinePoint(
+    userId: string,
+    newPoint: TimelinePoint
+  ): Promise<void> {
     const userRef = doc(db, COLLECTIONS.users, userId);
     await updateDoc(userRef, { practiceTimeline: arrayUnion(newPoint) });
-  },
+  }
 
-  getStreakData: async function (userId: string) {
+  static async getStreakData(userId: string): Promise<{
+    longestStreak: number;
+    currentStreak: number;
+    lastPractice: Date;
+  }> {
     const user: UserModel = await UsersService.getUserById(userId);
     const lastPractice = (user.lastPractice as Timestamp).toDate();
     const daysSinceLastPractice = calculateDaysDiff(new Date(), lastPractice);
@@ -52,9 +59,9 @@ export const StatisticsService = {
       currentStreak: streakExpired ? 0 : user.currentStreak,
       lastPractice,
     };
-  },
+  }
 
-  getStatistics: async function (userId: string) {
+  static async getStatistics(userId: string): Promise<Statistics> {
     let queryRef = query(
       collection(db, COLLECTIONS.cards),
       where("ownerIds", "array-contains", userId)
@@ -101,9 +108,9 @@ export const StatisticsService = {
     };
 
     return statistics;
-  },
+  }
 
-  getAdminStatistics: async (userId: string): Promise<StatisticsAdmin> => {
+  static async getAdminStatistics(userId: string): Promise<StatisticsAdmin> {
     let cardsQueryRef = query(collection(db, COLLECTIONS.cards));
     let usersQueryRef = query(collection(db, COLLECTIONS.users));
 
@@ -183,9 +190,9 @@ export const StatisticsService = {
             .toISOString()} - ${lastPracticeUser.username}`
         : "",
     };
-  },
+  }
 
-  getCardsDynamics: async function (
+  static async getCardsDynamics(
     filters: GetCardDynamicsFilters
   ): Promise<GetCardsDynamicsDto> {
     const cards = (
@@ -216,9 +223,9 @@ export const StatisticsService = {
       createdAt: groupedByCreationDate,
       lastPractice: groupedByLastPracticeDate,
     };
-  },
+  }
 
-  getPracticeTimeline: async function (
+  static async getPracticeTimeline(
     userId: string,
     filters?: GetPracticeTimelineFilters
   ): Promise<TimelinePointDto[]> {
@@ -247,9 +254,9 @@ export const StatisticsService = {
       ...point,
       dateTime: point.dateTime.toDate().toISOString(),
     }));
-  },
+  }
 
-  getUserDynamics: async function (
+  static async getUserDynamics(
     filters: GetUserDynamicsFilters
   ): Promise<GetUsersDynamicsDto> {
     const users: UserModelDto[] = await UsersService.getUsers({
@@ -273,5 +280,5 @@ export const StatisticsService = {
       createdAt: groupedByCreationDate,
       lastPractice: groupedByLastPracticeDate,
     };
-  },
-};
+  }
+}

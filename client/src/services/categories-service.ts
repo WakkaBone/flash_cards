@@ -10,65 +10,66 @@ import { buildUrl } from "../utils/url-util";
 import { handleError } from "../utils/error-handler";
 import { CategoryModel } from "../models/category";
 import { GetCategoriesFilters } from "../models/filters";
+import { APIS } from "../constants";
 
-const apiPostfix = "/categories";
+export class CategoriesService {
+  private static apiPostfix = APIS.categories;
 
-export const CategoriesService = {
-  async getCategories(filters: GetCategoriesFilters) {
-    const url = buildUrl(apiPostfix, filters);
+  static async getCategories(filters: GetCategoriesFilters) {
+    const url = buildUrl(this.apiPostfix, filters);
     const response = await httpClient.get<
       ApiResponse<CategoryModel[]>,
       AxiosPromise<ApiResponse<CategoryModel[]>> | AxiosError<ApiResponse>
     >(url);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
-  },
+  }
 
-  async addCategory(category: AddCategoryPayload) {
+  static async addCategory(category: AddCategoryPayload) {
     const response = await httpClient.post<
       ApiResponse,
       AxiosPromise<ApiResponse> | AxiosError<ApiResponse>,
       AddCategoryPayload
-    >(apiPostfix, category);
+    >(this.apiPostfix, category);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
-  },
+  }
 
-  async updateUpdatedAt(categoryId: string) {
+  static async updateUpdatedAt(categoryId: string) {
     const response = await httpClient.patch<
       ApiResponse,
       AxiosPromise<ApiResponse> | AxiosError<ApiResponse>
-    >(`${apiPostfix}/${categoryId}`);
+    >(`${this.apiPostfix}/${categoryId}`);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
-  },
+  }
 
-  async deleteCategory(categoryId: string) {
+  static async deleteCategory(categoryId: string) {
     const response = await httpClient.delete<
       ApiResponse,
       AxiosPromise<ApiResponse> | AxiosError<ApiResponse>
-    >(`${apiPostfix}/${categoryId}`);
+    >(`${this.apiPostfix}/${categoryId}`);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
-  },
+  }
 
-  async bulkDeleteCategories(ids: string[]) {
+  static async bulkDeleteCategories(ids: string[]) {
     const response = await httpClient.delete<
       ApiResponse,
       AxiosPromise<ApiResponse> | AxiosError<ApiResponse>,
       BulkDeleteCategoriesPayload
-    >(`${apiPostfix}/bulk/delete`, { data: { ids } });
+    >(`${this.apiPostfix}/bulk/delete`, { data: { ids } });
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
-  },
+  }
 
-  async updateCategory(category: UpdateCategoryPayload) {
+  static async updateCategory(category: UpdateCategoryPayload) {
     const response = await httpClient.put<
       ApiResponse,
       AxiosPromise<ApiResponse> | AxiosError<ApiResponse>,
       UpdateCategoryPayload
-    >(`${apiPostfix}/${category.id}`, category);
+    >(`${this.apiPostfix}/${category.id}`, category);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
-  },
-};
+  }
+}
