@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
-import { UsersService } from "../../services/users-service";
+import { UsersService } from "../../services";
 
 export const checkAuthController = async (
   req: Request<null, ApiResponse>,

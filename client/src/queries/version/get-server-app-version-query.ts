@@ -1,6 +1,6 @@
 import { DefinedInitialDataOptions } from "@tanstack/react-query";
 import { ApiResponse } from "../../models/api";
-import { VersionsService } from "../../services/version-service";
+import { VersionsService } from "../../services";
 import { QUERY_KEYS } from "../../constants";
 
 export const getServerAppVersionQuery = (): DefinedInitialDataOptions<

@@ -2,9 +2,8 @@ import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
 import { isValid } from "../../utils/validation-util";
 import { JwtPayload } from "../../utils/jwt-util";
-import { UsersService } from "../../services/users-service";
+import { AuthService, UsersService } from "../../services";
 import bcrypt from "bcrypt";
-import { AuthService } from "../../services/auth-service";
 
 type LoginBody = {
   username: string;

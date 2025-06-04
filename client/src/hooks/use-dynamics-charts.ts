@@ -1,9 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-  ApiResponse,
-  GetCardDynamicsFilters,
-  GetUserDynamicsFilters,
-} from "../models/api";
+import { ApiResponse } from "../models/api";
 import { GetCardsDynamicsDto, GetUsersDynamicsDto } from "../models/statistics";
 import { getCardsDynamicsQuery } from "../queries/cards";
 import {
@@ -16,6 +12,10 @@ import { useScreenSize } from "./use-screen-size";
 import { getUsersDynamicsQuery } from "../queries/users";
 import { formatDateForChart } from "../utils/date-time";
 import { useMemo } from "react";
+import {
+  GetCardDynamicsFilters,
+  GetUserDynamicsFilters,
+} from "../models/filters";
 
 const prepareChartData = (
   data: GetCardsDynamicsDto = { createdAt: {}, lastPractice: {} },

@@ -1,6 +1,6 @@
 import { UseMutationOptions } from "@tanstack/react-query";
 import { AddCategoryPayload, ApiResponse } from "../../models/api";
-import { CategoriesService } from "../../services/categories-service";
+import { CategoriesService } from "../../services";
 
 export const addCategoryMutation: UseMutationOptions<
   ApiResponse,

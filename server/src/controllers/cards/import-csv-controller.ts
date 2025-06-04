@@ -1,8 +1,7 @@
 import { Request, RequestHandler } from "express";
 import csvParser from "csv-parser";
 import fs from "fs";
-import { CardsService } from "../../services/cards-service";
-import { UsersService } from "../../services/users-service";
+import { CardsService, UsersService } from "../../services";
 import { mapCsvEntryToCardModel } from "../../utils/mappers-util";
 
 export const importCsvController: RequestHandler = (req, res) => {

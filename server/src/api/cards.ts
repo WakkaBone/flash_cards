@@ -7,12 +7,9 @@ import {
   updateCardController,
   updateStatisticsController,
   getRandomCardController,
-  getStatisticsController,
-  getAdminStatisticsController,
   addCardPrecheckController,
   bulkDeleteCardsController,
   bulkMarkLearnedController,
-  getCardsDynamicsController,
   importCsvController,
 } from "../controllers/cards";
 import {
@@ -25,7 +22,6 @@ import {
   updateCardValidator,
   updateStatisticsValidator,
 } from "../validators";
-import { isAdminValidation } from "../validators/shared";
 import multer from "multer";
 import cors from "cors";
 
@@ -54,13 +50,6 @@ router.patch(
   updateStatisticsController
 );
 router.patch("/:id/learned", markLearnedValidator, markLearnedController);
-router.get("/statistics", getStatisticsController);
-router.get(
-  "/statistics-admin",
-  [isAdminValidation],
-  getAdminStatisticsController
-);
-router.get("/dynamics", isAdminValidation, getCardsDynamicsController);
 
 // const upload = multer({ dest: "uploads/" });
 // router.options("/import/csv", cors());

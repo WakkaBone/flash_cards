@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
 import { isValid } from "../../utils/validation-util";
 import { UserModel, UserModelDto } from "../../models/user";
-import { UsersService } from "../../services/users-service";
+import { UsersService } from "../../services";
 
 type UpdateUserParams = { id: string };
 type UpdateUserBody = UserModelDto;

@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { getStatisticsQuery } from "../queries/cards/get-statistics-query";
 import {
   adminStatisticsLabelsMapper,
   statisticsLabelsMapper,
@@ -12,8 +11,11 @@ import {
 } from "../models/statistics";
 import { format } from "date-fns";
 import { isValidDate } from "../utils/date-time";
-import { getAdminStatisticsQuery } from "../queries/cards/get-admin-statistics-query";
 import { useAuthContext } from "../context/auth-context";
+import {
+  getAdminStatisticsQuery,
+  getStatisticsQuery,
+} from "../queries/statistics";
 
 const mapDataToEntries = (
   data: Statistics | StatisticsAdmin,

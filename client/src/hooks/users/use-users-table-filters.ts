@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDebounce } from "../use-debounce";
-import { GetUsersFilters, RolesExtended } from "../../models/api";
+import { RolesExtended } from "../../models/api";
 import { SelectChangeEvent } from "@mui/material";
 import { Roles } from "../../models/user";
 import { AllOptionString } from "../../models/shared";
+import { GetUsersFilters } from "../../models/filters";
 
 export const defaultFilters = { role: AllOptionString.All };
 

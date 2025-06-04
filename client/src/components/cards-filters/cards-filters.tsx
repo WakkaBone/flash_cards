@@ -7,7 +7,7 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { GetCardsFilters } from "../../models/api";
+import { GetCardsFilters } from "../../models/filters";
 import { useEffect } from "react";
 import deepEqual from "deep-equal";
 import { CategoryAutocomplete } from "../category-select/category-autocomplete";

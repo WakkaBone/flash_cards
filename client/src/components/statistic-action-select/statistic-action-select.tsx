@@ -6,7 +6,7 @@ import {
   SelectProps,
 } from "@mui/material";
 import { statisticsActionMapper } from "../../utils/mappers";
-import { StatisticsActionTypeExtended } from "../../hooks/practice-timeline/use-practice-timeline-filters";
+import { StatisticsActionTypeExtended } from "../../models/api";
 import { STATISTICS_ACTIONS } from "../../models/api";
 import { AllOptionString } from "../../models/shared";
 

@@ -1,6 +1,6 @@
 import { DefinedInitialDataOptions } from "@tanstack/react-query";
 import { ApiResponse } from "../../models/api";
-import { CardsService } from "../../services/cards-service";
+import { StatisticsService } from "../../services";
 import { Statistics } from "../../models/statistics";
 import { QUERY_KEYS } from "../../constants";
 
@@ -20,5 +20,5 @@ export const getStatisticsQuery = (): DefinedInitialDataOptions<
     },
   },
   queryKey: [QUERY_KEYS.statistics],
-  queryFn: async () => await CardsService.getStatistics(),
+  queryFn: async () => await StatisticsService.getStatistics(),
 });

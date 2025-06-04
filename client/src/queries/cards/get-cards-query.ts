@@ -1,8 +1,9 @@
 import { DefinedInitialDataOptions } from "@tanstack/react-query";
-import { ApiResponse, GetCardsFilters } from "../../models/api";
-import { CardsService } from "../../services/cards-service";
+import { ApiResponse } from "../../models/api";
+import { CardsService } from "../../services";
 import { CardModel } from "../../models/card";
 import { QUERY_KEYS } from "../../constants";
+import { GetCardsFilters } from "../../models/filters";
 
 export const getCardsQuery = (
   filters: GetCardsFilters

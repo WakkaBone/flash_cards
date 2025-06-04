@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
 import { isValid } from "../../utils/validation-util";
-import { GetUsersFilters, UsersService } from "../../services/users-service";
+import { UsersService } from "../../services";
 import { Roles, UserModelDto } from "../../models/user";
+import { GetUsersFilters } from "../../models/filters";
 
 type GetUsersQueryParams = {
   search?: string;

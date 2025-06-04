@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
 import { isValid } from "../../utils/validation-util";
-import { CardsService } from "../../services/cards-service";
-import { UsersService } from "../../services/users-service";
-import { CategoriesService } from "../../services/categories-service";
+import { CardsService, CategoriesService, UsersService } from "../../services";
 
 type DeleteUserParams = { id: string };
 export const deleteUserController = async (

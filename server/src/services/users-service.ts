@@ -7,62 +7,20 @@ import {
   doc,
   serverTimestamp,
   updateDoc,
-  arrayUnion,
   getDoc,
   limit,
-  QueryDocumentSnapshot,
   addDoc,
   deleteDoc,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { ACCESS_TOKEN_KEY, COLLECTIONS, REFRESH_TOKEN_KEY } from "../constants";
-import {
-  Roles,
-  TimelinePoint,
-  TimelinePointDto,
-  UserModel,
-  UserModelDto,
-} from "../models/user";
+import { UserModel, UserModelDto } from "../models/user";
 import { Request } from "express";
 import { decodeToken, JwtPayload } from "../utils/jwt-util";
-import { calculateDaysDiff, getCountByDate } from "../utils/date-time";
-import { CardsService, GetPracticeTimelineFilters } from "./cards-service";
+import { calculateDaysDiff } from "../utils/date-time";
 import { searchFilterCallback } from "../utils/search-util";
-import {
-  GetUsersDynamicsDto,
-  GetUserDynamicsFilters,
-} from "../models/statistics";
-import { DateRange } from "../models/shared";
-
-export type GetUsersFilters = DateRange & {
-  search?: string;
-  searchExact?: string;
-  role?: Roles;
-  numberOfCards?: number;
-  longestStreak?: number;
-  currentStreak?: number;
-  page?: number;
-  pageSize?: number;
-};
-
-const mapUserToUserDto = async (
-  docRef: QueryDocumentSnapshot
-): Promise<UserModelDto> => {
-  const userData = docRef.data() as UserModel;
-
-  const userCards = await CardsService.getCards({ ownerId: docRef.id });
-
-  return {
-    id: docRef.id,
-    username: userData.username,
-    numberOfCards: userCards.length,
-    lastPractice: (userData.lastPractice as Timestamp).toDate().toISOString(),
-    createdAt: (userData.createdAt as Timestamp).toDate().toISOString(),
-    currentStreak: userData.currentStreak,
-    longestStreak: userData.longestStreak,
-    role: userData.role,
-  };
-};
+import { mapUserToUserDto } from "../utils/mappers-util";
+import { GetUsersFilters } from "../models/filters";
 
 export const UsersService = {
   getUsers: async function (filters: GetUsersFilters): Promise<UserModelDto[]> {
@@ -185,11 +143,6 @@ export const UsersService = {
     await updateDoc(userRef, data);
   },
 
-  addTimelinePoint: async function (userId: string, newPoint: TimelinePoint) {
-    const userRef = doc(db, COLLECTIONS.users, userId);
-    await updateDoc(userRef, { practiceTimeline: arrayUnion(newPoint) });
-  },
-
   getUserFromToken: (req: Request) => {
     let token = req.cookies[ACCESS_TOKEN_KEY] || req.cookies[REFRESH_TOKEN_KEY];
     if (!token) throw new Error("Token is missing");
@@ -198,76 +151,5 @@ export const UsersService = {
     if (!token) throw new Error("Failed to parse the token");
 
     return decoded as JwtPayload;
-  },
-
-  getStreakData: async function (userId: string) {
-    const user: UserModel = await this.getUserById(userId);
-    const lastPractice = (user.lastPractice as Timestamp).toDate();
-    const daysSinceLastPractice = calculateDaysDiff(new Date(), lastPractice);
-
-    const streakExpired = daysSinceLastPractice > 1;
-    if (streakExpired) await this.updateUser(userId, { streak: 0 });
-
-    return {
-      longestStreak: user.longestStreak,
-      currentStreak: streakExpired ? 0 : user.currentStreak,
-      lastPractice,
-    };
-  },
-
-  getPracticeTimeline: async function (
-    userId: string,
-    filters?: GetPracticeTimelineFilters
-  ): Promise<TimelinePointDto[]> {
-    let practiceTimeline: TimelinePoint[] = (await this.getUserById(userId))
-      .practiceTimeline;
-
-    if (filters.action) {
-      practiceTimeline = practiceTimeline.filter(
-        ({ action }) => action === filters.action
-      );
-    }
-
-    if (filters.from) {
-      practiceTimeline = practiceTimeline.filter(
-        ({ dateTime }) => dateTime.toDate() >= filters.from
-      );
-    }
-    if (filters.to) {
-      practiceTimeline = practiceTimeline.filter(
-        ({ dateTime }) => dateTime.toDate() <= filters.to
-      );
-    }
-
-    return practiceTimeline.map((point) => ({
-      ...point,
-      dateTime: point.dateTime.toDate().toISOString(),
-    }));
-  },
-
-  getUserDynamics: async function (
-    filters: GetUserDynamicsFilters
-  ): Promise<GetUsersDynamicsDto> {
-    const users: UserModelDto[] = await this.getUsers({
-      ...filters,
-      from: undefined,
-      to: undefined,
-    });
-    const range =
-      filters.from && filters.to
-        ? { from: filters.from, to: filters.to }
-        : undefined;
-
-    const groupedByCreationDate = getCountByDate(users, "createdAt", range);
-    const groupedByLastPracticeDate = getCountByDate(
-      users,
-      "lastPractice",
-      range
-    );
-
-    return {
-      createdAt: groupedByCreationDate,
-      lastPractice: groupedByLastPracticeDate,
-    };
   },
 };

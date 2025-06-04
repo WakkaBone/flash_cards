@@ -2,8 +2,7 @@ import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
 import { isValid } from "../../utils/validation-util";
 import { serverTimestamp, Timestamp } from "firebase/firestore";
-import { CategoriesService } from "../../services/categories-service";
-import { UsersService } from "../../services/users-service";
+import { UsersService, CategoriesService } from "../../services";
 import { CategoryModel } from "../../models/category";
 
 type CreateCategoryBody = {

@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
-import { CardsService } from "../../services/cards-service";
+import { CardsService, CategoriesService, UsersService } from "../../services";
 import { isValid } from "../../utils/validation-util";
-import { CategoriesService } from "../../services/categories-service";
-import { UsersService } from "../../services/users-service";
 
 type BulkDeleteBody = { ids: string[] };
 export const bulkDeleteUsersController = async (

@@ -15,7 +15,7 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
-import { CardModel, CardModelDto, Priorities } from "../models/card";
+import { CardModel, CardModelDto } from "../models/card";
 import {
   COLLECTIONS,
   MAIN_CATEGORIES,
@@ -23,35 +23,11 @@ import {
   MIN_EASE_COEFFICIENT,
   STATISTICS_ACTIONS,
 } from "../constants";
-import {
-  GetCardDynamicsFilters,
-  GetCardsDynamicsDto,
-  Statistics,
-  StatisticsAdmin,
-} from "../models/statistics";
-import { UsersService } from "./users-service";
-import { getNextReviewDate, getCountByDate } from "../utils/date-time";
+import { getNextReviewDate } from "../utils/date-time";
 import { searchFilterCallback } from "../utils/search-util";
-import { UserModel } from "../models/user";
-import { DateRange } from "../models/shared";
 import { mapCardToCardDto } from "../utils/mappers-util";
 import { shuffleArray } from "../utils/array-util";
-
-export type GetCardsFilters = DateRange & {
-  category?: string;
-  search?: string;
-  searchExact?: string;
-  includeLearned?: boolean;
-  mistakesThreshold?: number;
-  priority?: Priorities;
-  page?: number;
-  pageSize?: number;
-  ownerId?: string;
-};
-
-export type GetPracticeTimelineFilters = DateRange & {
-  action?: STATISTICS_ACTIONS;
-};
+import { GetCardsFilters } from "../models/filters";
 
 export const CardsService = {
   getCards: async (filters: GetCardsFilters = {}): Promise<CardModelDto[]> => {
@@ -171,137 +147,6 @@ export const CardsService = {
     await deleteDoc(cardRef);
   },
 
-  getStatistics: async function (userId: string) {
-    let queryRef = query(
-      collection(db, COLLECTIONS.cards),
-      where("ownerIds", "array-contains", userId)
-    );
-
-    const allQuery = query(queryRef);
-    const learnedQuery = query(queryRef, where("isLearned", "==", true));
-    const lastAddedQuery = query(
-      queryRef,
-      orderBy("createdAt", "desc"),
-      limit(1)
-    );
-    const mostMistakesQuery = query(
-      queryRef,
-      orderBy("statistics.wrong", "desc"),
-      limit(1)
-    );
-
-    const lastAddedWordSnapshot = await getDocs(lastAddedQuery);
-    const mostMistakesSnapshot = await getDocs(mostMistakesQuery);
-
-    const lastAddedCard = lastAddedWordSnapshot.docs[0]
-      ? (lastAddedWordSnapshot.docs[0].data() as CardModel)
-      : undefined;
-    const mostMistakesCard = mostMistakesSnapshot.docs[0]
-      ? (mostMistakesSnapshot.docs[0].data() as CardModel)
-      : undefined;
-
-    const { currentStreak, lastPractice, longestStreak } =
-      await UsersService.getStreakData(userId);
-
-    const statistics: Statistics = {
-      totalCards: (await getDocs(allQuery)).size,
-      totalLearnedCards: (await getDocs(learnedQuery)).size,
-      lastAdded: lastAddedCard
-        ? `${lastAddedCard.hebrew} - ${lastAddedCard.english}`
-        : "",
-      mostMistakes: mostMistakesCard
-        ? `${mostMistakesCard.hebrew} - ${mostMistakesCard.english}`
-        : "",
-      currentStreak,
-      longestStreak,
-      lastPractice: lastPractice ? lastPractice.toISOString() : "",
-    };
-
-    return statistics;
-  },
-
-  getAdminStatistics: async (userId: string): Promise<StatisticsAdmin> => {
-    let cardsQueryRef = query(collection(db, COLLECTIONS.cards));
-    let usersQueryRef = query(collection(db, COLLECTIONS.users));
-
-    const totalCards = (await getDocs(cardsQueryRef)).size;
-    const totalLearnedCards = (
-      await getDocs(query(cardsQueryRef, where("isLearned", "==", true)))
-    ).size;
-    const totalUsers = (await getDocs(usersQueryRef)).size;
-
-    const lastAddedQuery = query(
-      cardsQueryRef,
-      orderBy("createdAt", "desc"),
-      limit(1)
-    );
-    const mostMistakesQuery = query(
-      cardsQueryRef,
-      orderBy("statistics.wrong", "desc"),
-      limit(1)
-    );
-    const longestStreakQuery = query(
-      usersQueryRef,
-      orderBy("longestStreak", "desc"),
-      limit(1)
-    );
-    const longestActiveStreakQuery = query(
-      usersQueryRef,
-      orderBy("currentStreak", "desc"),
-      limit(1)
-    );
-    const lastPracticeQuery = query(
-      usersQueryRef,
-      orderBy("lastPractice", "desc"),
-      limit(1)
-    );
-
-    const lastAddedWordSnapshot = await getDocs(lastAddedQuery);
-    const mostMistakesSnapshot = await getDocs(mostMistakesQuery);
-    const longestStreakSnapshot = await getDocs(longestStreakQuery);
-    const longestActiveStreakSnapshot = await getDocs(longestActiveStreakQuery);
-    const lastPracticeSnapshot = await getDocs(lastPracticeQuery);
-
-    const lastAddedCard = lastAddedWordSnapshot.docs[0]
-      ? (lastAddedWordSnapshot.docs[0].data() as CardModel)
-      : undefined;
-    const mostMistakesCard = mostMistakesSnapshot.docs[0]
-      ? (mostMistakesSnapshot.docs[0].data() as CardModel)
-      : undefined;
-    const longestStreakUser = longestStreakSnapshot.docs[0]
-      ? (longestStreakSnapshot.docs[0].data() as UserModel)
-      : undefined;
-    const longestActiveStreakUser = longestActiveStreakSnapshot.docs[0]
-      ? (longestActiveStreakSnapshot.docs[0].data() as UserModel)
-      : undefined;
-    const lastPracticeUser = lastPracticeSnapshot.docs[0]
-      ? (lastPracticeSnapshot.docs[0].data() as UserModel)
-      : undefined;
-
-    return {
-      totalCards,
-      totalLearnedCards,
-      lastAdded: lastAddedCard
-        ? `${lastAddedCard.hebrew} - ${lastAddedCard.english}`
-        : "",
-      mostMistakes: mostMistakesCard
-        ? `${mostMistakesCard.hebrew} - ${mostMistakesCard.english}`
-        : "",
-      totalUsers,
-      longestActiveStreak: longestActiveStreakUser
-        ? `${longestActiveStreakUser.longestStreak} - ${longestActiveStreakUser.username}`
-        : "",
-      longestStreak: longestStreakUser
-        ? `${longestStreakUser.longestStreak} - ${longestStreakUser.username}`
-        : "",
-      lastPractice: lastPracticeUser
-        ? `${(lastPracticeUser.lastPractice as Timestamp)
-            .toDate()
-            .toISOString()} - ${lastPracticeUser.username}`
-        : "",
-    };
-  },
-
   moveCardsToOtherCategory: async function (categoryId: string): Promise<void> {
     const allCardsWithCategory = await this.getCards({
       category: categoryId,
@@ -323,35 +168,6 @@ export const CardsService = {
       //remove the card only if it belongs only to the deleted user
       if (card.ownerIds.length === 1) await this.deleteCard(card.id);
     });
-  },
-
-  getCardsDynamics: async function (
-    filters: GetCardDynamicsFilters
-  ): Promise<GetCardsDynamicsDto> {
-    const cards = (
-      await this.getCards({ ...filters, from: undefined, to: undefined })
-    ).map((card: CardModelDto) => ({
-      ...card,
-      lastReviewDate:
-        card.lastReviewDate &&
-        (card.lastReviewDate as Timestamp).toDate().toISOString(),
-    }));
-    const range =
-      filters.from && filters.to
-        ? { from: filters.from, to: filters.to }
-        : undefined;
-
-    const groupedByCreationDate = getCountByDate(cards, "createdAt", range);
-    const groupedByLastPracticeDate = getCountByDate(
-      cards,
-      "lastReviewDate",
-      range
-    );
-
-    return {
-      createdAt: groupedByCreationDate,
-      lastPractice: groupedByLastPracticeDate,
-    };
   },
 
   getOptions: async function (

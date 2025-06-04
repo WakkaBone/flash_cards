@@ -11,42 +11,13 @@ import {
   Timestamp,
   doc,
   serverTimestamp,
-  QueryDocumentSnapshot,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { COLLECTIONS, MAIN_CATEGORIES } from "../constants";
 import { CategoryDto, CategoryModel } from "../models/category";
-import { CardsService } from "./cards-service";
 import { searchFilterCallback } from "../utils/search-util";
-import { DateRange } from "../models/shared";
-
-export type GetCategoriesFilters = DateRange & {
-  search?: string;
-  searchExact?: string;
-  numberOfCards?: number;
-  page?: number;
-  pageSize?: number;
-  ownerId?: string;
-};
-
-const mapCategoryToCategoryDto = async (
-  docRef: QueryDocumentSnapshot
-): Promise<CategoryDto> => {
-  const categoryData = docRef.data() as CategoryModel;
-
-  const cards = await CardsService.getCards({ category: docRef.id });
-
-  const categoryDto: CategoryDto = {
-    id: docRef.id,
-    label: categoryData.label,
-    numberOfCards: cards.length,
-    createdAt: categoryData.createdAt.toDate().toISOString(),
-    updatedAt: (categoryData.updatedAt as Timestamp).toDate().toISOString(),
-    ownerIds: categoryData.ownerIds,
-  };
-
-  return categoryDto;
-};
+import { mapCategoryToCategoryDto } from "../utils/mappers-util";
+import { GetCategoriesFilters } from "../models/filters";
 
 export const CategoriesService = {
   getMainCategories: async function (): Promise<CategoryDto[]> {

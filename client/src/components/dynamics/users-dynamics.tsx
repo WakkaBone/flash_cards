@@ -4,7 +4,7 @@ import { useDynamicsCharts } from "../../hooks";
 import { Line } from "react-chartjs-2";
 import { UsersDynamicsFilters } from "./users-dynamics-filters";
 import { getOneWeekTimeRange } from "../../utils/date-time";
-import { GetUserDynamicsFilters } from "../../models/api";
+import { GetUserDynamicsFilters } from "../../models/filters";
 import { AllOptionString } from "../../models/shared";
 
 export const getUsersDynamicChartDefaultFilters =

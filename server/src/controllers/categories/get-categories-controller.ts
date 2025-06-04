@@ -1,13 +1,10 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
 import { isValid } from "../../utils/validation-util";
-import {
-  CategoriesService,
-  GetCategoriesFilters,
-} from "../../services/categories-service";
 import { CategoryDto } from "../../models/category";
-import { UsersService } from "../../services/users-service";
+import { UsersService, CategoriesService } from "../../services";
 import { getOwnershipFilter } from "../../utils/roles-util";
+import { GetCategoriesFilters } from "../../models/filters";
 
 type GetCategoriesQueryParams = {
   search?: string;

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { PatchService } from "../services/patch-service";
+import { PatchService } from "../services";
 
 export const patchDbController = async (req: Request, res: Response) => {
   try {

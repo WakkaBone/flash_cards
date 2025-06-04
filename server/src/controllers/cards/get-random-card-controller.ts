@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
-import { CardsService, GetCardsFilters } from "../../services/cards-service";
+import { CardsService, UsersService } from "../../services";
 import { isValid } from "../../utils/validation-util";
 import { CardModelDto } from "../../models/card";
-import { UsersService } from "../../services/users-service";
 import { getOwnershipFilter } from "../../utils/roles-util";
+import { GetCardsFilters } from "../../models/filters";
 
 export enum PracticeModes {
   ethInput,

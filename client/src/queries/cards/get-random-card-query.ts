@@ -1,6 +1,6 @@
 import { DefinedInitialDataOptions } from "@tanstack/react-query";
 import { GetRandomCardResponse } from "../../models/api";
-import { CardsService } from "../../services/cards-service";
+import { CardsService } from "../../services";
 import { PracticeFilersType } from "../../pages/practice-page";
 import { PracticeModes } from "../../models/practice-mode";
 import { QUERY_KEYS } from "../../constants";

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDebounce } from "../use-debounce";
-import { GetCategoriesFilters } from "../../models/api";
+import { GetCategoriesFilters } from "../../models/filters";
 
 export const defaultFilters = {};
 

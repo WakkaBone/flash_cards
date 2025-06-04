@@ -7,7 +7,7 @@ import {
 } from "react";
 import { toastError } from "../utils/error-handler";
 import { useAuth } from "../hooks";
-import { AuthService } from "../services/auth-service";
+import { AuthService } from "../services";
 import { AuthUserModel } from "../models/api";
 import { Roles } from "../models/user";
 import { useNavigate } from "react-router-dom";

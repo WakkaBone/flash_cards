@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
-import { CardsService } from "../../services/cards-service";
+import { CardsService, UsersService, StatisticsService } from "../../services";
 import { STATISTICS_ACTIONS } from "../../constants";
 import { isValid } from "../../utils/validation-util";
-import { UsersService } from "../../services/users-service";
 import { TimelinePoint } from "../../models/user";
 import { Timestamp } from "firebase/firestore";
 
@@ -24,7 +23,7 @@ export const updateStatisticsController = async (
     };
 
     const userId = UsersService.getUserFromToken(req).id;
-    await UsersService.addTimelinePoint(userId, newTimelinePoint);
+    await StatisticsService.addTimelinePoint(userId, newTimelinePoint);
 
     res.status(200).json({ isSuccess: true });
   } catch (error) {

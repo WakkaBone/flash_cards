@@ -1,11 +1,9 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
-import { CardsService } from "../../services/cards-service";
+import { CardsService, UsersService, CategoriesService } from "../../services";
 import { isValid } from "../../utils/validation-util";
 import { Timestamp } from "firebase/firestore";
-import { CategoriesService } from "../../services/categories-service";
 import { CardModel, Priorities } from "../../models/card";
-import { UsersService } from "../../services/users-service";
 import { getInitialSrsValues } from "../../utils/mappers-util";
 
 type CreateCardBody = {

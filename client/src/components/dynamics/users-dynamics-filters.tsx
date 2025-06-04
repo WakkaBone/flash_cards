@@ -5,7 +5,7 @@ import { useScreenSize, useUsersTableFilters } from "../../hooks";
 import { DateTimeRangePicker } from "../date-time-range-picker/date-time-range-picker";
 import { FilterAlt } from "@mui/icons-material";
 import { CollapsibleSection } from "../collapsible/collapsible-section";
-import { GetUserDynamicsFilters } from "../../models/api";
+import { GetUserDynamicsFilters } from "../../models/filters";
 import { RoleSelect } from "../role-select/role-select";
 
 export enum FilterTypes {

@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
-import { CardsService } from "../../services/cards-service";
+import { CardsService, CategoriesService } from "../../services";
 import { CardModel, CardModelDto } from "../../models/card";
 import { isValid } from "../../utils/validation-util";
 import { serverTimestamp } from "firebase/firestore";
-import { CategoriesService } from "../../services/categories-service";
 
 type UpdateCardParams = { id: string };
 type UpdateCardBody = CardModelDto;

@@ -1,5 +1,5 @@
 import { Box, Button, Input, Stack, TextField } from "@mui/material";
-import { GetCategoriesFilters } from "../../models/api";
+import { GetCategoriesFilters } from "../../models/filters";
 import { useEffect } from "react";
 import deepEqual from "deep-equal";
 import { useScreenSize, useCategoriesTableFilters } from "../../hooks";

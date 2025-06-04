@@ -5,7 +5,7 @@ import { WordCard } from "../components/card/card";
 import { PageTitle } from "../components/layout/page-title";
 import { PracticeModeSelect } from "../components/practice-mode-select/practice-mode-select";
 import { useTimer, useRandomCard, useTTS } from "../hooks";
-import { GetCardsFilters, STATISTICS_ACTIONS } from "../models/api";
+import { STATISTICS_ACTIONS } from "../models/api";
 import {
   CardsFilters,
   FilterTypes,
@@ -14,6 +14,7 @@ import { toastError } from "../utils/error-handler";
 import { PracticeModes, PracticeSettingsType } from "../models/practice-mode";
 import { PracticeSettings } from "../components/practice-settings/practice-settings";
 import { TOAST_CONTAINERS_IDS } from "../constants";
+import { GetCardsFilters } from "../models/filters";
 
 export type PracticeFilersType = Omit<GetCardsFilters, "search">;
 

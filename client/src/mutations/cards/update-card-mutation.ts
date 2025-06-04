@@ -1,5 +1,5 @@
 import { UseMutationOptions } from "@tanstack/react-query";
-import { CardsService } from "../../services/cards-service";
+import { CardsService } from "../../services";
 import { ApiResponse, UpdateCardPayload } from "../../models/api";
 
 export const updateCardMutation: UseMutationOptions<

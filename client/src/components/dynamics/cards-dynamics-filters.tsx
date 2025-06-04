@@ -5,7 +5,7 @@ import { useCardsTableFilters, useScreenSize } from "../../hooks";
 import { DateTimeRangePicker } from "../date-time-range-picker/date-time-range-picker";
 import { FilterAlt } from "@mui/icons-material";
 import { CollapsibleSection } from "../collapsible/collapsible-section";
-import { GetCardDynamicsFilters } from "../../models/api";
+import { GetCardDynamicsFilters } from "../../models/filters";
 import { PrioritySelect } from "../priority-select/priority-select";
 
 export enum FilterTypes {

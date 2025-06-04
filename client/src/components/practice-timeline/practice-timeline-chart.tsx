@@ -10,7 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { GetPracticeTimelineFilters } from "../../models/api";
+import { GetPracticeTimelineFilters } from "../../models/filters";
 
 ChartJS.register(
   CategoryScale,

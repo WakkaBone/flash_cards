@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
 import { isValid } from "../../utils/validation-util";
 import { serverTimestamp, Timestamp } from "firebase/firestore";
-import { UsersService } from "../../services/users-service";
+import { UsersService } from "../../services";
 import { Roles, UserModel } from "../../models/user";
 import { encrypt } from "../../utils/encryption-util";
 

@@ -1,6 +1,6 @@
 import { UseMutationOptions } from "@tanstack/react-query";
 import { ApiResponse } from "../../models/api";
-import { UsersService } from "../../services/users-service";
+import { UsersService } from "../../services";
 
 type ArgsType = {
   ids: string[];

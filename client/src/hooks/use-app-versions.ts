@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { VersionsService } from "../services/version-service";
+import { VersionsService } from "../services";
 import { getServerAppVersionQuery } from "../queries/version/get-server-app-version-query";
 
 export const useAppVersions = () => {

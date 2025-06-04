@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
-import { UsersService } from "../../services/users-service";
 import { Roles } from "../../models/user";
 import {
   GetUsersDynamicsDto,
   GetUserDynamicsFilters,
 } from "../../models/statistics";
+import { StatisticsService } from "../../services";
 
 type GetUsersDynamicsQueryParams = {
   role?: string;
@@ -25,7 +25,7 @@ export const getUsersDynamicsController = async (
       to: to ? new Date(to) : undefined,
     };
 
-    const dynamics = await UsersService.getUserDynamics(filters);
+    const dynamics = await StatisticsService.getUserDynamics(filters);
 
     res.status(200).json({ isSuccess: true, data: dynamics });
   } catch (error) {

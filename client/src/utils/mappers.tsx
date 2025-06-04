@@ -10,17 +10,14 @@ import { CategoryModel } from "../models/category";
 import { CategoriesTableRowType } from "../components/categories-table/categories-table";
 import { ActionsCell as ActionsCellCategories } from "../components/categories-table/actions-cell";
 import { AddCardFormType } from "../components/add-card-form/add-card-form";
-import {
-  AddCardPayload,
-  GetCardsFilters,
-  STATISTICS_ACTIONS,
-} from "../models/api";
+import { AddCardPayload, STATISTICS_ACTIONS } from "../models/api";
 import { IdLabel } from "../models/shared";
 import { PriorityCell } from "../components/cards-table/priority-cell";
 import { Roles, UserModel } from "../models/user";
 import { UsersTableRowType } from "../components/users-table/users-table";
 import { ActionsCell as ActionsCellUsers } from "../components/users-table/actions-cell";
 import { CSV_HEADERS } from "./export-util";
+import { GetCardsFilters } from "../models/filters";
 
 export const practiceModeMapper: Record<PracticeModes, string> = {
   [PracticeModes.ethInput]: "English to Hebrew Text Input",

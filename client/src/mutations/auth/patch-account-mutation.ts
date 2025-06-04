@@ -4,7 +4,7 @@ import {
   AuthUserModel,
   PatchAccountPayload,
 } from "../../models/api";
-import { AuthService } from "../../services/auth-service";
+import { AuthService } from "../../services";
 
 export const patchAccountMutation: UseMutationOptions<
   ApiResponse<AuthUserModel>,

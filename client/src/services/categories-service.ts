@@ -4,12 +4,12 @@ import {
   AddCategoryPayload,
   ApiResponse,
   BulkDeleteCategoriesPayload,
-  GetCategoriesFilters,
   UpdateCategoryPayload,
 } from "../models/api";
 import { buildUrl } from "../utils/url-util";
 import { handleError } from "../utils/error-handler";
 import { CategoryModel } from "../models/category";
+import { GetCategoriesFilters } from "../models/filters";
 
 const apiPostfix = "/categories";
 

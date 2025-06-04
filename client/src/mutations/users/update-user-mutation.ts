@@ -1,6 +1,6 @@
 import { UseMutationOptions } from "@tanstack/react-query";
 import { ApiResponse, UpdateUserPayload } from "../../models/api";
-import { UsersService } from "../../services/users-service";
+import { UsersService } from "../../services";
 
 export const updateUserMutation: UseMutationOptions<
   ApiResponse,

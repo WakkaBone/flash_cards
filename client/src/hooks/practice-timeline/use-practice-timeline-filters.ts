@@ -1,12 +1,11 @@
 import { useState } from "react";
 import {
-  GetPracticeTimelineFilters,
   STATISTICS_ACTIONS,
+  StatisticsActionTypeExtended,
 } from "../../models/api";
 import { SelectChangeEvent } from "@mui/material";
 import { AllOptionString } from "../../models/shared";
-
-export type StatisticsActionTypeExtended = STATISTICS_ACTIONS | AllOptionString;
+import { GetPracticeTimelineFilters } from "../../models/filters";
 
 export const getInitialPracticeTimelineFilters =
   (): GetPracticeTimelineFilters => {

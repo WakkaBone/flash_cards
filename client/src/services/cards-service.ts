@@ -5,21 +5,15 @@ import {
   ApiResponse,
   BulkDeleteCardsPayload,
   BulkMarkLearnedPayload,
-  GetCardDynamicsFilters,
-  GetCardsFilters,
   STATISTICS_ACTIONS,
   UpdateCardPayload,
 } from "../models/api";
 import { CardModel } from "../models/card";
-import {
-  GetCardsDynamicsDto,
-  Statistics,
-  StatisticsAdmin,
-} from "../models/statistics";
 import { buildUrl } from "../utils/url-util";
 import { handleError } from "../utils/error-handler";
 import { compileGetCardsFilters } from "../utils/mappers";
 import { PracticeModes } from "../models/practice-mode";
+import { GetCardsFilters } from "../models/filters";
 
 const apiPostfix = "/cards";
 
@@ -120,34 +114,6 @@ export const CardsService = {
       AxiosPromise<ApiResponse> | AxiosError<ApiResponse>,
       UpdateCardPayload
     >(`${apiPostfix}/${card.id}`, card);
-    if (response instanceof AxiosError) return handleError(response);
-    return response.data;
-  },
-
-  async getStatistics() {
-    const response = await httpClient.get<
-      ApiResponse<Statistics>,
-      AxiosPromise<ApiResponse<Statistics>> | AxiosError<ApiResponse>
-    >(`${apiPostfix}/statistics`);
-    if (response instanceof AxiosError) return handleError(response);
-    return response.data;
-  },
-
-  async getAdminStatistics() {
-    const response = await httpClient.get<
-      ApiResponse<Statistics>,
-      AxiosPromise<ApiResponse<StatisticsAdmin>> | AxiosError<ApiResponse>
-    >(`${apiPostfix}/statistics-admin`);
-    if (response instanceof AxiosError) return handleError(response);
-    return response.data;
-  },
-
-  async getCardsDynamics(filters: GetCardDynamicsFilters) {
-    const url = buildUrl(`${apiPostfix}/dynamics`, filters);
-    const response = await httpClient.get<
-      ApiResponse<GetCardsDynamicsDto>,
-      AxiosPromise<ApiResponse<GetCardsDynamicsDto>> | AxiosError<ApiResponse>
-    >(url);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;
   },

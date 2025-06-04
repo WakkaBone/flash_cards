@@ -8,6 +8,8 @@ import { CategoriesService } from "../services/categories-service";
 import { CSV_FIELD_NAMES } from "../constants";
 import { isEnglish, isHebrew } from "../validators/cards/validations";
 import { CardsService } from "../services/cards-service";
+import { CategoryDto, CategoryModel } from "../models/category";
+import { UserModel, UserModelDto } from "../models/user";
 
 const priorityReverseMapper: Record<string, Priorities> = {
   Low: Priorities.Low,
@@ -106,4 +108,42 @@ export const mapCsvEntryToCardModel = async (
   };
 
   return newCard;
+};
+
+export const mapCategoryToCategoryDto = async (
+  docRef: QueryDocumentSnapshot
+): Promise<CategoryDto> => {
+  const categoryData = docRef.data() as CategoryModel;
+
+  const cards = await CardsService.getCards({ category: docRef.id });
+
+  const categoryDto: CategoryDto = {
+    id: docRef.id,
+    label: categoryData.label,
+    numberOfCards: cards.length,
+    createdAt: categoryData.createdAt.toDate().toISOString(),
+    updatedAt: (categoryData.updatedAt as Timestamp).toDate().toISOString(),
+    ownerIds: categoryData.ownerIds,
+  };
+
+  return categoryDto;
+};
+
+export const mapUserToUserDto = async (
+  docRef: QueryDocumentSnapshot
+): Promise<UserModelDto> => {
+  const userData = docRef.data() as UserModel;
+
+  const userCards = await CardsService.getCards({ ownerId: docRef.id });
+
+  return {
+    id: docRef.id,
+    username: userData.username,
+    numberOfCards: userCards.length,
+    lastPractice: (userData.lastPractice as Timestamp).toDate().toISOString(),
+    createdAt: (userData.createdAt as Timestamp).toDate().toISOString(),
+    currentStreak: userData.currentStreak,
+    longestStreak: userData.longestStreak,
+    role: userData.role,
+  };
 };

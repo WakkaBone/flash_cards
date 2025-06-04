@@ -1,7 +1,6 @@
-import { StatisticsActionTypeExtended } from "../hooks/practice-timeline/use-practice-timeline-filters";
 import { CardModel, Priorities } from "./card";
 import { CategoryModel } from "./category";
-import { AllOptionInt, AllOptionString, DateRange, IdLabel } from "./shared";
+import { AllOptionInt, AllOptionString } from "./shared";
 import { Roles, UserModel } from "./user";
 
 export interface ApiError<T = any> {
@@ -24,53 +23,11 @@ export type GetRandomCardResponse = ApiResponse<{
 export type PrioritiesExtended = Priorities | AllOptionInt;
 export type RolesExtended = Roles | AllOptionString;
 
-export type GetCardsFilters = DateRange & {
-  ownerId?: string;
-  category?: IdLabel | null;
-  search?: string;
-  includeLearned?: boolean;
-  mistakesThreshold?: string;
-  priority?: PrioritiesExtended;
-  page?: number;
-  pageSize?: number;
-};
-
-export type GetCategoriesFilters = DateRange & {
-  search?: string;
-  numberOfCards?: string;
-  page?: number;
-  pageSize?: number;
-};
-
-export type GetPracticeTimelineFilters = DateRange & {
-  action?: StatisticsActionTypeExtended;
-};
-
-export type GetUsersFilters = DateRange & {
-  search?: string;
-  searchExact?: string;
-  role?: RolesExtended;
-  numberOfCards?: string;
-  from?: Date;
-  to?: Date;
-  longestStreak?: string;
-  currentStreak?: string;
-  page?: number;
-  pageSize?: number;
-};
-
-export type GetUserDynamicsFilters = DateRange & {
-  role?: RolesExtended;
-};
-
-export type GetCardDynamicsFilters = DateRange & {
-  priority?: PrioritiesExtended;
-};
-
 export enum STATISTICS_ACTIONS {
   Correct = "correct",
   Wrong = "wrong",
 }
+export type StatisticsActionTypeExtended = STATISTICS_ACTIONS | AllOptionString;
 
 export type AddCardPayload = {
   category: string;

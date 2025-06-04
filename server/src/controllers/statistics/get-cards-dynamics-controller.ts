@@ -5,7 +5,7 @@ import {
   GetCardsDynamicsDto,
 } from "../../models/statistics";
 import { Priorities } from "../../models/card";
-import { CardsService } from "../../services/cards-service";
+import { StatisticsService } from "../../services";
 
 type GetCardsDynamicsQueryParams = {
   priority?: string;
@@ -25,7 +25,7 @@ export const getCardsDynamicsController = async (
       to: to ? new Date(to) : undefined,
     };
 
-    const dynamics = await CardsService.getCardsDynamics(filters);
+    const dynamics = await StatisticsService.getCardsDynamics(filters);
 
     res.status(200).json({ isSuccess: true, data: dynamics });
   } catch (error) {

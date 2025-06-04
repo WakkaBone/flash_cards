@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
-import { CardsService } from "../../services/cards-service";
+import { UsersService, StatisticsService } from "../../services";
 import { Statistics } from "../../models/statistics";
-import { UsersService } from "../../services/users-service";
 
 export const getStatisticsController = async (
   req: Request,
@@ -10,7 +9,7 @@ export const getStatisticsController = async (
 ) => {
   try {
     const userId = UsersService.getUserFromToken(req).id;
-    const statistics = await CardsService.getStatistics(userId);
+    const statistics = await StatisticsService.getStatistics(userId);
     res.status(200).json({ isSuccess: true, data: statistics });
   } catch (error) {
     res.status(500).json({

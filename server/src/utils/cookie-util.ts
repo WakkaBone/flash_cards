@@ -1,4 +1,4 @@
-import { accessTokenDuration } from "../services/auth-service";
+import { accessTokenDuration } from "../constants";
 
 export const generateAuthCookie = (
   name: string,

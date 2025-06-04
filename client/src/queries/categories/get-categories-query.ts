@@ -1,8 +1,9 @@
 import { DefinedInitialDataOptions } from "@tanstack/react-query";
-import { ApiResponse, GetCategoriesFilters } from "../../models/api";
+import { ApiResponse } from "../../models/api";
 import { CategoryModel } from "../../models/category";
-import { CategoriesService } from "../../services/categories-service";
+import { CategoriesService } from "../../services";
 import { QUERY_KEYS } from "../../constants";
+import { GetCategoriesFilters } from "../../models/filters";
 
 export const getCategoriesQuery = (
   filters: GetCategoriesFilters

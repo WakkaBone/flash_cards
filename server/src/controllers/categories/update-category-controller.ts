@@ -3,7 +3,7 @@ import { ApiResponse } from "../../models/api-response";
 import { isValid } from "../../utils/validation-util";
 import { Timestamp, serverTimestamp } from "firebase/firestore";
 import { CategoryDto, CategoryModel } from "../../models/category";
-import { CategoriesService } from "../../services/categories-service";
+import { CategoriesService } from "../../services";
 
 type UpdateCategoryParams = { id: string };
 type UpdateCategoryBody = CategoryDto;

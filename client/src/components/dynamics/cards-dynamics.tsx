@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { useState } from "react";
-import { GetCardDynamicsFilters } from "../../models/api";
+import { GetCardDynamicsFilters } from "../../models/filters";
 import { useDynamicsCharts } from "../../hooks";
 import { Line } from "react-chartjs-2";
 import { CardsDynamicsFilters } from "./cards-dynamics-filters";

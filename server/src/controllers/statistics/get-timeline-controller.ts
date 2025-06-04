@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
-import { GetPracticeTimelineFilters } from "../../services/cards-service";
-import { UsersService } from "../../services/users-service";
+import { StatisticsService, UsersService } from "../../services";
 import { TimelinePointDto } from "../../models/user";
 import { STATISTICS_ACTIONS } from "../../constants";
+import { GetPracticeTimelineFilters } from "../../models/filters";
 
 type GetTimelineQueryParams = {
   action?: string;
@@ -24,7 +24,10 @@ export const getTimelineController = async (
     };
 
     const userId = UsersService.getUserFromToken(req).id;
-    const timeline = await UsersService.getPracticeTimeline(userId, filters);
+    const timeline = await StatisticsService.getPracticeTimeline(
+      userId,
+      filters
+    );
 
     res.status(200).json({ isSuccess: true, data: timeline });
   } catch (error) {

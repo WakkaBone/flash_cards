@@ -1,6 +1,7 @@
 export const APIS = {
   auth: "auth",
   cards: "cards",
+  statistics: "statistics",
   categories: "categories",
   users: "users",
   version: "version",
@@ -26,6 +27,9 @@ export const MAIN_CATEGORIES = {
 
 export const ACCESS_TOKEN_KEY = "access_token";
 export const REFRESH_TOKEN_KEY = "refresh_token";
+
+export const accessTokenDuration = 600; //10 minutes
+export const refreshTokenDuration = 43200; //12 hours
 
 export const MIN_EASE_COEFFICIENT = 1.3;
 export const MAX_EASE_COEFFICIENT = 2.5;

@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../models/api-response";
 import { isValid } from "../../utils/validation-util";
-import { UsersService } from "../../services/users-service";
+import { AuthService, UsersService } from "../../services";
 import { encrypt } from "../../utils/encryption-util";
 import { UserModel } from "../../models/user";
 import { JwtPayload } from "../../utils/jwt-util";
-import { AuthService } from "../../services/auth-service";
 import bcrypt from "bcrypt";
 
 type PatchAccountBody = {

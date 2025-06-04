@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDebounce } from "../use-debounce";
-import { GetCardsFilters, PrioritiesExtended } from "../../models/api";
+import { PrioritiesExtended } from "../../models/api";
 import { CategoryOptionType } from "../../components/category-select/category-select";
 import { SelectChangeEvent } from "@mui/material";
 import { AllOptionInt } from "../../models/shared";
+import { GetCardsFilters } from "../../models/filters";
 
 export const defaultFilters: Partial<GetCardsFilters> = {
   includeLearned: false,

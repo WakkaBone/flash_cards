@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { GetCategoriesFilters } from "../../models/api";
+import { GetCategoriesFilters } from "../../models/filters";
 import { useScreenSize, useTablePagination } from "../../hooks";
 import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 import { mapCategoryToTableRow } from "../../utils/mappers";
