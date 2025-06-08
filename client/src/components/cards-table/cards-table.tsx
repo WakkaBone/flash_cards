@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import { GetCardsFilters } from "../../models/filters";
-import { useGetCards, useScreenSize, useTablePagination } from "../../hooks";
+import {
+  useGetCards,
+  useScreenSize,
+  useTablePagination,
+  useCardsTableColumns,
+} from "../../hooks";
 import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 import { mapCardToTableRow } from "../../utils/mappers";
 import { defaultFilters } from "../../hooks/cards/use-cards-table-filters";
 import { ToastContainer } from "react-toastify";
 import { CardsFilters } from "../cards-filters/cards-filters";
-import { cardsTableColumns } from "./columns";
 import { BulkActions } from "./bulk-actions";
 import { TOAST_CONTAINERS_IDS } from "../../constants";
 import { EditCardModal } from "../edit-card-modal/edit-card-modal";
@@ -41,11 +45,7 @@ export const CardsTable = () => {
 
   const [rowsSelected, setRowsSelected] = useState<GridRowSelectionModel>([]);
 
-  const columns = isMobile
-    ? cardsTableColumns.slice(0, 3)
-    : isTablet
-    ? cardsTableColumns.slice(0, 7)
-    : cardsTableColumns;
+  const columns = useCardsTableColumns({ isModal: false });
 
   const allowEditOnClick = isMobile || isTablet;
   const [isEdit, setIsEdit] = useState(false);

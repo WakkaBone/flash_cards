@@ -28,6 +28,9 @@ import { useGetCategories } from "./categories/use-get-categories";
 import { useUpdateCategory } from "./categories/use-update-category";
 import { useDynamicsCharts } from "./use-dynamics-charts";
 import { useTTS } from "./use-tts";
+import { useUsersTableColumns } from "./users/use-users-table-columns";
+import { useCategoriesTableColumns } from "./categories/use-categories-table-columns";
+import { useCardsTableColumns } from "./cards/use-cards-table-columns";
 
 export {
   useAddCard,
@@ -60,4 +63,7 @@ export {
   useUpdateCategory,
   useUpdateUser,
   useUsersTableFilters,
+  useUsersTableColumns,
+  useCategoriesTableColumns,
+  useCardsTableColumns,
 };

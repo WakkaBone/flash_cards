@@ -1,9 +1,13 @@
 import { DataGrid } from "@mui/x-data-grid";
-import { useGetCards, useScreenSize, useTablePagination } from "../../hooks";
+import {
+  useGetCards,
+  useScreenSize,
+  useTablePagination,
+  useCardsTableColumns,
+} from "../../hooks";
 import { useEffect, useState } from "react";
 import { CardsTableRowType } from "../cards-table/cards-table";
 import { mapCardToTableRow } from "../../utils/mappers";
-import { cardsTableColumns } from "../cards-table/columns";
 
 type UserCardsPropsType = {
   userId: string;
@@ -21,6 +25,8 @@ export const UserCards = ({ userId }: UserCardsPropsType) => {
 
   const paginationProps = useTablePagination();
 
+  const columns = useCardsTableColumns({ isModal: true });
+
   return (
     <DataGrid
       {...paginationProps}
@@ -34,7 +40,7 @@ export const UserCards = ({ userId }: UserCardsPropsType) => {
         },
       }}
       rows={rows}
-      columns={isMobile ? cardsTableColumns.slice(0, 3) : cardsTableColumns}
+      columns={columns}
     />
   );
 };

@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
 import { GetCategoriesFilters } from "../../models/filters";
-import { useScreenSize, useTablePagination } from "../../hooks";
+import {
+  useScreenSize,
+  useTablePagination,
+  useCategoriesTableColumns,
+} from "../../hooks";
 import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 import { mapCategoryToTableRow } from "../../utils/mappers";
 import { ToastContainer } from "react-toastify";
 import { useGetCategories } from "../../hooks/categories/use-get-categories";
 import { CategoriesFilters } from "./categories-filters";
 import { BulkActions } from "./bulk-actions";
-import { categoriesTableColumns } from "./columns";
+import { EditCategoryModal } from "../edit-category-modal/edit-category-modal";
+import { CategoryModel } from "../../models/category";
+import { MAIN_CATEGORIES } from "../../constants";
 
 export type CategoriesTableRowType = {
   id: string;
@@ -36,6 +42,16 @@ export const CategoriesTable = () => {
 
   const [rowsSelected, setRowsSelected] = useState<GridRowSelectionModel>([]);
 
+  const allowEditOnClick = isMobile || isTablet;
+  const [isEdit, setIsEdit] = useState(false);
+  const [category, setCategory] = useState<CategoryModel | undefined>();
+  const onCloseEditModal = () => setCategory(undefined);
+  useEffect(() => {
+    allowEditOnClick && setIsEdit(!!category);
+  }, [allowEditOnClick, category]);
+
+  const columns = useCategoriesTableColumns();
+
   return (
     <>
       <CategoriesFilters filters={filters} onChange={setFilters} />
@@ -59,11 +75,24 @@ export const CategoriesTable = () => {
           },
         }}
         rows={rows}
-        columns={
-          isMobile ? categoriesTableColumns.slice(0, 3) : categoriesTableColumns
-        }
+        columns={columns}
         disableRowSelectionOnClick
+        onRowClick={({ row }) => {
+          if (!allowEditOnClick) return;
+          const selectedCategory = data.data?.find(({ id }) => row.id === id);
+          selectedCategory && setCategory(selectedCategory);
+        }}
       />
+      {allowEditOnClick && category && (
+        <EditCategoryModal
+          open={isEdit}
+          category={category}
+          onClose={onCloseEditModal}
+          isReadonly={
+            Object.values(MAIN_CATEGORIES).indexOf(category.id) !== -1
+          }
+        />
+      )}
       <ToastContainer />
     </>
   );

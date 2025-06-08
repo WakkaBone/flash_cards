@@ -207,18 +207,17 @@ export const WordCard = ({
     switch (mode) {
       case PracticeModes.ethInput:
       case PracticeModes.hteInput:
-        return showTranslation ? (
+        return (
           <TextField
             value={
-              card?.[PracticeModes.ethInput === mode ? "hebrew" : "english"]
+              showTranslation
+                ? card?.[PracticeModes.ethInput === mode ? "hebrew" : "english"]
+                : translation
             }
-            disabled
-          />
-        ) : (
-          <TextField
-            value={translation}
+            disabled={showTranslation}
             placeholder="Enter translation"
             onChange={(e) => setTranslation(e.target.value)}
+            inputRef={(ref) => ref && ref.focus()}
           />
         );
       case PracticeModes.ethSelect:

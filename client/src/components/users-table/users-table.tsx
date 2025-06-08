@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
 import { GetUsersFilters } from "../../models/filters";
-import { useGetUsers, useScreenSize, useTablePagination } from "../../hooks";
+import {
+  useGetUsers,
+  useScreenSize,
+  useTablePagination,
+  useUsersTableColumns,
+} from "../../hooks";
 import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 import { mapUserToTableRow } from "../../utils/mappers";
 import { ToastContainer } from "react-toastify";
-import { usersTableColumns } from "./columns";
-import { Roles } from "../../models/user";
+import { Roles, UserModel } from "../../models/user";
 import { BulkActions } from "./bulk-actions";
 import { UsersFilters } from "./users-filters";
 import { defaultFilters } from "../../hooks/users/use-users-table-filters";
+import { EditUserModal } from "../edit-user-modal/edit-user-modal";
 
 export type UsersTableRowType = {
   id: string;
@@ -40,6 +45,16 @@ export const UsersTable = () => {
 
   const [rowsSelected, setRowsSelected] = useState<GridRowSelectionModel>([]);
 
+  const allowEditOnClick = isMobile || isTablet;
+  const [isEdit, setIsEdit] = useState(false);
+  const [user, setUser] = useState<UserModel | undefined>();
+  const onCloseEditModal = () => setUser(undefined);
+  useEffect(() => {
+    allowEditOnClick && setIsEdit(!!user);
+  }, [allowEditOnClick, user]);
+
+  const columns = useUsersTableColumns();
+
   return (
     <>
       <UsersFilters filters={filters} onChange={setFilters} />
@@ -63,9 +78,17 @@ export const UsersTable = () => {
           },
         }}
         rows={rows}
-        columns={isMobile ? usersTableColumns.slice(0, 3) : usersTableColumns}
+        columns={columns}
         disableRowSelectionOnClick
+        onRowClick={({ row }) => {
+          if (!allowEditOnClick) return;
+          const selectedCategory = data.data?.find(({ id }) => row.id === id);
+          selectedCategory && setUser(selectedCategory);
+        }}
       />
+      {allowEditOnClick && user && (
+        <EditUserModal open={isEdit} user={user} onClose={onCloseEditModal} />
+      )}
       <ToastContainer />
     </>
   );
