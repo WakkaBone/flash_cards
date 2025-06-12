@@ -2,6 +2,7 @@ import { GridColDef } from "@mui/x-data-grid";
 import { format } from "date-fns";
 import { useScreenSize, useTTS } from "../../hooks";
 import { CardsTableRowType } from "../../components/cards-table/cards-table";
+import { PriorityCell } from "../../components/cards-table/priority-cell";
 
 const HebrewCell = ({ string }: { string: string }) => {
   const { supportsHebrew, tts } = useTTS();
@@ -22,20 +23,19 @@ export const useCardsTableColumns = ({ isModal }: { isModal: boolean }) => {
     {
       field: "priority",
       headerName: "Priority",
-      renderCell: (params) => params.value,
+      renderCell: (params) => <PriorityCell priority={params.value} />,
       flex: !isMobile ? 0.7 : 0.5,
     },
     { field: "category", headerName: "Category", flex: 0.5 },
     { field: "correct", headerName: "Correct", flex: 0.5 },
     { field: "wrong", headerName: "Wrong", flex: 0.5 },
     {
-      field: "",
+      field: "balance",
       headerName: "Balance",
       flex: 0.5,
       renderCell({ row }) {
-        const balance = row.correct - row.wrong;
-        const isNegative = balance < 0;
-        const isPositive = balance > 0;
+        const isNegative = row.balance < 0;
+        const isPositive = row.balance > 0;
         return (
           <span
             style={{
@@ -44,7 +44,7 @@ export const useCardsTableColumns = ({ isModal }: { isModal: boolean }) => {
             }}
           >
             {isNegative ? "-" : isPositive ? "+" : ""}
-            {Math.abs(balance)}
+            {Math.abs(row.balance)}
           </span>
         );
       },

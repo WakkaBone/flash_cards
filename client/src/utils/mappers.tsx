@@ -12,7 +12,6 @@ import { ActionsCell as ActionsCellCategories } from "../components/categories-t
 import { AddCardFormType } from "../components/add-card-form/add-card-form";
 import { AddCardPayload, STATISTICS_ACTIONS } from "../models/api";
 import { IdLabel } from "../models/shared";
-import { PriorityCell } from "../components/cards-table/priority-cell";
 import { Roles, UserModel } from "../models/user";
 import { UsersTableRowType } from "../components/users-table/users-table";
 import { ActionsCell as ActionsCellUsers } from "../components/users-table/actions-cell";
@@ -70,9 +69,9 @@ export const userRoleMapper: Record<Roles, string> = {
 export const mapCardToTableRow = (item: CardModel): CardsTableRowType => ({
   ...item,
   category: item.category.label,
-  priority: <PriorityCell priority={item.priority} />,
   correct: item.statistics.correct,
   wrong: item.statistics.wrong,
+  balance: item.statistics.correct - item.statistics.wrong,
   isLearned: item.isLearned ? "Yes" : "No",
   actions: <ActionsCellCards card={item} />,
 });
@@ -80,23 +79,13 @@ export const mapCardToTableRow = (item: CardModel): CardsTableRowType => ({
 export const mapCategoryToTableRow = (
   item: CategoryModel
 ): CategoriesTableRowType => ({
-  id: item.id,
+  ...item,
   name: item.label,
-  createdAt: item.createdAt,
-  updatedAt: item.updatedAt,
-  numberOfCards: item.numberOfCards.toString(),
   actions: <ActionsCellCategories category={item} />,
 });
 
 export const mapUserToTableRow = (user: UserModel): UsersTableRowType => ({
-  id: user.id,
-  username: user.username,
-  role: user.role,
-  numberOfCards: user.numberOfCards,
-  createdAt: user.createdAt,
-  currentStreak: user.currentStreak,
-  lastPractice: user.lastPractice,
-  longestStreak: user.longestStreak,
+  ...user,
   actions: <ActionsCellUsers user={user} />,
 });
 

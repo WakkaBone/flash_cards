@@ -18,7 +18,7 @@ import { MAIN_CATEGORIES } from "../../constants";
 export type CategoriesTableRowType = {
   id: string;
   name: string;
-  numberOfCards: string;
+  numberOfCards: number;
   updatedAt: string;
   createdAt: string;
   actions: JSX.Element;

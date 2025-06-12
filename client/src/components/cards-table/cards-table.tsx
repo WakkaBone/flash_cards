@@ -21,9 +21,10 @@ export type CardsTableRowType = {
   english: string;
   hebrew: string;
   category: string;
-  priority: JSX.Element;
+  priority: number;
   correct: number;
   wrong: number;
+  balance: number;
   isLearned: string;
   createdAt: string;
   actions: JSX.Element;
