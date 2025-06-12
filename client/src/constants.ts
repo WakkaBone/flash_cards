@@ -49,3 +49,5 @@ export const APIS = {
   users: "/users",
   version: "/version",
 };
+
+export const NIQQUD_REGEXP = /[\u05B0-\u05BD\u05BF\u05C1\u05C2\u05C7]/g;

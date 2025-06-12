@@ -42,6 +42,7 @@ import { shuffleArray } from "../../utils/array-util";
 import { HotkeysLegend } from "./hotkeys-legend";
 import { UtterButton } from "./utter-button";
 import { IntervalCountdown } from "./interval-countdown";
+import { compareWithoutNiqqud } from "../../utils/string-util";
 
 type WordCardPropsType = {
   mode: PracticeModes;
@@ -145,8 +146,10 @@ export const WordCard = ({
   const isCorrectAnswer = useCallback(() => {
     if (!card) return;
     const correctAnswer = eth ? card.hebrew : card.english;
-    return (
-      translation.trim().toLowerCase() === correctAnswer.trim().toLowerCase()
+
+    return compareWithoutNiqqud(
+      translation.trim().toLowerCase(),
+      correctAnswer.trim().toLowerCase()
     );
   }, [card, translation, eth]);
 
