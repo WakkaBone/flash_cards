@@ -72,7 +72,15 @@ export class CardsService {
       );
     }
 
-    return cards;
+    const sortedCards = cards.sort((a, b) => {
+      const createdAtA = new Date(a.createdAt);
+      const createdAtB = new Date(b.createdAt);
+      return createdAtB.getTime() - createdAtA.getTime();
+    });
+
+    if (filters.lastCards) return sortedCards.slice(0, filters.lastCards);
+
+    return sortedCards;
   }
 
   static async getCardById(id: string): Promise<CardModel> {

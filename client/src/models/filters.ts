@@ -14,6 +14,7 @@ export type GetCardsFilters = DateRange & {
   priority?: PrioritiesExtended;
   page?: number;
   pageSize?: number;
+  lastCards?: number;
 };
 
 export type GetCategoriesFilters = DateRange & {

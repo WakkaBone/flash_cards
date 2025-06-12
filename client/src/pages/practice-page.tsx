@@ -34,6 +34,11 @@ export const PracticePage = () => {
 
   const [filters, setFilters] = useState<PracticeFilersType>(defaultFilters);
 
+  const appliedFilters: PracticeFilersType = {
+    ...filters,
+    lastCards: settings.lastCards,
+  };
+
   const {
     cardData,
     options,
@@ -42,7 +47,7 @@ export const PracticePage = () => {
     isLoading: isLoadingCard,
     updateCardStats,
     updateStatsRest: { isPending: isUpdatingStats },
-  } = useRandomCard(filters, practiceMode);
+  } = useRandomCard(appliedFilters, practiceMode);
 
   const {
     displayedCountdown,

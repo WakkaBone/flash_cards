@@ -13,6 +13,7 @@ export type GetCardsFilters = DateRange & {
   page?: number;
   pageSize?: number;
   ownerId?: string;
+  lastCards?: number;
 };
 
 export type GetPracticeTimelineFilters = DateRange & {

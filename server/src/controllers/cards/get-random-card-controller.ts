@@ -22,6 +22,7 @@ type GetRandomCardQueryParams = {
   from?: string;
   to?: string;
   mode?: string;
+  lastCards?: string;
 };
 
 export const getRandomCardController = async (
@@ -38,6 +39,7 @@ export const getRandomCardController = async (
       from,
       to,
       mode,
+      lastCards,
     } = req.query;
 
     const user = UsersService.getUserFromToken(req);
@@ -52,6 +54,7 @@ export const getRandomCardController = async (
       priority: priority ? Number(priority) : undefined,
       from: from ? new Date(from) : undefined,
       to: to ? new Date(to) : undefined,
+      lastCards: lastCards ? Number(lastCards) : undefined,
     };
 
     const cards = await CardsService.getCards(filters);

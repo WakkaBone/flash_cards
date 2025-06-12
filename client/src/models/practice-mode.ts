@@ -10,4 +10,5 @@ export type PracticeSettingsType = {
   interval: number;
   voiceEnabled: boolean;
   voiceWithTranslation?: boolean;
+  lastCards?: number;
 };

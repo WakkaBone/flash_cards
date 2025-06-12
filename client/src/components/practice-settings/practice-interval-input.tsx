@@ -26,7 +26,7 @@ export const PracticeIntervalInput = ({
           const newVal = Number(e.target.value);
           if (newVal < MIN_VALUE) return setInterval(MIN_VALUE);
           if (newVal > MAX_VALUE) return setInterval(MAX_VALUE);
-          setInterval(Number(e.target.value));
+          setInterval(newVal);
         }}
         placeholder="Interval (sec)"
         inputProps={{ step: 1, min: MIN_VALUE, max: MAX_VALUE }}
