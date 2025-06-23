@@ -41,7 +41,11 @@ export const HotkeysLegend = () => (
 
           <Stack>
             {HOTKEYS.map(({ keyCombo, description }) => (
-              <HotkeyItem keyCombo={keyCombo} description={description} />
+              <HotkeyItem
+                key={keyCombo}
+                keyCombo={keyCombo}
+                description={description}
+              />
             ))}
           </Stack>
 

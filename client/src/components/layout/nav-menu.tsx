@@ -134,6 +134,7 @@ const MenuList = ({ closeDrawer }: { closeDrawer?: () => void }) => {
         .map(({ id, path, label, icon }) => (
           <MenuItem
             id={id}
+            key={id}
             label={label}
             onClick={() => handleMenuItemClick(path)}
             icon={icon}

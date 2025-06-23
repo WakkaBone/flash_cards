@@ -51,8 +51,8 @@ const TooltipContent = () => {
       </Typography>
       <Typography color="warning" variant="caption">
         <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
-          {rules.map((rule, index) => (
-            <li key={index}> *{rule}</li>
+          {rules.map((rule) => (
+            <li key={rule}> *{rule}</li>
           ))}
         </ul>
       </Typography>
