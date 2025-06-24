@@ -1,7 +1,7 @@
 import { GridColDef } from "@mui/x-data-grid";
 import { useScreenSize } from "../use-screen-size";
 import { CategoriesTableRowType } from "../../components/categories-table/categories-table";
-import { format } from "date-fns";
+import { formatDateTime } from "../../utils/date-time";
 
 export const useCategoriesTableColumns = () => {
   const { isMobile, isTablet } = useScreenSize();
@@ -16,10 +16,7 @@ export const useCategoriesTableColumns = () => {
       type: "dateTime",
       flex: 1,
       sortComparator: (v1, v2) => v1 - v2,
-      renderCell: ({ row }) =>
-        row.updatedAt
-          ? format(new Date(row.updatedAt), "dd/MM/yyyy HH:mm")
-          : "",
+      renderCell: ({ row }) => formatDateTime(row.updatedAt),
     },
     {
       field: "createdAt",
@@ -28,10 +25,7 @@ export const useCategoriesTableColumns = () => {
       type: "dateTime",
       flex: 1,
       sortComparator: (v1, v2) => v1 - v2,
-      renderCell: ({ row }) =>
-        row.createdAt
-          ? format(new Date(row.createdAt), "dd/MM/yyyy HH:mm")
-          : "",
+      renderCell: ({ row }) => formatDateTime(row.createdAt),
     },
     {
       field: "actions",

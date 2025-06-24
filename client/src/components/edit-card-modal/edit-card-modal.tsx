@@ -3,10 +3,14 @@ import { CardModel } from "../../models/card";
 import { EditCardForm, EditCardFormType } from "./edit-card-form";
 import { useForm } from "react-hook-form";
 import { useUpdateCard } from "../../hooks";
-import { useEffect } from "react";
-import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { isMatch } from "date-fns";
 import { EditCardReadonlyData } from "./edit-card-readonly-data";
 import { EditCardModalActions } from "./edit-card-modal-actions";
+import { DATE_TIME_FORMAT, formatDateTime } from "../../utils/date-time";
+import { VerbConjugationsModal } from "../verb-conjugations-modal/verb-conjugations-modal";
+import { MAIN_CATEGORIES } from "../../constants";
+import { SeeVerbFormsButton } from "../buttons/see-verb-forms-btn";
 
 type EditCardModalPropsType = {
   open: boolean;
@@ -21,10 +25,12 @@ export const EditCardModal = ({
   onSuccess,
 }: EditCardModalPropsType) => {
   const createdAt = card.createdAt
-    ? format(new Date(card.createdAt), "dd/MM/yyyy HH:mm")
+    ? isMatch(card.createdAt, DATE_TIME_FORMAT) //check if a string is already formatted
+      ? card.createdAt
+      : formatDateTime(card.createdAt)
     : "";
   const lastPractice = card.lastReviewDate
-    ? format(new Date(card.lastReviewDate.seconds * 1000), "dd/MM/yyyy HH:mm")
+    ? formatDateTime(card.lastReviewDate.seconds * 1000)
     : "";
   const hasPracticed = lastPractice !== createdAt;
 
@@ -68,6 +74,11 @@ export const EditCardModal = ({
     });
   };
 
+  const cardIsVerb = card?.category.id === MAIN_CATEGORIES.verb;
+  const [verbFormsModalOpen, setVerbFormsModalOpen] = useState<boolean>(false);
+  const onOpenVerbFormsModal = () => cardIsVerb && setVerbFormsModalOpen(true);
+  const onCloseVerbFormsModal = () => setVerbFormsModalOpen(false);
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Edit Card</DialogTitle>
@@ -75,6 +86,17 @@ export const EditCardModal = ({
         <DialogContent>
           <EditCardReadonlyData formProps={formProps} />
           <EditCardForm formProps={formProps} />
+          {cardIsVerb && (
+            <SeeVerbFormsButton
+              onClick={onOpenVerbFormsModal}
+              sx={{ mt: 1, cursor: "pointer" }}
+            />
+          )}
+          <VerbConjugationsModal
+            open={verbFormsModalOpen}
+            infinitive={card.hebrew || ""}
+            onClose={onCloseVerbFormsModal}
+          />
         </DialogContent>
         <EditCardModalActions
           isFormDirty={formProps.formState.isDirty}

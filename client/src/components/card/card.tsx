@@ -5,7 +5,6 @@ import {
   Card,
   CardActions,
   CardContent,
-  Chip,
   Stack,
   TextField,
   Typography,
@@ -45,6 +44,7 @@ import { UtterButton } from "./utter-button";
 import { IntervalCountdown } from "./interval-countdown";
 import { compareWithoutNiqqud } from "../../utils/string-util";
 import { VerbConjugationsModal } from "../verb-conjugations-modal/verb-conjugations-modal";
+import { SeeVerbFormsButton } from "../buttons/see-verb-forms-btn";
 
 type WordCardPropsType = {
   mode: PracticeModes;
@@ -424,10 +424,7 @@ export const WordCard = ({
             <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
               {card.category.label}{" "}
               {cardIsVerb && (
-                <Chip
-                  label="See forms"
-                  size="small"
-                  sx={{ cursor: "pointer" }}
+                <SeeVerbFormsButton
                   disabled={isLoading}
                   onClick={onOpenVerbFormsModal}
                 />

@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
-import { useGetVerbConjugations } from "../../hooks";
+import { useGetVerbConjugations, useScreenSize } from "../../hooks";
 import { CenteredLoader } from "../loader/loader";
 import { VerbConjugationsTable } from "./verb-conjugations-table";
 
@@ -13,6 +13,7 @@ export const VerbConjugationsModal = ({
   onClose,
   open,
 }: VerbConjugationsModalPropsType) => {
+  const { isMobile } = useScreenSize();
   const { data, isFetching, isPending } = useGetVerbConjugations(
     infinitive,
     open
@@ -21,7 +22,11 @@ export const VerbConjugationsModal = ({
   const verbConjugations = data.data;
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      PaperProps={{ sx: { width: isMobile ? "90vw" : "70vw" } }}
+    >
       <DialogContent>
         {isFetching || isPending ? (
           <CenteredLoader />

@@ -4,7 +4,7 @@ import { useScreenSize } from "../use-screen-size";
 import { Roles } from "../../models/user";
 import { Chip } from "@mui/material";
 import { userRoleMapper } from "../../utils/mappers";
-import { format } from "date-fns";
+import { formatDateTime } from "../../utils/date-time";
 
 type RoleCellPropsType = {
   role: Roles;
@@ -33,19 +33,13 @@ export const useUsersTableColumns = () => {
     {
       field: "lastPractice",
       headerName: "Last Practice",
-      renderCell: ({ row }) =>
-        row.lastPractice
-          ? format(new Date(row.lastPractice), "dd/MM/yyyy HH:mm")
-          : "",
+      renderCell: ({ row }) => formatDateTime(row.lastPractice),
       flex: 1,
     },
     {
       field: "createdAt",
       headerName: "Created At",
-      renderCell: ({ row }) =>
-        row.lastPractice
-          ? format(new Date(row.createdAt), "dd/MM/yyyy HH:mm")
-          : "",
+      renderCell: ({ row }) => formatDateTime(row.createdAt),
       flex: 1,
     },
     {

@@ -1,5 +1,5 @@
 import { GridColDef } from "@mui/x-data-grid";
-import { format } from "date-fns";
+import { formatDateTime } from "../../utils/date-time";
 import { useScreenSize, useTTS } from "../../hooks";
 import { CardsTableRowType } from "../../components/cards-table/cards-table";
 import { PriorityCell } from "../../components/cards-table/priority-cell";
@@ -57,10 +57,7 @@ export const useCardsTableColumns = ({ isModal }: { isModal: boolean }) => {
       type: "dateTime",
       flex: 1,
       sortComparator: (v1, v2) => v1 - v2,
-      renderCell: ({ row }) =>
-        row.createdAt
-          ? format(new Date(row.createdAt), "dd/MM/yyyy HH:mm")
-          : "",
+      renderCell: ({ row }) => formatDateTime(row.createdAt),
     },
     {
       field: "actions",

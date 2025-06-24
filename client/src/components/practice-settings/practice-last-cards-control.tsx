@@ -2,7 +2,7 @@ import { Box, Checkbox, FormControlLabel, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 
 const MIN_VALUE = 1;
-const MAX_VALUE = 100;
+const MAX_VALUE = 200;
 
 type PracticeLastCardsControlPropsType = {
   lastCards: number | undefined;
@@ -12,7 +12,7 @@ export const PracticeLastCardsControl = ({
   lastCards,
   setLastCards,
 }: PracticeLastCardsControlPropsType) => {
-  const [lastCardsEnabled, setLastCardsEnabled] = useState(false);
+  const [lastCardsEnabled, setLastCardsEnabled] = useState(!!lastCards);
 
   useEffect(() => {
     if (!lastCardsEnabled) setLastCards(undefined);

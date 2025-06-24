@@ -41,10 +41,7 @@ const TableCellWithVoiceover = ({
 
 type PresentTenseTablePropsType = { forms: PresentTenseConjugations };
 const PresentTenseTable = ({ forms }: PresentTenseTablePropsType) => (
-  <TableContainer
-    component={Paper}
-    sx={{ maxWidth: 600, margin: "auto", mt: 4 }}
-  >
+  <TableContainer component={Paper} sx={{ margin: "auto", mt: 2 }}>
     <Typography variant="h6" align="center" sx={{ mt: 2 }}>
       Present Tense (הווה)
     </Typography>
@@ -89,10 +86,7 @@ const PastTenseTable = ({ forms }: PastTenseTablePropsType) => {
   const { isMobile } = useScreenSize();
 
   return (
-    <TableContainer
-      component={Paper}
-      sx={{ maxWidth: 700, margin: "auto", mt: 4 }}
-    >
+    <TableContainer component={Paper} sx={{ margin: "auto", mt: 2 }}>
       <Typography variant="h6" align="center" sx={{ mt: 2 }}>
         Past Tense (עבר)
       </Typography>

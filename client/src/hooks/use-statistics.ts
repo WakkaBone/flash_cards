@@ -10,7 +10,7 @@ import {
   StatisticsCountersAdmin,
 } from "../models/statistics";
 import { format } from "date-fns";
-import { isValidDate } from "../utils/date-time";
+import { DATE_TIME_FORMAT, isValidDate } from "../utils/date-time";
 import { useAuthContext } from "../context/auth-context";
 import {
   getAdminStatisticsQuery,
@@ -28,7 +28,7 @@ const mapDataToEntries = (
         ? StatisticsCountersAdmin.lastPractice
         : StatisticsCounters.lastPractice) &&
     isValidDate((value as string).split(" - ")[0])
-      ? `${format((value as string).split(" - ")[0], "dd/MM/yyyy HH:mm")}${
+      ? `${format((value as string).split(" - ")[0], DATE_TIME_FORMAT)}${
           isAdmin ? " - " + (value as string).split(" - ")[1] : ""
         }`
       : value?.toString(),

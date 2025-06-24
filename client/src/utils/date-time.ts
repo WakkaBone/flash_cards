@@ -1,4 +1,6 @@
-import { subDays } from "date-fns";
+import { subDays, format } from "date-fns";
+
+export const DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm";
 
 export const addSeconds = (seconds: string | number) => {
   const secondsInt = typeof seconds === "string" ? parseInt(seconds) : seconds;
@@ -17,3 +19,9 @@ export const getOneWeekTimeRange = () => {
 
   return { from: oneWeekAgo, to: now };
 };
+
+export const formatDateTime = (
+  string?: string | number | Date,
+  desiredFormat = DATE_TIME_FORMAT,
+  fallbackValue = ""
+) => (string ? format(new Date(string), desiredFormat) : fallbackValue);
