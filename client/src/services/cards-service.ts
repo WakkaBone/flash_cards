@@ -15,6 +15,7 @@ import { compileGetCardsFilters } from "../utils/mappers";
 import { PracticeModes } from "../models/practice-mode";
 import { GetCardsFilters } from "../models/filters";
 import { APIS } from "../constants";
+import { VerbConjugations } from "../models/verb";
 
 export class CardsService {
   private static apiPostfix = APIS.cards;
@@ -37,6 +38,17 @@ export class CardsService {
     const response = await httpClient.get<
       ApiResponse<CardModel | null>,
       AxiosPromise<ApiResponse<CardModel | null>> | AxiosError<ApiResponse>
+    >(url);
+    if (response instanceof AxiosError) return handleError(response);
+    return response.data;
+  }
+
+  static async getVerbConjugations(infinitive: string) {
+    const url = `${this.apiPostfix}/verbs/${infinitive}`;
+    const response = await httpClient.get<
+      ApiResponse<VerbConjugations | null>,
+      | AxiosPromise<ApiResponse<VerbConjugations | null>>
+      | AxiosError<ApiResponse>
     >(url);
     if (response instanceof AxiosError) return handleError(response);
     return response.data;

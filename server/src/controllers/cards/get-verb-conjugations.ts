@@ -8,12 +8,12 @@ type GetVerbConjugationsQueryParams = {
   infinitive: string;
 };
 export const getVerbConjugationsController = async (
-  req: Request<null, ApiResponse, null, GetVerbConjugationsQueryParams>,
+  req: Request<GetVerbConjugationsQueryParams, ApiResponse, null>,
   res: Response<ApiResponse<VerbConjugations | null>>
 ) => {
   if (!isValid(req, res)) return;
   try {
-    const { infinitive } = req.query;
+    const { infinitive } = req.params;
 
     const result = await CardsService.getVerbConjugations(infinitive);
     res.status(200).json({ isSuccess: true, data: result });

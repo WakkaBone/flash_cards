@@ -5,6 +5,7 @@ import {
   Card,
   CardActions,
   CardContent,
+  Chip,
   Stack,
   TextField,
   Typography,
@@ -36,13 +37,14 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { CardSkeletonLoader } from "./card-skeleton-loader";
 import { CenteredLoader } from "../loader/loader";
 import { MutateOptionsEnhanced } from "../../models/mutate-options-enhanced";
-import { TOAST_CONTAINERS_IDS } from "../../constants";
+import { MAIN_CATEGORIES, TOAST_CONTAINERS_IDS } from "../../constants";
 import { Options } from "./options";
 import { shuffleArray } from "../../utils/array-util";
 import { HotkeysLegend } from "./hotkeys-legend";
 import { UtterButton } from "./utter-button";
 import { IntervalCountdown } from "./interval-countdown";
 import { compareWithoutNiqqud } from "../../utils/string-util";
+import { VerbConjugationsModal } from "../verb-conjugations-modal/verb-conjugations-modal";
 
 type WordCardPropsType = {
   mode: PracticeModes;
@@ -337,6 +339,18 @@ export const WordCard = ({
     timerProps.timerSessionActive && resumeTimer();
   };
 
+  const cardIsVerb = card?.category.id === MAIN_CATEGORIES.verb;
+  const [verbFormsModalOpen, setVerbFormsModalOpen] = useState<boolean>(false);
+  const onOpenVerbFormsModal = () => {
+    if (!cardIsVerb) return;
+    stopTimer();
+    setVerbFormsModalOpen(true);
+  };
+  const onCloseVerbFormsModal = () => {
+    setVerbFormsModalOpen(false);
+    timerProps.timerSessionActive && resumeTimer();
+  };
+
   //bind hotkeys
   const hotkeysConfig = {
     ...(() =>
@@ -408,7 +422,16 @@ export const WordCard = ({
               ].includes(mode) && <UtterButton text={card.hebrew} />}
             </Typography>
             <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-              {card.category.label}
+              {card.category.label}{" "}
+              {cardIsVerb && (
+                <Chip
+                  label="See forms"
+                  size="small"
+                  sx={{ cursor: "pointer" }}
+                  disabled={isLoading}
+                  onClick={onOpenVerbFormsModal}
+                />
+              )}
             </Typography>
             {getCardBodyByMode()}
             {(mode === PracticeModes.browse || showTranslation) &&
@@ -487,6 +510,11 @@ export const WordCard = ({
         onSuccess={(updatedData) => {
           setCard(updatedData);
         }}
+      />
+      <VerbConjugationsModal
+        open={verbFormsModalOpen}
+        infinitive={card.hebrew || ""}
+        onClose={onCloseVerbFormsModal}
       />
     </Card>
   );
