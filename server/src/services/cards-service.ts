@@ -25,9 +25,14 @@ import {
 } from "../constants";
 import { getNextReviewDate } from "../utils/date-time";
 import { searchFilterCallback } from "../utils/search-util";
-import { mapCardToCardDto } from "../utils/mappers-util";
+import {
+  mapCardToCardDto,
+  mapReversoVerbToConjugationsObj,
+} from "../utils/mappers-util";
 import { shuffleArray } from "../utils/array-util";
 import { GetCardsFilters } from "../models/filters";
+import Reverso from "reverso-api";
+import { VerbConjugations } from "../models/verb";
 
 export class CardsService {
   static async getCards(
@@ -214,5 +219,22 @@ export class CardsService {
 
       return 0;
     });
+  }
+
+  private static reverso: Reverso;
+  private static getReversoInstance(): Reverso {
+    if (!this.reverso) {
+      this.reverso = new Reverso();
+    }
+    return this.reverso;
+  }
+  static async getVerbConjugations(
+    infinitive: string
+  ): Promise<VerbConjugations | null> {
+    const reverso = this.getReversoInstance();
+    const response = await reverso.getConjugation(infinitive, "hebrew");
+    const hasConjugations = response.ok;
+    if (!hasConjugations) return null;
+    return mapReversoVerbToConjugationsObj(response);
   }
 }

@@ -31,6 +31,7 @@ import { useTTS } from "./use-tts";
 import { useUsersTableColumns } from "./users/use-users-table-columns";
 import { useCategoriesTableColumns } from "./categories/use-categories-table-columns";
 import { useCardsTableColumns } from "./cards/use-cards-table-columns";
+import { useGetVerbConjugations } from "./cards/use-get-verb-conjugations";
 
 export {
   useAddCard,
@@ -66,4 +67,5 @@ export {
   useUsersTableColumns,
   useCategoriesTableColumns,
   useCardsTableColumns,
+  useGetVerbConjugations,
 };

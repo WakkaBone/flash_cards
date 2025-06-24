@@ -31,6 +31,7 @@ export const TOAST_CONTAINERS_IDS = {
 export const QUERY_KEYS = {
   cards: "cards",
   randomCard: "random-card",
+  verbConjugations: "verb-conjugations",
   statistics: "statistics",
   statisticsAdmin: "statistics-admin",
   cardsDynamics: "cards-dynamics",

@@ -11,6 +11,7 @@ import {
   bulkDeleteCardsController,
   bulkMarkLearnedController,
   importCsvController,
+  getVerbConjugationsController,
 } from "../controllers/cards";
 import {
   addCardValidator,
@@ -18,6 +19,7 @@ import {
   bulkMarkLearnedValidator,
   deleteCardValidator,
   getCardsValidator,
+  getVerbConjugationsValidator,
   markLearnedValidator,
   updateCardValidator,
   updateStatisticsValidator,
@@ -29,6 +31,11 @@ const router = Router();
 
 router.get("/", getCardsValidator, getCardsController);
 router.get("/random", getCardsValidator, getRandomCardController);
+router.get(
+  "/verbs/:infinitive",
+  getVerbConjugationsValidator,
+  getVerbConjugationsController
+);
 router.post("/check", addCardValidator, addCardPrecheckController);
 router.post("/", addCardValidator, addCardController);
 router.put("/:id", updateCardValidator, updateCardController);
