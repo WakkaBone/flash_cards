@@ -116,3 +116,16 @@ export const bulkOwnerValidation = body("ids").custom(async (ids, { req }) => {
 
   return true;
 });
+
+export const infinitiveValidation = param("infinitive")
+  .isString()
+  .notEmpty()
+  .withMessage("Infinitive is required")
+  .custom((value) => {
+    if (!isHebrew(value)) {
+      throw new Error(
+        "Verb infinitive must contain only Hebrew letters and spaces"
+      );
+    }
+    return true;
+  });

@@ -10,6 +10,7 @@ import { isEnglish, isHebrew } from "../validators/cards/validations";
 import { CardsService } from "../services/cards-service";
 import { CategoryDto, CategoryModel } from "../models/category";
 import { UserModel, UserModelDto } from "../models/user";
+import { ReversoVerb, VerbConjugations } from "../models/verb";
 
 const priorityReverseMapper: Record<string, Priorities> = {
   Low: Priorities.Low,
@@ -145,5 +146,105 @@ export const mapUserToUserDto = async (
     currentStreak: userData.currentStreak,
     longestStreak: userData.longestStreak,
     role: userData.role,
+  };
+};
+
+export const mapReversoVerbToConjugationsObj = (
+  conjugations: ReversoVerb
+): VerbConjugations => {
+  const { infinitive, verbForms } = conjugations;
+  const { 0: present, 1: past, 2: future } = verbForms;
+
+  const {
+    0: present_singular_male,
+    1: present_singular_female,
+    2: present_plural_male,
+    3: present_plural_female,
+  } = present.verbs;
+
+  const {
+    0: past_1_singular,
+    1: past_2_singular_male,
+    2: past_2_singular_female,
+    3: past_3_singular_male,
+    4: past_3_singular_female,
+    5: past_1_plural,
+    6: past_2_plural_male,
+    7: past_2_plural_female,
+    8: past_3_plural,
+  } = past.verbs;
+
+  // const {
+  //   0: future_1_singular,
+  //   1: future_2_singular_male,
+  //   2: future_2_singular_female,
+  //   3: future_3_singular_male,
+  //   4: future_1_plural,
+  //   5: future_2_plural_male,
+  //   6: future_2_plural_female,
+  //   7: future_3_plural_male,
+  //   8: future_3_plural_female,
+  // } = res.verbForms[2].verbs;
+
+  return {
+    infinitive,
+    present: {
+      singular: {
+        male: present_singular_male,
+        female: present_singular_female,
+      },
+      plural: {
+        male: present_plural_male,
+        female: present_plural_female,
+      },
+    },
+    past: {
+      1: {
+        singular: past_1_singular,
+        plural: past_1_plural,
+      },
+      2: {
+        singular: {
+          male: past_2_singular_male,
+          female: past_2_singular_female,
+        },
+        plural: {
+          male: past_2_plural_male,
+          female: past_2_plural_female,
+        },
+      },
+      3: {
+        singular: {
+          male: past_3_singular_male,
+          female: past_3_singular_female,
+        },
+        plural: past_3_plural,
+      },
+    },
+    // future: {
+    //   1: {
+    //     singular: future_1_singular,
+    //     plural: future_1_plural,
+    //   },
+    //   2: {
+    //     singular: {
+    //       male: future_2_singular_male,
+    //       female: future_2_singular_female,
+    //     },
+    //     plural: {
+    //       male: future_2_plural_male,
+    //       female: future_2_plural_female,
+    //     },
+    //   },
+    //   3: {
+    //     singular: {
+    //       male: future_3_singular_male,
+    //     },
+    //     plural: {
+    //       male: future_3_plural_male,
+    //       female: future_3_plural_female,
+    //     },
+    //   },
+    // },
   };
 };
