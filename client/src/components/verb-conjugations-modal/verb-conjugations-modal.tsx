@@ -1,4 +1,4 @@
-import { Dialog, DialogContent } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import { useGetVerbConjugations } from "../../hooks";
 import { CenteredLoader } from "../loader/loader";
 import { VerbConjugationsTable } from "./verb-conjugations-table";
@@ -29,6 +29,9 @@ export const VerbConjugationsModal = ({
           <VerbConjugationsTable verbConjugations={verbConjugations} />
         )}
       </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Close</Button>
+      </DialogActions>
     </Dialog>
   );
 };

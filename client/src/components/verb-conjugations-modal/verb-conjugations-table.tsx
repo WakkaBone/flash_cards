@@ -4,6 +4,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableCellProps,
   TableContainer,
   TableHead,
   TableRow,
@@ -15,10 +16,12 @@ import {
   VerbConjugations,
 } from "../../models/verb";
 import { useScreenSize, useTTS } from "../../hooks";
-import { MouseEvent, useCallback } from "react";
+import { MouseEvent, PropsWithChildren, useCallback } from "react";
 
-type PresentTenseTablePropsType = { forms: PresentTenseConjugations };
-const PresentTenseTable = ({ forms }: PresentTenseTablePropsType) => {
+const TableCellWithVoiceover = ({
+  children,
+  ...props
+}: PropsWithChildren<TableCellProps>) => {
   const { tts, isUttering } = useTTS();
 
   const voiceCellContent = useCallback(
@@ -30,62 +33,60 @@ const PresentTenseTable = ({ forms }: PresentTenseTablePropsType) => {
   );
 
   return (
-    <TableContainer
-      component={Paper}
-      sx={{ maxWidth: 600, margin: "auto", mt: 4 }}
-    >
-      <Typography variant="h6" align="center" sx={{ mt: 2 }}>
-        Present Tense (הווה)
-      </Typography>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell>
-              <strong>Masculine</strong>
-            </TableCell>
-            <TableCell>
-              <strong>Feminine</strong>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-            <TableCell>Singular</TableCell>
-            <TableCell onClick={voiceCellContent}>
-              <strong>{forms.singular.male}</strong>
-            </TableCell>
-            <TableCell onClick={voiceCellContent}>
-              <strong>{forms.singular.female}</strong>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Plural</TableCell>
-            <TableCell onClick={voiceCellContent}>
-              <strong>{forms.plural.male}</strong>
-            </TableCell>
-            <TableCell onClick={voiceCellContent}>
-              <strong>{forms.plural.female}</strong>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <TableCell {...props} onClick={voiceCellContent}>
+      {children}
+    </TableCell>
   );
 };
+
+type PresentTenseTablePropsType = { forms: PresentTenseConjugations };
+const PresentTenseTable = ({ forms }: PresentTenseTablePropsType) => (
+  <TableContainer
+    component={Paper}
+    sx={{ maxWidth: 600, margin: "auto", mt: 4 }}
+  >
+    <Typography variant="h6" align="center" sx={{ mt: 2 }}>
+      Present Tense (הווה)
+    </Typography>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell />
+          <TableCell>
+            <strong>Masculine</strong>
+          </TableCell>
+          <TableCell>
+            <strong>Feminine</strong>
+          </TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        <TableRow>
+          <TableCell>Singular</TableCell>
+          <TableCellWithVoiceover>
+            <strong>{forms.singular.male}</strong>
+          </TableCellWithVoiceover>
+          <TableCellWithVoiceover>
+            <strong>{forms.singular.female}</strong>
+          </TableCellWithVoiceover>
+        </TableRow>
+        <TableRow>
+          <TableCell>Plural</TableCell>
+          <TableCellWithVoiceover>
+            <strong>{forms.plural.male}</strong>
+          </TableCellWithVoiceover>
+          <TableCellWithVoiceover>
+            <strong>{forms.plural.female}</strong>
+          </TableCellWithVoiceover>
+        </TableRow>
+      </TableBody>
+    </Table>
+  </TableContainer>
+);
 
 type PastTenseTablePropsType = { forms: PastTenseConjugations };
 const PastTenseTable = ({ forms }: PastTenseTablePropsType) => {
   const { isMobile } = useScreenSize();
-  const { tts, isUttering } = useTTS();
-
-  const voiceCellContent = useCallback(
-    (e: MouseEvent<HTMLTableCellElement>) => {
-      const cellText = e.currentTarget.textContent;
-      if (cellText && !isUttering) tts(cellText);
-    },
-    [tts, isUttering]
-  );
 
   return (
     <TableContainer
@@ -110,48 +111,48 @@ const PastTenseTable = ({ forms }: PastTenseTablePropsType) => {
         <TableBody>
           <TableRow>
             <TableCell>1st {isMobile ? "Sg." : "Singular"}</TableCell>
-            <TableCell colSpan={2} onClick={voiceCellContent}>
+            <TableCellWithVoiceover colSpan={2}>
               <strong>{forms[1].singular}</strong>
-            </TableCell>
+            </TableCellWithVoiceover>
           </TableRow>
           <TableRow>
             <TableCell>2nd {isMobile ? "Sg." : "Singular"}</TableCell>
-            <TableCell onClick={voiceCellContent}>
+            <TableCellWithVoiceover>
               <strong>{forms[2].singular.male}</strong>
-            </TableCell>
-            <TableCell onClick={voiceCellContent}>
+            </TableCellWithVoiceover>
+            <TableCellWithVoiceover>
               <strong>{forms[2].singular.female}</strong>
-            </TableCell>
+            </TableCellWithVoiceover>
           </TableRow>
           <TableRow>
             <TableCell>3rd {isMobile ? "Sg." : "Singular"}</TableCell>
-            <TableCell onClick={voiceCellContent}>
+            <TableCellWithVoiceover>
               <strong>{forms[3].singular.male}</strong>
-            </TableCell>
-            <TableCell onClick={voiceCellContent}>
+            </TableCellWithVoiceover>
+            <TableCellWithVoiceover>
               <strong>{forms[3].singular.female}</strong>
-            </TableCell>
+            </TableCellWithVoiceover>
           </TableRow>
           <TableRow>
             <TableCell>1st {isMobile ? "Pl." : "Plural"}</TableCell>
-            <TableCell colSpan={2} onClick={voiceCellContent}>
+            <TableCellWithVoiceover colSpan={2}>
               <strong>{forms[1].plural}</strong>
-            </TableCell>
+            </TableCellWithVoiceover>
           </TableRow>
           <TableRow>
             <TableCell>2nd {isMobile ? "Pl." : "Plural"}</TableCell>
-            <TableCell onClick={voiceCellContent}>
+            <TableCellWithVoiceover>
               <strong>{forms[2].plural.male}</strong>
-            </TableCell>
-            <TableCell onClick={voiceCellContent}>
+            </TableCellWithVoiceover>
+            <TableCellWithVoiceover>
               <strong>{forms[2].plural.female}</strong>
-            </TableCell>
+            </TableCellWithVoiceover>
           </TableRow>
           <TableRow>
             <TableCell>3rd {isMobile ? "Pl." : "Plural"}</TableCell>
-            <TableCell colSpan={2} onClick={voiceCellContent}>
+            <TableCellWithVoiceover colSpan={2}>
               <strong>{forms[3].plural}</strong>
-            </TableCell>
+            </TableCellWithVoiceover>
           </TableRow>
         </TableBody>
       </Table>
