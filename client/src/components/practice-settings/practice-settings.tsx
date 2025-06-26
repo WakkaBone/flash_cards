@@ -1,39 +1,37 @@
 import { Settings } from "@mui/icons-material";
-import {
-  PracticeModes,
-  PracticeSettingsType,
-} from "../../models/practice-mode";
+import { PracticeModes } from "../../models/practice-mode";
 import { CollapsibleSection } from "../collapsible/collapsible-section";
 import { PracticeIntervalInput } from "./practice-interval-input";
 import { Box, Stack } from "@mui/material";
 import { useDebounce, useScreenSize, useTTS } from "../../hooks";
 import { PracticeVoiceEnabledToggle } from "./practice-voice-enabled-toggle";
-import { Timer, TimerPropsType } from "../card/timer";
+import { Timer } from "../card/timer";
 import { PracticeLastCardsControl } from "./practice-last-cards-control";
 import { useEffect, useState } from "react";
+import { usePracticeContext } from "../../context/practice-context";
 
-type PracticeSettingsPropsType = {
-  settings: PracticeSettingsType;
-  setSettings: React.Dispatch<React.SetStateAction<PracticeSettingsType>>;
-  timerProps: TimerPropsType;
-  practiceMode: PracticeModes;
-};
-
-export const PracticeSettings = ({
-  settings,
-  setSettings,
-  practiceMode,
-  timerProps,
-}: PracticeSettingsPropsType) => {
+export const PracticeSettings = () => {
   const { isMobile } = useScreenSize();
+
+  const {
+    practiceModeState: { practiceMode },
+    settingsState: { settings, setSettings },
+    timerState: timerProps,
+  } = usePracticeContext();
+
   const { supportsHebrew } = useTTS();
 
   const setInterval = (interval: number) =>
-    setSettings({ ...settings, interval });
+    setSettings((prev) => ({ ...prev, interval }));
+
   const setVoiceEnabled = (voiceEnabled: boolean) =>
-    setSettings({ ...settings, voiceEnabled });
+    setSettings((prev) => ({ ...prev, voiceEnabled }));
+
   const setVoiceWithTranslation = (voiceWithTranslation: boolean) =>
-    setSettings({ ...settings, voiceWithTranslation: voiceWithTranslation });
+    setSettings((prev) => ({
+      ...prev,
+      voiceWithTranslation,
+    }));
 
   const [lastCardsNoDebounce, setLastCardsNoDebounce] = useState<
     number | undefined
