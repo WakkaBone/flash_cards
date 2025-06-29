@@ -31,6 +31,8 @@ import { useUsersTableColumns } from "./users/use-users-table-columns";
 import { useCategoriesTableColumns } from "./categories/use-categories-table-columns";
 import { useCardsTableColumns } from "./cards/use-cards-table-columns";
 import { useGetVerbConjugations } from "./cards/use-get-verb-conjugations";
+import { useModal } from "./use-modal";
+import { useCardTranslation } from "./cards/use-card-translation";
 
 export {
   useAddCard,
@@ -66,4 +68,6 @@ export {
   useCategoriesTableColumns,
   useCardsTableColumns,
   useGetVerbConjugations,
+  useModal,
+  useCardTranslation,
 };

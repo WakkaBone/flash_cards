@@ -3,6 +3,7 @@ import { Controller, UseFormReturn, useWatch } from "react-hook-form";
 import { useEffect } from "react";
 import { useScreenSize } from "../../hooks";
 import { passwordValidator, usernameValidator } from "../../utils/validators";
+import { FORM_IDS } from "../../constants";
 
 export type MyAccountFormType = {
   username: string;
@@ -43,7 +44,7 @@ export const MyAccountForm = ({
   }, [changePassword, setValue]);
 
   return (
-    <form>
+    <form id={FORM_IDS.userAccount}>
       <Stack direction={isMobile ? "column" : "row"} spacing={2} mb={2}>
         <Controller
           name="username"

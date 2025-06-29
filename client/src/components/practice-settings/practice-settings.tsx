@@ -49,9 +49,7 @@ export const PracticeSettings = ({
 
   const timerProps = useTimerContext();
   useEffect(() => {
-    debouncedLastCards &&
-      timerProps.timerSessionActive &&
-      timerProps.handleStopTimer();
+    debouncedLastCards && timerProps.sessionActive && timerProps.handleStop();
   }, [debouncedLastCards, timerProps]);
 
   return (

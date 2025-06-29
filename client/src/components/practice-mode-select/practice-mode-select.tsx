@@ -15,14 +15,14 @@ export const PracticeModeSelect = (props: SelectProps) => {
     (key) => !isNaN(Number(key))
   ) as PracticeModes[];
 
-  const { handleStopTimer } = useTimerContext();
+  const timerProps = useTimerContext();
 
   const handleChangePracticeMode = (
     e: SelectChangeEvent<unknown>,
     child: React.ReactNode
   ) => {
     props?.onChange?.(e, child);
-    handleStopTimer();
+    timerProps.handleStop();
   };
 
   return (

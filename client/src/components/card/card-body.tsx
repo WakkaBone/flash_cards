@@ -89,10 +89,14 @@ export const CardBody = () => {
   const {
     practiceMode: mode,
     eth,
-    optionsState: { allOptions, handleSelectOption },
-    cardState: { card },
+    cardState: { card, options },
     loadersState: { isLoading },
-    translationState: { translation, showTranslation, setTranslation },
+    translationState: {
+      translation,
+      showTranslation,
+      setTranslation,
+      handleSelectOption,
+    },
   } = usePracticeContext();
 
   if (!card) return null;
@@ -117,7 +121,7 @@ export const CardBody = () => {
     case PracticeModes.hteSelect: {
       return (
         <Options
-          options={allOptions}
+          options={options}
           onSelect={handleSelectOption}
           selected={translation}
           isLoading={isLoading}

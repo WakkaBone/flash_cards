@@ -1,15 +1,11 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { CategoryModel } from "../../models/category";
 import { useUpdateCategory } from "../../hooks";
 import { EditCategoryForm, EditCategoryFormType } from "./edit-category-form";
 import { CategoryCards } from "./category-cards";
+import { Modal } from "../modal/modal";
+import { FORM_IDS } from "../../constants";
 
 type EditCategoryModalPropsType = {
   open: boolean;
@@ -45,28 +41,38 @@ export const EditCategoryModal = ({
     });
   };
 
+  const Actions = () => (
+    <Box>
+      <Button onClick={onClose} color="primary">
+        Cancel
+      </Button>
+      <Button
+        loading={isPending}
+        disabled={!formProps.formState.isDirty}
+        type="submit"
+        color="primary"
+        form={FORM_IDS.editCategory}
+      >
+        Save
+      </Button>
+    </Box>
+  );
+
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Edit Category</DialogTitle>
-      <form onSubmit={formProps.handleSubmit(onSave)} style={{ width: "100%" }}>
-        <DialogContent>
-          <EditCategoryForm formProps={formProps} />
-          <CategoryCards category={category} />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose} color="primary">
-            Cancel
-          </Button>
-          <Button
-            loading={isPending}
-            disabled={!formProps.formState.isDirty}
-            type="submit"
-            color="primary"
-          >
-            Save
-          </Button>
-        </DialogActions>
+    <Modal
+      open={open}
+      onClose={onClose}
+      actions={<Actions />}
+      title="Edit Category"
+    >
+      <form
+        id={FORM_IDS.editCategory}
+        onSubmit={formProps.handleSubmit(onSave)}
+        style={{ marginTop: "1rem" }}
+      >
+        <EditCategoryForm formProps={formProps} />
+        <CategoryCards category={category} />
       </form>
-    </Dialog>
+    </Modal>
   );
 };

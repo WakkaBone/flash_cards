@@ -44,7 +44,7 @@ export const CardWrapper = ({
           })
         : tts(cardData.hebrew);
     getAnotherCard().then(() => {
-      if (timerProps.timerSessionActive) timerProps.restart();
+      if (timerProps.sessionActive) timerProps.restart();
     });
   }, [
     cardData,
@@ -93,7 +93,7 @@ export const CardWrapper = ({
       timerProps={{
         pause: timerProps.pause,
         resume: timerProps.resume,
-        timerSessionActive: timerProps.timerSessionActive,
+        sessionActive: timerProps.sessionActive,
       }}
       getNextCard={getNextCard}
     >

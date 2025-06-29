@@ -65,7 +65,7 @@ export const CardsFilters = React.memo(
     useEffect(() => {
       if (!deepEqual(filters, initialFilters)) {
         onChange(filters);
-        timerProps.timerSessionActive && timerProps.handleStopTimer();
+        timerProps.sessionActive && timerProps.handleStop();
       }
     }, [filters, initialFilters, onChange, timerProps]);
 

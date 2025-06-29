@@ -14,9 +14,9 @@ interface TimerContextType {
   timerDuration: string;
   displayedCountdown: string | undefined;
   restart: (duration?: string) => void;
-  timerSessionActive: boolean;
-  handleStartTimer: (timerDuration: string) => void;
-  handleStopTimer: () => void;
+  sessionActive: boolean;
+  handleStart: (timerDuration: string) => void;
+  handleStop: () => void;
   resume: () => void;
   pause: () => void;
   isExpired: boolean;
@@ -28,9 +28,9 @@ const TimerContext = createContext<TimerContextType>({
   isRunning: false,
   timerDuration: "",
   restart: () => {},
-  timerSessionActive: false,
-  handleStartTimer: () => {},
-  handleStopTimer: () => {},
+  sessionActive: false,
+  handleStart: () => {},
+  handleStop: () => {},
   resume: () => {},
   pause: () => {},
   isExpired: false,
@@ -39,7 +39,7 @@ const TimerContext = createContext<TimerContextType>({
 export const TimerContextProvider = ({ children }: PropsWithChildren) => {
   const [isEnabled, setIsEnabled] = useState(false);
   const [timerDuration, setTimerDuration] = useState("");
-  const [timerSessionActive, setTimerSessionActive] = useState(false);
+  const [sessionActive, setTimerSessionActive] = useState(false);
   const [isExpired, setIsExpired] = useState(false);
 
   const {
@@ -74,7 +74,7 @@ export const TimerContextProvider = ({ children }: PropsWithChildren) => {
     [isEnabled, timerDuration, restart]
   );
 
-  const handleStartTimer = useCallback(
+  const handleStart = useCallback(
     (timerDuration: string) => {
       if (!isEnabled) return;
       setTimerDuration(timerDuration);
@@ -84,7 +84,7 @@ export const TimerContextProvider = ({ children }: PropsWithChildren) => {
     [isEnabled, restartTimer]
   );
 
-  const handleStopTimer = useCallback(() => {
+  const handleStop = useCallback(() => {
     if (!isEnabled) return;
     setTimerSessionActive(false);
     pause();
@@ -98,9 +98,9 @@ export const TimerContextProvider = ({ children }: PropsWithChildren) => {
         timerDuration,
         displayedCountdown: (minutesLeft * 60 + secondsLeft).toString(),
         restart: restartTimer,
-        timerSessionActive,
-        handleStartTimer,
-        handleStopTimer,
+        sessionActive,
+        handleStart,
+        handleStop,
         resume,
         pause,
         isExpired,

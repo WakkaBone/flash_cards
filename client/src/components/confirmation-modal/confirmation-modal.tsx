@@ -1,12 +1,7 @@
 import React from "react";
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Button,
-} from "@mui/material";
+import { Button } from "@mui/material";
 import { Warning } from "@mui/icons-material";
+import { Modal } from "../modal/modal";
 
 export enum ConfirmationModalTypes {
   info,
@@ -31,9 +26,22 @@ export const ConfirmationModal: React.FC<ConfirmationModalPropsType> = ({
   message,
   type,
 }) => (
-  <Dialog open={open} onClose={onClose}>
-    <DialogTitle
-      sx={{
+  <Modal
+    open={open}
+    onClose={onClose}
+    title={
+      <>
+        {[
+          ConfirmationModalTypes.error,
+          ConfirmationModalTypes.warning,
+        ].includes(type) ? (
+          <Warning sx={{ verticalAlign: "middle", marginRight: 1 }} />
+        ) : null}
+        {title}
+      </>
+    }
+    titleProps={{
+      sx: {
         color: [
           ConfirmationModalTypes.error,
           ConfirmationModalTypes.warning,
@@ -42,23 +50,19 @@ export const ConfirmationModal: React.FC<ConfirmationModalPropsType> = ({
           : "black",
         fontWeight: "bold",
         textAlign: "center",
-      }}
-    >
-      {[ConfirmationModalTypes.error, ConfirmationModalTypes.warning].includes(
-        type
-      ) ? (
-        <Warning sx={{ verticalAlign: "middle", marginRight: 1 }} />
-      ) : null}
-      {title}
-    </DialogTitle>
-    <DialogContent>{message}</DialogContent>
-    <DialogActions>
-      <Button onClick={onClose} color="primary">
-        Cancel
-      </Button>
-      <Button onClick={onConfirm} color="primary">
-        Confirm
-      </Button>
-    </DialogActions>
-  </Dialog>
+      },
+    }}
+    actions={
+      <>
+        <Button onClick={onClose} color="primary">
+          Cancel
+        </Button>
+        <Button onClick={onConfirm} color="primary">
+          Confirm
+        </Button>
+      </>
+    }
+  >
+    {message}
+  </Modal>
 );

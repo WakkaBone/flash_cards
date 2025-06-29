@@ -7,14 +7,18 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useDeleteCard, useMarkCardLearned } from "../hooks";
+import {
+  useCardTranslation,
+  useDeleteCard,
+  useMarkCardLearned,
+  useModal,
+} from "../hooks";
 import { PracticeModes, PracticeSettingsType } from "../models/practice-mode";
 import { GetCardsFilters } from "../models/filters";
 import { CardModel } from "../models/card";
 import { ApiResponse, STATISTICS_ACTIONS } from "../models/api";
 import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
 import { MAIN_CATEGORIES } from "../constants";
-import { compareWithoutNiqqud } from "../utils/string-util";
 import { shuffleArray } from "../utils/array-util";
 import { useHotkeys } from "react-hotkeys-hook";
 
@@ -24,8 +28,8 @@ interface PracticeContextType {
   settings: PracticeSettingsType;
   cardState: {
     card?: CardModel | null;
-    setCard: React.Dispatch<React.SetStateAction<CardModel | undefined | null>>;
     cardIsVerb: boolean;
+    options: string[];
   };
   actions: {
     getNextCard: () => Promise<void>;
@@ -46,13 +50,7 @@ interface PracticeContextType {
   translationState: {
     translation: string;
     setTranslation: React.Dispatch<React.SetStateAction<string>>;
-    resetTranslation: () => void;
     showTranslation: boolean;
-    setShowTranslation: React.Dispatch<React.SetStateAction<boolean>>;
-  };
-  optionsState: {
-    options: string[];
-    allOptions: string[];
     handleSelectOption: (option: string) => void;
   };
   modalsState: {
@@ -76,8 +74,8 @@ const PracticeContext = createContext<PracticeContextType>({
   settings: { interval: 3, voiceEnabled: false },
   cardState: {
     card: null,
-    setCard: () => {},
     cardIsVerb: false,
+    options: [],
   },
   actions: {
     getNextCard: () => Promise.resolve(),
@@ -98,13 +96,7 @@ const PracticeContext = createContext<PracticeContextType>({
   translationState: {
     translation: "",
     setTranslation: () => {},
-    resetTranslation: () => {},
     showTranslation: false,
-    setShowTranslation: () => {},
-  },
-  optionsState: {
-    options: [],
-    allOptions: [],
     handleSelectOption: () => {},
   },
   modalsState: {
@@ -158,7 +150,7 @@ export const PracticeContextProvider = ({
   timerProps: {
     pause: () => void;
     resume: () => void;
-    timerSessionActive: boolean;
+    sessionActive: boolean;
   };
   getNextCard: () => Promise<void>;
 }>) => {
@@ -166,41 +158,42 @@ export const PracticeContextProvider = ({
   const eth = [PracticeModes.ethInput, PracticeModes.ethSelect].includes(
     practiceMode
   );
+
+  const hasOptions = [
+    PracticeModes.ethSelect,
+    PracticeModes.hteSelect,
+  ].includes(practiceMode);
+
   const [card, setCard] = useState<CardModel | undefined | null>(cardData);
 
   useEffect(() => {
     cardData && setCard(cardData);
   }, [cardData]);
 
+  const cardIsVerb = card?.category.id === MAIN_CATEGORIES.verb;
+
   const [inTransition, setInTransition] = useState<boolean>(false);
 
-  //translations and checking logic
-  const [translation, setTranslation] = useState<string>("");
-  const [showTranslation, setShowTranslation] = useState<boolean>(false);
-
-  const isCorrectAnswer = useCallback(
-    (translation: string) => {
-      if (!card) return;
-      const correctAnswer = eth ? card.hebrew : card.english;
-
-      return compareWithoutNiqqud(
-        translation.trim().toLowerCase(),
-        correctAnswer.trim().toLowerCase()
-      );
-    },
-    [card, eth]
-  );
+  const {
+    translation,
+    setTranslation,
+    showTranslation,
+    setShowTranslation,
+    isCorrectTranslation,
+    handleSelectOption,
+  } = useCardTranslation(card, eth, hasOptions);
 
   const handleCheckTranslation = useCallback(() => {
     if (!card || practiceMode === PracticeModes.browse || !translation) return;
-    const isCorrect = isCorrectAnswer(translation);
 
     timerProps.pause();
     updateCardStats(
-      isCorrect ? STATISTICS_ACTIONS.Correct : STATISTICS_ACTIONS.Wrong,
+      isCorrectTranslation
+        ? STATISTICS_ACTIONS.Correct
+        : STATISTICS_ACTIONS.Wrong,
       {
         onSuccess: () => {
-          if (!isCorrect) return;
+          if (!isCorrectTranslation) return;
           setShowTranslation(true);
           setInTransition(true);
           setTimeout(() => {
@@ -216,42 +209,16 @@ export const PracticeContextProvider = ({
     settings.interval,
     updateCardStats,
     getNextCard,
-    isCorrectAnswer,
+    isCorrectTranslation,
     timerProps,
     translation,
+    setShowTranslation,
   ]);
-
-  const hasOptions = [
-    PracticeModes.ethSelect,
-    PracticeModes.hteSelect,
-  ].includes(practiceMode);
-
-  const handleSelectOption = useCallback(
-    (option: string) => {
-      if (!hasOptions) return;
-      document.activeElement instanceof HTMLElement &&
-        document.activeElement.blur();
-      setTranslation(option);
-    },
-    [hasOptions]
-  );
-
-  useEffect(() => setTranslation(""), [showTranslation]);
 
   const handleToggleTranslation = useCallback(() => {
     setShowTranslation((val) => !val);
     updateCardStats(STATISTICS_ACTIONS.Wrong, { hideToast: true });
-  }, [updateCardStats]);
-
-  const resetTranslation = useCallback(() => {
-    setShowTranslation(false);
-    setTranslation("");
-  }, []);
-
-  useEffect(() => {
-    //cleanup on card change
-    resetTranslation();
-  }, [card?.id, resetTranslation]);
+  }, [updateCardStats, setShowTranslation]);
 
   const allOptions = useMemo(() => {
     if (!hasOptions) return [];
@@ -283,30 +250,22 @@ export const PracticeContextProvider = ({
     isMarkingLearned ||
     isDeletingCard;
 
-  //edit card modal
-  const [isEdit, setIsEdit] = useState<boolean>(false);
-  const onOpenEditModal = () => {
-    timerProps.pause();
-    setIsEdit(true);
-  };
-  const onCloseEditModal = () => {
-    setIsEdit(false);
-    setVerbFormsModalOpen(false);
-    timerProps.timerSessionActive && timerProps.resume();
-  };
-  const onSuccessEditModal = (updatedData: CardModel) => setCard(updatedData);
+  const verbFormsModal = useModal({
+    onOpen: () => timerProps.sessionActive && timerProps.pause(),
+    onClose: () => timerProps.sessionActive && timerProps.resume(),
+  });
 
-  //verb forms modal
-  const cardIsVerb = card?.category.id === MAIN_CATEGORIES.verb;
-  const [verbFormsModalOpen, setVerbFormsModalOpen] = useState<boolean>(false);
-  const onOpenVerbFormsModal = () => {
-    if (!cardIsVerb) return;
-    timerProps.pause();
-    setVerbFormsModalOpen(true);
-  };
-  const onCloseVerbFormsModal = () => {
-    setVerbFormsModalOpen(false);
-    timerProps.timerSessionActive && timerProps.resume();
+  const editModal: ReturnType<typeof useModal> & {
+    onSuccess: (updatedData: CardModel) => void;
+  } = {
+    ...useModal({
+      onOpen: () => timerProps.pause(),
+      onClose: () => {
+        timerProps.sessionActive && timerProps.resume();
+        verbFormsModal.onClose();
+      },
+    }),
+    onSuccess: (updatedData: CardModel) => setCard(updatedData),
   };
 
   //bind hotkeys
@@ -317,7 +276,7 @@ export const PracticeContextProvider = ({
           !isLoading && handleSelectOption(allOptions[num - 1]);
         return acc;
       }, {} as Record<string, () => void>))(),
-    e: () => !isLoading && card && onOpenEditModal(),
+    e: () => !isLoading && card && editModal.onOpen(),
     d: () => !isLoading && handleDeleteCard(),
     l: () => !isLoading && handleMarkAsLearned(),
     f: () => !isLoading && card && handleToggleTranslation(),
@@ -336,14 +295,12 @@ export const PracticeContextProvider = ({
         practiceMode,
         eth,
         settings,
-        cardState: { card, setCard, cardIsVerb },
-        optionsState: { options, allOptions, handleSelectOption },
+        cardState: { card, cardIsVerb, options: allOptions },
         translationState: {
           translation,
           setTranslation,
-          resetTranslation,
           showTranslation,
-          setShowTranslation,
+          handleSelectOption,
         },
         actions: {
           getNextCard,
@@ -361,19 +318,7 @@ export const PracticeContextProvider = ({
           inTransition,
           isLoading,
         },
-        modalsState: {
-          editModal: {
-            open: isEdit,
-            onClose: onCloseEditModal,
-            onOpen: onOpenEditModal,
-            onSuccess: onSuccessEditModal,
-          },
-          verbFormsModal: {
-            onClose: onCloseVerbFormsModal,
-            onOpen: onOpenVerbFormsModal,
-            open: verbFormsModalOpen,
-          },
-        },
+        modalsState: { editModal, verbFormsModal },
       }}
     >
       {children}

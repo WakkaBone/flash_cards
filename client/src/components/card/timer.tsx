@@ -20,9 +20,9 @@ export type TimerPropsType = {
     event: React.ChangeEvent<HTMLInputElement>
   ) => void;
   displayedCountdown?: string;
-  handleStartTimer: () => void;
-  handleStopTimer: () => void;
-  timerSessionActive: boolean;
+  handleStart: () => void;
+  handleStop: () => void;
+  sessionActive: boolean;
 };
 
 const MIN_SECONDS = 5;
@@ -34,9 +34,9 @@ export const Timer = () => {
   const {
     isRunning,
     displayedCountdown,
-    handleStartTimer,
-    handleStopTimer,
-    timerSessionActive,
+    handleStart,
+    handleStop,
+    sessionActive,
     handleIsEnabled,
   } = useTimerContext();
 
@@ -49,8 +49,8 @@ export const Timer = () => {
     []
   );
   const onStartBtnClick = useCallback(
-    () => handleStartTimer(timerDuration),
-    [handleStartTimer, timerDuration]
+    () => handleStart(timerDuration),
+    [handleStart, timerDuration]
   );
 
   useEffect(
@@ -111,8 +111,8 @@ export const Timer = () => {
         <TextField
           label="Enter Seconds"
           type="number"
-          disabled={timerSessionActive}
-          value={timerSessionActive ? displayedCountdown : timerDuration}
+          disabled={sessionActive}
+          value={sessionActive ? displayedCountdown : timerDuration}
           onChange={handleTimerDurationChange}
           fullWidth
           size="small"
@@ -121,12 +121,12 @@ export const Timer = () => {
           error={!isRunning && invalidTimerDurationValue}
           helperText={invalidTimerDurationValue ? "5-60 seconds" : ""}
         />
-        {timerSessionActive ? (
+        {sessionActive ? (
           <Button
             {...buttonSharedStyles}
             color="warning"
             disabled={!isRunning || invalidTimerDurationValue}
-            onClick={handleStopTimer}
+            onClick={handleStop}
           >
             Stop
           </Button>

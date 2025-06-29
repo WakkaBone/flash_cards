@@ -17,14 +17,8 @@ export const WordCard = () => {
 
   const {
     loadersState: { isFetchingCard, isLoadingCard },
-    cardState: { card, setCard },
-    modalsState: {
-      editModal: { open: editCardModalOpen, onClose: onCloseEditModal },
-      verbFormsModal: {
-        open: verbFormsModalOpen,
-        onClose: onCloseVerbFormsModal,
-      },
-    },
+    cardState: { card },
+    modalsState: { editModal, verbFormsModal },
   } = usePracticeContext();
 
   if (card === undefined || isLoadingCard) return <CenteredLoader />;
@@ -69,16 +63,10 @@ export const WordCard = () => {
         )}
       </CardContent>
       <CardActions />
-      <EditCardModal
-        open={editCardModalOpen}
-        card={card}
-        onClose={onCloseEditModal}
-        onSuccess={(updatedData) => setCard(updatedData)}
-      />
+      <EditCardModal {...editModal} card={card} />
       <VerbConjugationsModal
-        open={verbFormsModalOpen}
+        {...verbFormsModal}
         infinitive={card.hebrew || ""}
-        onClose={onCloseVerbFormsModal}
       />
     </Card>
   );

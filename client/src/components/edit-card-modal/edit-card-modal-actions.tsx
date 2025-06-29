@@ -1,4 +1,4 @@
-import { Button, DialogActions } from "@mui/material";
+import { Button } from "@mui/material";
 import { PopoverConfirmation } from "../popover-confirmation/popover-confirmation";
 import { CardModel } from "../../models/card";
 import {
@@ -8,6 +8,7 @@ import {
   useScreenSize,
 } from "../../hooks";
 import { useCallback, useState } from "react";
+import { FORM_IDS } from "../../constants";
 
 type EditCardModalActionsPropsType = {
   card: CardModel;
@@ -47,7 +48,7 @@ export const EditCardModalActions = ({
   const isLoading = isUpdatePending || isDeletePending || isMarkLearnedPending;
 
   return (
-    <DialogActions>
+    <>
       {isLearned ? (
         <Button
           onClick={handleMarkCardLearned}
@@ -100,12 +101,13 @@ export const EditCardModalActions = ({
         type="submit"
         color="primary"
         size={isMobile ? "small" : "medium"}
+        form={FORM_IDS.editCard}
       >
         Save
       </Button>
       {confirmationProps && (
         <PopoverConfirmation {...confirmationProps} open={showConfirmation} />
       )}
-    </DialogActions>
+    </>
   );
 };

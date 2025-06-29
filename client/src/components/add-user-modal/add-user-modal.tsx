@@ -1,14 +1,9 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useAddUser } from "../../hooks";
 import { AddUserForm, AddUserFormType } from "./add-user-form";
+import { Modal } from "../modal/modal";
+import { FORM_IDS } from "../../constants";
 
 type EditUserModalPropsType = {
   open: boolean;
@@ -36,29 +31,42 @@ export const AddUserModal = ({
     });
   };
 
+  const Actions = () => (
+    <Box>
+      <Button onClick={onClose} color="primary">
+        Cancel
+      </Button>
+      <Button
+        loading={isPending}
+        disabled={!formProps.formState.isDirty}
+        type="submit"
+        color="primary"
+        form={FORM_IDS.addUser}
+      >
+        Save
+      </Button>
+    </Box>
+  );
+
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Add User</DialogTitle>
-      <form onSubmit={formProps.handleSubmit(onSave)} style={{ width: "100%" }}>
-        <DialogContent sx={{ minWidth: "40vw" }}>
-          <AddUserForm formProps={formProps} />
-        </DialogContent>
-        <DialogActions>
-          <Box>
-            <Button onClick={onClose} color="primary">
-              Cancel
-            </Button>
-            <Button
-              loading={isPending}
-              disabled={!formProps.formState.isDirty}
-              type="submit"
-              color="primary"
-            >
-              Save
-            </Button>
-          </Box>
-        </DialogActions>
+    <Modal
+      open={open}
+      onClose={onClose}
+      title="Add User"
+      contentProps={{
+        sx: {
+          minWidth: "40vw",
+        },
+      }}
+      actions={<Actions />}
+    >
+      <form
+        id={FORM_IDS.addUser}
+        onSubmit={formProps.handleSubmit(onSave)}
+        style={{ width: "100%", marginTop: "1rem" }}
+      >
+        <AddUserForm formProps={formProps} />
       </form>
-    </Dialog>
+    </Modal>
   );
 };

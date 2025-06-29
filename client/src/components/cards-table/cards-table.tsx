@@ -5,6 +5,7 @@ import {
   useScreenSize,
   useTablePagination,
   useCardsTableColumns,
+  useModal,
 } from "../../hooks";
 import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 import { mapCardToTableRow } from "../../utils/mappers";
@@ -49,12 +50,13 @@ export const CardsTable = () => {
   const columns = useCardsTableColumns({ isModal: false });
 
   const allowEditOnClick = isMobile || isTablet;
-  const [isEdit, setIsEdit] = useState(false);
+
   const [card, setCard] = useState<CardModel | undefined>();
-  const onCloseEditModal = () => setCard(undefined);
+
+  const editModal = useModal({ onClose: () => setCard(undefined) });
   useEffect(() => {
-    allowEditOnClick && setIsEdit(!!card);
-  }, [allowEditOnClick, card]);
+    allowEditOnClick && !!card ? editModal.onOpen() : editModal.onClose();
+  }, [allowEditOnClick, card, editModal]);
 
   return (
     <>
@@ -87,9 +89,7 @@ export const CardsTable = () => {
           selectedCard && setCard(selectedCard);
         }}
       />
-      {allowEditOnClick && card && (
-        <EditCardModal open={isEdit} card={card} onClose={onCloseEditModal} />
-      )}
+      {allowEditOnClick && card && <EditCardModal {...editModal} card={card} />}
       <ToastContainer containerId={TOAST_CONTAINERS_IDS.cardsTable} />
     </>
   );

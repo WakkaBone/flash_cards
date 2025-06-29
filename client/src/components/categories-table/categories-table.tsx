@@ -4,6 +4,7 @@ import {
   useScreenSize,
   useTablePagination,
   useCategoriesTableColumns,
+  useModal,
 } from "../../hooks";
 import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 import { mapCategoryToTableRow } from "../../utils/mappers";
@@ -43,12 +44,14 @@ export const CategoriesTable = () => {
   const [rowsSelected, setRowsSelected] = useState<GridRowSelectionModel>([]);
 
   const allowEditOnClick = isMobile || isTablet;
-  const [isEdit, setIsEdit] = useState(false);
+
   const [category, setCategory] = useState<CategoryModel | undefined>();
-  const onCloseEditModal = () => setCategory(undefined);
+
+  const editModal = useModal({ onClose: () => setCategory(undefined) });
+
   useEffect(() => {
-    allowEditOnClick && setIsEdit(!!category);
-  }, [allowEditOnClick, category]);
+    allowEditOnClick && !!category ? editModal.onOpen() : editModal.onClose();
+  }, [allowEditOnClick, category, editModal]);
 
   const columns = useCategoriesTableColumns();
 
@@ -85,9 +88,8 @@ export const CategoriesTable = () => {
       />
       {allowEditOnClick && category && (
         <EditCategoryModal
-          open={isEdit}
+          {...editModal}
           category={category}
-          onClose={onCloseEditModal}
           isReadonly={
             Object.values(MAIN_CATEGORIES).indexOf(category.id) !== -1
           }
