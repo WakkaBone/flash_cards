@@ -1,5 +1,8 @@
 import { Settings } from "@mui/icons-material";
-import { PracticeModes } from "../../models/practice-mode";
+import {
+  PracticeModes,
+  PracticeSettingsType,
+} from "../../models/practice-mode";
 import { CollapsibleSection } from "../collapsible/collapsible-section";
 import { PracticeIntervalInput } from "./practice-interval-input";
 import { Box, Stack } from "@mui/material";
@@ -8,16 +11,18 @@ import { PracticeVoiceEnabledToggle } from "./practice-voice-enabled-toggle";
 import { Timer } from "../card/timer";
 import { PracticeLastCardsControl } from "./practice-last-cards-control";
 import { useEffect, useState } from "react";
-import { usePracticeContext } from "../../context/practice-context";
+import { useTimerContext } from "../../context/timer-context";
 
-export const PracticeSettings = () => {
+export const PracticeSettings = ({
+  settings,
+  setSettings,
+  practiceMode,
+}: {
+  settings: PracticeSettingsType;
+  setSettings: React.Dispatch<React.SetStateAction<PracticeSettingsType>>;
+  practiceMode: PracticeModes;
+}) => {
   const { isMobile } = useScreenSize();
-
-  const {
-    practiceModeState: { practiceMode },
-    settingsState: { settings, setSettings },
-    timerState: timerProps,
-  } = usePracticeContext();
 
   const { supportsHebrew } = useTTS();
 
@@ -41,6 +46,13 @@ export const PracticeSettings = () => {
   useEffect(() => {
     setSettings((prev) => ({ ...prev, lastCards: debouncedLastCards }));
   }, [debouncedLastCards, setSettings]);
+
+  const timerProps = useTimerContext();
+  useEffect(() => {
+    debouncedLastCards &&
+      timerProps.timerSessionActive &&
+      timerProps.handleStopTimer();
+  }, [debouncedLastCards, timerProps]);
 
   return (
     <CollapsibleSection
@@ -79,9 +91,8 @@ export const PracticeSettings = () => {
             setLastCards={setLastCardsNoDebounce}
           />
         </Box>
-
         <Box sx={{ width: "100%" }}>
-          <Timer {...timerProps} />
+          <Timer />
         </Box>
       </Stack>
     </CollapsibleSection>

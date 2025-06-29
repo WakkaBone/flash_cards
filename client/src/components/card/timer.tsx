@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Checkbox,
   TextField,
@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { Timer as TimerIcon } from "@mui/icons-material";
 import { useScreenSize } from "../../hooks";
+import { useTimerContext } from "../../context/timer-context";
 
 export type TimerPropsType = {
   isRunning: boolean;
@@ -27,20 +28,30 @@ export type TimerPropsType = {
 const MIN_SECONDS = 5;
 const MAX_SECONDS = 60;
 
-export const Timer = (props: TimerPropsType) => {
+export const Timer = () => {
   const { isMobile } = useScreenSize();
-  const [isTimerEnabled, setIsTimerEnabled] = useState(!!props.isRunning);
 
   const {
     isRunning,
-    timerDuration,
-    handleTimerDurationChange,
     displayedCountdown,
     handleStartTimer,
     handleStopTimer,
     timerSessionActive,
     handleIsEnabled,
-  } = props;
+  } = useTimerContext();
+
+  const [isTimerEnabled, setIsTimerEnabled] = useState(!!isRunning);
+  const [timerDuration, setTimerDuration] = useState("");
+
+  const handleTimerDurationChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) =>
+      setTimerDuration(event.target.value),
+    []
+  );
+  const onStartBtnClick = useCallback(
+    () => handleStartTimer(timerDuration),
+    [handleStartTimer, timerDuration]
+  );
 
   useEffect(
     () => handleIsEnabled(isTimerEnabled),
@@ -124,7 +135,7 @@ export const Timer = (props: TimerPropsType) => {
             {...buttonSharedStyles}
             color="primary"
             disabled={isRunning || invalidTimerDurationValue || !timerDuration}
-            onClick={handleStartTimer}
+            onClick={onStartBtnClick}
           >
             Start
           </Button>

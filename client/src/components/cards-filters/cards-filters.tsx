@@ -16,6 +16,7 @@ import { DateTimeRangePicker } from "../date-time-range-picker/date-time-range-p
 import { FilterAlt } from "@mui/icons-material";
 import { CollapsibleSection } from "../collapsible/collapsible-section";
 import { PrioritySelect } from "../priority-select/priority-select";
+import { useTimerContext } from "../../context/timer-context";
 
 export enum FilterTypes {
   Search = "search",
@@ -60,9 +61,13 @@ export const CardsFilters = React.memo(
       handleReset,
     } = useCardsTableFilters(initialFilters);
 
+    const timerProps = useTimerContext();
     useEffect(() => {
-      if (!deepEqual(filters, initialFilters)) onChange(filters);
-    }, [filters, initialFilters, onChange]);
+      if (!deepEqual(filters, initialFilters)) {
+        onChange(filters);
+        timerProps.timerSessionActive && timerProps.handleStopTimer();
+      }
+    }, [filters, initialFilters, onChange, timerProps]);
 
     return (
       <CollapsibleSection

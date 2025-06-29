@@ -87,10 +87,11 @@ const Options = ({
 
 export const CardBody = () => {
   const {
+    practiceMode: mode,
+    eth,
     optionsState: { allOptions, handleSelectOption },
     cardState: { card },
     loadersState: { isLoading },
-    practiceModeState: { practiceMode: mode, eth },
     translationState: { translation, showTranslation, setTranslation },
   } = usePracticeContext();
 

@@ -22,6 +22,7 @@ export const CardActions = () => {
   const { isMobile } = useScreenSize();
 
   const {
+    practiceMode: mode,
     cardState: { card },
     translationState: { translation, showTranslation },
     loadersState: {
@@ -31,14 +32,13 @@ export const CardActions = () => {
       isDeletingCard,
       isLoadingCard,
     },
-    practiceModeState: { practiceMode: mode },
     modalsState: {
       editModal: { onOpen: onOpenEditModal },
     },
     actions: {
       handleMarkAsLearned,
       handleDeleteCard,
-      handleNextButtonClick,
+      getNextCard,
       handleCheckTranslation,
       handleToggleTranslation,
     },
@@ -111,7 +111,7 @@ export const CardActions = () => {
             {...buttonStyles}
             loading={isLoadingCard}
             disabled={isLoading}
-            onClick={handleNextButtonClick}
+            onClick={getNextCard}
             endIcon={<NavigateNextRounded />}
           >
             Next

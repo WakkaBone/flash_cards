@@ -1,6 +1,4 @@
-import { Stack } from "@mui/material";
-
-import { WordCard } from "../components/card/card";
+import { SelectChangeEvent, Stack } from "@mui/material";
 import { PageTitle } from "../components/layout/page-title";
 import { PracticeModeSelect } from "../components/practice-mode-select/practice-mode-select";
 import {
@@ -9,22 +7,56 @@ import {
 } from "../components/cards-filters/cards-filters";
 import { PracticeSettings } from "../components/practice-settings/practice-settings";
 import { GetCardsFilters } from "../models/filters";
-import { usePracticeContext } from "../context/practice-context";
+import { useCallback, useState } from "react";
+import { PracticeModes, PracticeSettingsType } from "../models/practice-mode";
+import { CardWrapper } from "../components/card/card-wrapper";
+import { TimerContextProvider } from "../context/timer-context";
 
 export type PracticeFilersType = Omit<GetCardsFilters, "search">;
 
+const defaultFilters = {
+  includeLearned: false,
+};
+
+const DEFAULT_INTERVAL = 3;
+
+const defaultSettings = {
+  interval: DEFAULT_INTERVAL,
+  voiceEnabled: true,
+};
+
 export const PracticePage = () => {
-  const {
-    filtersState: { filters, setFilters },
-  } = usePracticeContext();
+  const [practiceMode, setPracticeMode] = useState(PracticeModes.browse);
+  const handleChangePracticeMode = useCallback(
+    (e: SelectChangeEvent<unknown>) => {
+      setPracticeMode(e.target.value as PracticeModes);
+    },
+    []
+  );
+
+  const [settings, setSettings] =
+    useState<PracticeSettingsType>(defaultSettings);
+  const [filters, setFilters] = useState<PracticeFilersType>(defaultFilters);
+
+  const appliedFilters: PracticeFilersType = {
+    ...filters,
+    lastCards: settings.lastCards,
+  };
 
   return (
-    <>
+    <TimerContextProvider>
       <PageTitle>Practice</PageTitle>
       <Stack mb={2}>
-        <PracticeModeSelect />
+        <PracticeModeSelect
+          value={practiceMode}
+          onChange={handleChangePracticeMode}
+        />
       </Stack>
-      <PracticeSettings />
+      <PracticeSettings
+        practiceMode={practiceMode}
+        setSettings={setSettings}
+        settings={settings}
+      />
       <CardsFilters
         filters={filters}
         onChange={setFilters}
@@ -36,7 +68,11 @@ export const PracticePage = () => {
           FilterTypes.Priority,
         ]}
       />
-      <WordCard />
-    </>
+      <CardWrapper
+        filters={appliedFilters}
+        settings={settings}
+        practiceMode={practiceMode}
+      />
+    </TimerContextProvider>
   );
 };

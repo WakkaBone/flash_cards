@@ -3,20 +3,27 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  SelectChangeEvent,
   SelectProps,
 } from "@mui/material";
 import { PracticeModes } from "../../models/practice-mode";
 import { practiceModeMapper } from "../../utils/mappers";
-import { usePracticeContext } from "../../context/practice-context";
+import { useTimerContext } from "../../context/timer-context";
 
 export const PracticeModeSelect = (props: SelectProps) => {
-  const {
-    practiceModeState: { practiceMode, handleChangePracticeMode },
-  } = usePracticeContext();
-
   const modes = Object.values(PracticeModes).filter(
     (key) => !isNaN(Number(key))
   ) as PracticeModes[];
+
+  const { handleStopTimer } = useTimerContext();
+
+  const handleChangePracticeMode = (
+    e: SelectChangeEvent<unknown>,
+    child: React.ReactNode
+  ) => {
+    props?.onChange?.(e, child);
+    handleStopTimer();
+  };
 
   return (
     <FormControl fullWidth>
@@ -25,7 +32,6 @@ export const PracticeModeSelect = (props: SelectProps) => {
         labelId="mode-select-label"
         id="mode-select"
         {...props}
-        value={practiceMode}
         onChange={handleChangePracticeMode}
       >
         {modes.map((mode) => (

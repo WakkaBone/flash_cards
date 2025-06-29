@@ -79,6 +79,10 @@ export const EditCardModal = ({
   const onOpenVerbFormsModal = () => cardIsVerb && setVerbFormsModalOpen(true);
   const onCloseVerbFormsModal = () => setVerbFormsModalOpen(false);
 
+  useEffect(() => {
+    if (!open) setVerbFormsModalOpen(false);
+  }, [open]);
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Edit Card</DialogTitle>

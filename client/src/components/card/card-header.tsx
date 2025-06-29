@@ -6,9 +6,10 @@ import { usePracticeContext } from "../../context/practice-context";
 
 export const CardHeader = () => {
   const {
+    practiceMode: mode,
+    eth,
     cardState: { card, cardIsVerb },
     loadersState: { isLoading },
-    practiceModeState: { practiceMode: mode, eth },
     modalsState: {
       verbFormsModal: { onOpen: onOpenVerbFormsModal },
     },

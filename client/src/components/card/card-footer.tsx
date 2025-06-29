@@ -45,13 +45,11 @@ const IntervalCountdown = ({ seconds }: { seconds: number }) => {
 
 export const CardFooter = () => {
   const {
+    practiceMode: mode,
+    settings: { interval },
     loadersState: { inTransition },
     translationState: { showTranslation },
-    practiceModeState: { practiceMode: mode },
     cardState: { card },
-    settingsState: {
-      settings: { interval },
-    },
   } = usePracticeContext();
 
   if (!card) return null;

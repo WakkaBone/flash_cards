@@ -18,7 +18,6 @@ import { usePracticeTimelineChart } from "./practice-timeline/use-practice-timel
 import { usePracticeTimelineFilters } from "./practice-timeline/use-practice-timeline-filters";
 import { useRandomCard } from "./cards/use-random-card";
 import { useScreenSize } from "./use-screen-size";
-import { useTimer } from "./use-timer";
 import { useUpdateCard } from "./cards/use-update-card";
 import { useUpdateUser } from "./users/use-update-user";
 import { useUsersTableFilters } from "./users/use-users-table-filters";
@@ -58,7 +57,6 @@ export {
   useRandomCard,
   useTablePagination,
   useScreenSize,
-  useTimer,
   useTTS,
   useUpdateCard,
   useUpdateCategory,

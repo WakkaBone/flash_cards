@@ -23,7 +23,6 @@ import { AdminRoute } from "./components/protected-route/admin-route";
 import { SignupPage } from "./pages/signup-page";
 import { UnauthorizedRoute } from "./components/protected-route/unauthorized-route";
 import { MyAccountPage } from "./pages/my-account-page";
-import { PracticeContextProvider } from "./context/practice-context";
 
 const queryClient = new QueryClient();
 
@@ -44,14 +43,7 @@ function App() {
               >
                 <Route index element={<CardsPage />} />
                 <Route path={ROUTES.addCard} element={<AddCardPage />} />
-                <Route
-                  path={ROUTES.practice}
-                  element={
-                    <PracticeContextProvider>
-                      <PracticePage />
-                    </PracticeContextProvider>
-                  }
-                />
+                <Route path={ROUTES.practice} element={<PracticePage />} />
                 <Route path={ROUTES.categories} element={<CategoriesPage />} />
                 <Route path={ROUTES.statistics} element={<StatisticsPage />} />
                 <Route
