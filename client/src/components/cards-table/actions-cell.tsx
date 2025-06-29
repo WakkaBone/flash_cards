@@ -6,12 +6,12 @@ import {
   KeyboardReturn,
   TaskAltRounded,
 } from "@mui/icons-material";
-import { useCallback, useState } from "react";
-import { useDeleteCard, useMarkCardLearned } from "../../hooks";
+import { useCallback } from "react";
+import { useDeleteCard, useMarkCardLearned, useModal } from "../../hooks";
 import { EditCardModal } from "../edit-card-modal/edit-card-modal";
 
 export const ActionsCell = ({ card }: { card: CardModel }) => {
-  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const editModal = useModal();
 
   const isLearned = !!card.isLearned;
   const { markCardLearned, isPending: isMarkLearnedPending } =
@@ -27,9 +27,6 @@ export const ActionsCell = ({ card }: { card: CardModel }) => {
     [deleteCard, card]
   );
 
-  const onOpenEditModal = () => setIsEdit(true);
-  const onCloseEditModal = () => setIsEdit(false);
-
   return (
     <>
       <Button size="small" onClick={handleDeleteCard} loading={isDeletePending}>
@@ -37,7 +34,7 @@ export const ActionsCell = ({ card }: { card: CardModel }) => {
           <DeleteForeverRounded />
         </Tooltip>
       </Button>
-      <Button onClick={onOpenEditModal} size="small" title="Edit">
+      <Button onClick={editModal.onOpen} size="small" title="Edit">
         <Tooltip title="Edit card">
           <EditRounded />
         </Tooltip>
@@ -52,7 +49,7 @@ export const ActionsCell = ({ card }: { card: CardModel }) => {
           {isLearned ? <KeyboardReturn /> : <TaskAltRounded />}
         </Tooltip>
       </Button>
-      <EditCardModal open={isEdit} card={card} onClose={onCloseEditModal} />
+      <EditCardModal {...editModal} card={card} />
     </>
   );
 };

@@ -1,14 +1,15 @@
 import { Button, Tooltip } from "@mui/material";
 import { DeleteForeverRounded, EditRounded } from "@mui/icons-material";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { UserModel } from "../../models/user";
-import { useDeleteUsers } from "../../hooks";
+import { useDeleteUsers, useModal } from "../../hooks";
 import { useAuthContext } from "../../context/auth-context";
 import { EditUserModal } from "../edit-user-modal/edit-user-modal";
 
 export const ActionsCell = ({ user }: { user: UserModel }) => {
   const { user: authUser } = useAuthContext();
-  const [isEdit, setIsEdit] = useState<boolean>(false);
+
+  const editModal = useModal();
 
   const {
     deleteUser,
@@ -22,9 +23,6 @@ export const ActionsCell = ({ user }: { user: UserModel }) => {
 
   const canDelete = authUser?.id !== user.id;
 
-  const onOpenEditModal = () => setIsEdit(true);
-  const onCloseEditModal = () => setIsEdit(false);
-
   return (
     <>
       <Button
@@ -37,17 +35,12 @@ export const ActionsCell = ({ user }: { user: UserModel }) => {
           <DeleteForeverRounded />
         </Tooltip>
       </Button>
-      <Button onClick={onOpenEditModal} size="small" title="Edit">
+      <Button onClick={editModal.onOpen} size="small" title="Edit">
         <Tooltip title="Edit user">
           <EditRounded />
         </Tooltip>
       </Button>
-      <EditUserModal
-        open={isEdit}
-        user={user}
-        onClose={onCloseEditModal}
-        onSuccess={onCloseEditModal}
-      />
+      <EditUserModal {...editModal} user={user} onSuccess={editModal.onClose} />
     </>
   );
 };

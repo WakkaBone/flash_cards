@@ -18,7 +18,6 @@ import { usePracticeTimelineChart } from "./practice-timeline/use-practice-timel
 import { usePracticeTimelineFilters } from "./practice-timeline/use-practice-timeline-filters";
 import { useRandomCard } from "./cards/use-random-card";
 import { useScreenSize } from "./use-screen-size";
-import { useTimer } from "./use-timer";
 import { useUpdateCard } from "./cards/use-update-card";
 import { useUpdateUser } from "./users/use-update-user";
 import { useUsersTableFilters } from "./users/use-users-table-filters";
@@ -32,6 +31,8 @@ import { useUsersTableColumns } from "./users/use-users-table-columns";
 import { useCategoriesTableColumns } from "./categories/use-categories-table-columns";
 import { useCardsTableColumns } from "./cards/use-cards-table-columns";
 import { useGetVerbConjugations } from "./cards/use-get-verb-conjugations";
+import { useModal } from "./use-modal";
+import { useCardTranslation } from "./cards/use-card-translation";
 
 export {
   useAddCard,
@@ -58,7 +59,6 @@ export {
   useRandomCard,
   useTablePagination,
   useScreenSize,
-  useTimer,
   useTTS,
   useUpdateCard,
   useUpdateCategory,
@@ -68,4 +68,6 @@ export {
   useCategoriesTableColumns,
   useCardsTableColumns,
   useGetVerbConjugations,
+  useModal,
+  useCardTranslation,
 };

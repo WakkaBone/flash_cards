@@ -51,4 +51,13 @@ export const APIS = {
   version: "/version",
 };
 
+export const FORM_IDS = {
+  addUser: "add-user-form",
+  editUser: "edit-user-form",
+  editCategory: "edit-category-form",
+  addCard: "add-card-form",
+  editCard: "edit-card-form",
+  userAccount: "user-account-form",
+};
+
 export const NIQQUD_REGEXP = /[\u05B0-\u05BD\u05BF\u05C1\u05C2\u05C7]/g;

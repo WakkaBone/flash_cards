@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Checkbox,
   TextField,
@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { Timer as TimerIcon } from "@mui/icons-material";
 import { useScreenSize } from "../../hooks";
+import { useTimerContext } from "../../context/timer-context";
 
 export type TimerPropsType = {
   isRunning: boolean;
@@ -19,28 +20,38 @@ export type TimerPropsType = {
     event: React.ChangeEvent<HTMLInputElement>
   ) => void;
   displayedCountdown?: string;
-  handleStartTimer: () => void;
-  handleStopTimer: () => void;
-  timerSessionActive: boolean;
+  handleStart: () => void;
+  handleStop: () => void;
+  sessionActive: boolean;
 };
 
 const MIN_SECONDS = 5;
 const MAX_SECONDS = 60;
 
-export const Timer = (props: TimerPropsType) => {
+export const Timer = () => {
   const { isMobile } = useScreenSize();
-  const [isTimerEnabled, setIsTimerEnabled] = useState(!!props.isRunning);
 
   const {
     isRunning,
-    timerDuration,
-    handleTimerDurationChange,
     displayedCountdown,
-    handleStartTimer,
-    handleStopTimer,
-    timerSessionActive,
+    handleStart,
+    handleStop,
+    sessionActive,
     handleIsEnabled,
-  } = props;
+  } = useTimerContext();
+
+  const [isTimerEnabled, setIsTimerEnabled] = useState(!!isRunning);
+  const [timerDuration, setTimerDuration] = useState("");
+
+  const handleTimerDurationChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) =>
+      setTimerDuration(event.target.value),
+    []
+  );
+  const onStartBtnClick = useCallback(
+    () => handleStart(timerDuration),
+    [handleStart, timerDuration]
+  );
 
   useEffect(
     () => handleIsEnabled(isTimerEnabled),
@@ -100,8 +111,8 @@ export const Timer = (props: TimerPropsType) => {
         <TextField
           label="Enter Seconds"
           type="number"
-          disabled={timerSessionActive}
-          value={timerSessionActive ? displayedCountdown : timerDuration}
+          disabled={sessionActive}
+          value={sessionActive ? displayedCountdown : timerDuration}
           onChange={handleTimerDurationChange}
           fullWidth
           size="small"
@@ -110,12 +121,12 @@ export const Timer = (props: TimerPropsType) => {
           error={!isRunning && invalidTimerDurationValue}
           helperText={invalidTimerDurationValue ? "5-60 seconds" : ""}
         />
-        {timerSessionActive ? (
+        {sessionActive ? (
           <Button
             {...buttonSharedStyles}
             color="warning"
             disabled={!isRunning || invalidTimerDurationValue}
-            onClick={handleStopTimer}
+            onClick={handleStop}
           >
             Stop
           </Button>
@@ -124,7 +135,7 @@ export const Timer = (props: TimerPropsType) => {
             {...buttonSharedStyles}
             color="primary"
             disabled={isRunning || invalidTimerDurationValue || !timerDuration}
-            onClick={handleStartTimer}
+            onClick={onStartBtnClick}
           >
             Start
           </Button>

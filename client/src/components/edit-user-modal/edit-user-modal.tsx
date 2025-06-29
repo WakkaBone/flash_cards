@@ -1,16 +1,11 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { UserModel } from "../../models/user";
 import { useUpdateUser } from "../../hooks";
 import { UserCards } from "./user-cards";
 import { EditUserForm, EditUserFormType } from "./edit-user-form";
+import { FORM_IDS } from "../../constants";
+import { Modal } from "../modal/modal";
 
 type EditUserModalPropsType = {
   open: boolean;
@@ -43,30 +38,38 @@ export const EditUserModal = ({
     });
   };
 
+  const Actions = () => (
+    <Box>
+      <Button onClick={onClose} color="primary">
+        Cancel
+      </Button>
+      <Button
+        loading={isPending}
+        disabled={!formProps.formState.isDirty}
+        type="submit"
+        color="primary"
+        form={FORM_IDS.editUser}
+      >
+        Save
+      </Button>
+    </Box>
+  );
+
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Edit User</DialogTitle>
-      <form onSubmit={formProps.handleSubmit(onSave)} style={{ width: "100%" }}>
-        <DialogContent>
-          <EditUserForm formProps={formProps} />
-          <UserCards userId={user.id} />
-        </DialogContent>
-        <DialogActions>
-          <Box>
-            <Button onClick={onClose} color="primary">
-              Cancel
-            </Button>
-            <Button
-              loading={isPending}
-              disabled={!formProps.formState.isDirty}
-              type="submit"
-              color="primary"
-            >
-              Save
-            </Button>
-          </Box>
-        </DialogActions>
+    <Modal
+      open={open}
+      onClose={onClose}
+      actions={<Actions />}
+      title="Edit User"
+    >
+      <form
+        id={FORM_IDS.editUser}
+        onSubmit={formProps.handleSubmit(onSave)}
+        style={{ marginTop: "1rem" }}
+      >
+        <EditUserForm formProps={formProps} />
+        <UserCards userId={user.id} />
       </form>
-    </Dialog>
+    </Modal>
   );
 };

@@ -8,32 +8,35 @@ import { PracticeIntervalInput } from "./practice-interval-input";
 import { Box, Stack } from "@mui/material";
 import { useDebounce, useScreenSize, useTTS } from "../../hooks";
 import { PracticeVoiceEnabledToggle } from "./practice-voice-enabled-toggle";
-import { Timer, TimerPropsType } from "../card/timer";
+import { Timer } from "../card/timer";
 import { PracticeLastCardsControl } from "./practice-last-cards-control";
 import { useEffect, useState } from "react";
-
-type PracticeSettingsPropsType = {
-  settings: PracticeSettingsType;
-  setSettings: React.Dispatch<React.SetStateAction<PracticeSettingsType>>;
-  timerProps: TimerPropsType;
-  practiceMode: PracticeModes;
-};
+import { useTimerContext } from "../../context/timer-context";
 
 export const PracticeSettings = ({
   settings,
   setSettings,
   practiceMode,
-  timerProps,
-}: PracticeSettingsPropsType) => {
+}: {
+  settings: PracticeSettingsType;
+  setSettings: React.Dispatch<React.SetStateAction<PracticeSettingsType>>;
+  practiceMode: PracticeModes;
+}) => {
   const { isMobile } = useScreenSize();
+
   const { supportsHebrew } = useTTS();
 
   const setInterval = (interval: number) =>
-    setSettings({ ...settings, interval });
+    setSettings((prev) => ({ ...prev, interval }));
+
   const setVoiceEnabled = (voiceEnabled: boolean) =>
-    setSettings({ ...settings, voiceEnabled });
+    setSettings((prev) => ({ ...prev, voiceEnabled }));
+
   const setVoiceWithTranslation = (voiceWithTranslation: boolean) =>
-    setSettings({ ...settings, voiceWithTranslation: voiceWithTranslation });
+    setSettings((prev) => ({
+      ...prev,
+      voiceWithTranslation,
+    }));
 
   const [lastCardsNoDebounce, setLastCardsNoDebounce] = useState<
     number | undefined
@@ -43,6 +46,11 @@ export const PracticeSettings = ({
   useEffect(() => {
     setSettings((prev) => ({ ...prev, lastCards: debouncedLastCards }));
   }, [debouncedLastCards, setSettings]);
+
+  const timerProps = useTimerContext();
+  useEffect(() => {
+    debouncedLastCards && timerProps.sessionActive && timerProps.handleStop();
+  }, [debouncedLastCards, timerProps]);
 
   return (
     <CollapsibleSection
@@ -81,9 +89,8 @@ export const PracticeSettings = ({
             setLastCards={setLastCardsNoDebounce}
           />
         </Box>
-
         <Box sx={{ width: "100%" }}>
-          <Timer {...timerProps} />
+          <Timer />
         </Box>
       </Stack>
     </CollapsibleSection>

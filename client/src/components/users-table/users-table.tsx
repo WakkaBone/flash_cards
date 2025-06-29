@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { GetUsersFilters } from "../../models/filters";
 import {
   useGetUsers,
+  useModal,
   useScreenSize,
   useTablePagination,
   useUsersTableColumns,
@@ -46,12 +47,13 @@ export const UsersTable = () => {
   const [rowsSelected, setRowsSelected] = useState<GridRowSelectionModel>([]);
 
   const allowEditOnClick = isMobile || isTablet;
-  const [isEdit, setIsEdit] = useState(false);
+
   const [user, setUser] = useState<UserModel | undefined>();
-  const onCloseEditModal = () => setUser(undefined);
+
+  const editModal = useModal({ onClose: () => setUser(undefined) });
   useEffect(() => {
-    allowEditOnClick && setIsEdit(!!user);
-  }, [allowEditOnClick, user]);
+    allowEditOnClick && !!user ? editModal.onOpen() : editModal.onClose();
+  }, [allowEditOnClick, user, editModal]);
 
   const columns = useUsersTableColumns();
 
@@ -86,9 +88,7 @@ export const UsersTable = () => {
           selectedCategory && setUser(selectedCategory);
         }}
       />
-      {allowEditOnClick && user && (
-        <EditUserModal open={isEdit} user={user} onClose={onCloseEditModal} />
-      )}
+      {allowEditOnClick && user && <EditUserModal {...editModal} user={user} />}
       <ToastContainer />
     </>
   );

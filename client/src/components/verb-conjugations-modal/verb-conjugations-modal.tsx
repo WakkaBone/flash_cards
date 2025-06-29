@@ -1,7 +1,8 @@
-import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
+import { Button } from "@mui/material";
 import { useGetVerbConjugations, useScreenSize } from "../../hooks";
 import { CenteredLoader } from "../loader/loader";
 import { VerbConjugationsTable } from "./verb-conjugations-table";
+import { Modal } from "../modal/modal";
 
 type VerbConjugationsModalPropsType = {
   infinitive: string;
@@ -22,21 +23,17 @@ export const VerbConjugationsModal = ({
   const verbConjugations = data.data;
 
   return (
-    <Dialog
+    <Modal
       open={open}
       onClose={onClose}
       PaperProps={{ sx: { width: isMobile ? "90vw" : "70vw" } }}
+      actions={<Button onClick={onClose}>Close</Button>}
     >
-      <DialogContent>
-        {isFetching || isPending ? (
-          <CenteredLoader />
-        ) : (
-          <VerbConjugationsTable verbConjugations={verbConjugations} />
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Close</Button>
-      </DialogActions>
-    </Dialog>
+      {isFetching || isPending ? (
+        <CenteredLoader />
+      ) : (
+        <VerbConjugationsTable verbConjugations={verbConjugations} />
+      )}
+    </Modal>
   );
 };

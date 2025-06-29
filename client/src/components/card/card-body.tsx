@@ -1,4 +1,13 @@
-import { Box, Card, CardContent, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { PracticeModes } from "../../models/practice-mode";
+import { usePracticeContext } from "../../context/practice-context";
 import { useScreenSize } from "../../hooks";
 import { UtterButton } from "./utter-button";
 
@@ -13,7 +22,7 @@ type OptionsPropsType = {
   isLoading: boolean;
   eth: boolean;
 };
-export const Options = ({
+const Options = ({
   options,
   onSelect,
   selected,
@@ -74,4 +83,53 @@ export const Options = ({
       })}
     </Stack>
   );
+};
+
+export const CardBody = () => {
+  const {
+    practiceMode: mode,
+    eth,
+    cardState: { card, options },
+    loadersState: { isLoading },
+    translationState: {
+      translation,
+      showTranslation,
+      setTranslation,
+      handleSelectOption,
+    },
+  } = usePracticeContext();
+
+  if (!card) return null;
+
+  switch (mode) {
+    case PracticeModes.ethInput:
+    case PracticeModes.hteInput:
+      return (
+        <TextField
+          value={
+            showTranslation
+              ? card[PracticeModes.ethInput === mode ? "hebrew" : "english"]
+              : translation
+          }
+          disabled={showTranslation}
+          placeholder="Enter translation"
+          onChange={(e) => setTranslation(e.target.value)}
+          inputRef={(ref) => ref && ref.focus()}
+        />
+      );
+    case PracticeModes.ethSelect:
+    case PracticeModes.hteSelect: {
+      return (
+        <Options
+          options={options}
+          onSelect={handleSelectOption}
+          selected={translation}
+          isLoading={isLoading}
+          eth={eth}
+        />
+      );
+    }
+    case PracticeModes.browse:
+      return <TextField value={card.english} sx={{ pointerEvents: "none" }} />;
+  }
 };

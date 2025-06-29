@@ -1,13 +1,13 @@
 import { Button, Tooltip } from "@mui/material";
 import { DeleteForeverRounded, EditRounded } from "@mui/icons-material";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { CategoryModel } from "../../models/category";
-import { useDeleteCategory } from "../../hooks";
+import { useDeleteCategory, useModal } from "../../hooks";
 import { MAIN_CATEGORIES } from "../../constants";
 import { EditCategoryModal } from "../edit-category-modal/edit-category-modal";
 
 export const ActionsCell = ({ category }: { category: CategoryModel }) => {
-  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const editModal = useModal();
 
   const {
     deleteCategory,
@@ -19,9 +19,6 @@ export const ActionsCell = ({ category }: { category: CategoryModel }) => {
   );
 
   const isReadonly = Object.values(MAIN_CATEGORIES).indexOf(category.id) !== -1;
-
-  const onOpenEditModal = () => setIsEdit(true);
-  const onCloseEditModal = () => setIsEdit(false);
 
   return (
     <>
@@ -35,16 +32,15 @@ export const ActionsCell = ({ category }: { category: CategoryModel }) => {
           <DeleteForeverRounded />
         </Tooltip>
       </Button>
-      <Button onClick={onOpenEditModal} size="small" title="Edit">
+      <Button onClick={editModal.onOpen} size="small" title="Edit">
         <Tooltip title="Edit category">
           <EditRounded />
         </Tooltip>
       </Button>
       <EditCategoryModal
-        open={isEdit}
+        {...editModal}
         category={category}
-        onClose={onCloseEditModal}
-        onSuccess={onCloseEditModal}
+        onSuccess={editModal.onClose}
         isReadonly={isReadonly}
       />
     </>

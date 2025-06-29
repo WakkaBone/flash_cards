@@ -1,16 +1,16 @@
-import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { CardModel } from "../../models/card";
 import { EditCardForm, EditCardFormType } from "./edit-card-form";
 import { useForm } from "react-hook-form";
-import { useUpdateCard } from "../../hooks";
-import { useEffect, useState } from "react";
+import { useModal, useUpdateCard } from "../../hooks";
+import { useEffect } from "react";
 import { isMatch } from "date-fns";
 import { EditCardReadonlyData } from "./edit-card-readonly-data";
 import { EditCardModalActions } from "./edit-card-modal-actions";
 import { DATE_TIME_FORMAT, formatDateTime } from "../../utils/date-time";
 import { VerbConjugationsModal } from "../verb-conjugations-modal/verb-conjugations-modal";
-import { MAIN_CATEGORIES } from "../../constants";
+import { FORM_IDS, MAIN_CATEGORIES } from "../../constants";
 import { SeeVerbFormsButton } from "../buttons/see-verb-forms-btn";
+import { Modal } from "../modal/modal";
 
 type EditCardModalPropsType = {
   open: boolean;
@@ -75,36 +75,40 @@ export const EditCardModal = ({
   };
 
   const cardIsVerb = card?.category.id === MAIN_CATEGORIES.verb;
-  const [verbFormsModalOpen, setVerbFormsModalOpen] = useState<boolean>(false);
-  const onOpenVerbFormsModal = () => cardIsVerb && setVerbFormsModalOpen(true);
-  const onCloseVerbFormsModal = () => setVerbFormsModalOpen(false);
+  const verbFormsModal = useModal();
+
+  useEffect(() => {
+    if (!open) verbFormsModal.onClose();
+  }, [open, verbFormsModal]);
 
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Edit Card</DialogTitle>
-      <form onSubmit={formProps.handleSubmit(onSave)} style={{ width: "100%" }}>
-        <DialogContent>
-          <EditCardReadonlyData formProps={formProps} />
-          <EditCardForm formProps={formProps} />
-          {cardIsVerb && (
-            <SeeVerbFormsButton
-              onClick={onOpenVerbFormsModal}
-              sx={{ mt: 1, cursor: "pointer" }}
-            />
-          )}
-          <VerbConjugationsModal
-            open={verbFormsModalOpen}
-            infinitive={card.hebrew || ""}
-            onClose={onCloseVerbFormsModal}
-          />
-        </DialogContent>
+    <Modal
+      open={open}
+      onClose={onClose}
+      title="Edit Card"
+      actions={
         <EditCardModalActions
           isFormDirty={formProps.formState.isDirty}
           card={card}
           onClose={onClose}
           isUpdatePending={isPending}
         />
+      }
+    >
+      <form onSubmit={formProps.handleSubmit(onSave)} id={FORM_IDS.editCard}>
+        <EditCardReadonlyData formProps={formProps} />
+        <EditCardForm formProps={formProps} />
+        {cardIsVerb && (
+          <SeeVerbFormsButton
+            onClick={verbFormsModal.onOpen}
+            sx={{ mt: 1, cursor: "pointer" }}
+          />
+        )}
+        <VerbConjugationsModal
+          {...verbFormsModal}
+          infinitive={card.hebrew || ""}
+        />
       </form>
-    </Dialog>
+    </Modal>
   );
 };

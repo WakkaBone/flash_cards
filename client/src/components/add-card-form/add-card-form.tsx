@@ -10,6 +10,7 @@ import { IdLabel } from "../../models/shared";
 import { mapAddCardFormToPayload } from "../../utils/mappers";
 import { PrioritySelect } from "../priority-select/priority-select";
 import { Priorities } from "../../models/card";
+import { FORM_IDS } from "../../constants";
 
 export type AddCardFormType = {
   category: IdLabel;
@@ -52,7 +53,7 @@ export const AddCardForm = () => {
   const isLoading = isLoadingPrecheck || isLoadingAdd;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
+    <form onSubmit={handleSubmit(onSubmit)} id={FORM_IDS.addCard}>
       <Stack
         spacing={2}
         mb={2}
@@ -149,6 +150,7 @@ export const AddCardForm = () => {
           type="submit"
           variant="contained"
           fullWidth
+          form={FORM_IDS.addCard}
         >
           Add
         </Button>
