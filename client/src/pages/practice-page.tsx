@@ -66,6 +66,7 @@ export const PracticePage = () => {
           FilterTypes.IncludeLearned,
           FilterTypes.MistakesThreshold,
           FilterTypes.Priority,
+          FilterTypes.NegativeBalance,
         ]}
       />
       <CardWrapper

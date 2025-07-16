@@ -8,6 +8,7 @@ export type GetCardsFilters = DateRange & {
   search?: string;
   searchExact?: string;
   includeLearned?: boolean;
+  negativeBalance?: boolean;
   mistakesThreshold?: number;
   priority?: Priorities;
   page?: number;

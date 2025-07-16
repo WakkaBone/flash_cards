@@ -15,6 +15,7 @@ export type GetCardsFilters = DateRange & {
   page?: number;
   pageSize?: number;
   lastCards?: number;
+  negativeBalance?: boolean;
 };
 
 export type GetCategoriesFilters = DateRange & {

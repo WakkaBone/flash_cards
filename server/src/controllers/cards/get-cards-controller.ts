@@ -10,6 +10,7 @@ type GetCardsQueryParams = {
   search?: string;
   category?: string;
   includeLearned?: string;
+  negativeBalance?: string;
   from?: string;
   to?: string;
   mistakesThreshold?: string;
@@ -28,6 +29,7 @@ export const getCardsController = async (
       search,
       category,
       includeLearned,
+      negativeBalance,
       from,
       to,
       mistakesThreshold,
@@ -44,6 +46,7 @@ export const getCardsController = async (
       search,
       category: category ? category : undefined,
       includeLearned: includeLearned ? includeLearned === "true" : undefined,
+      negativeBalance: negativeBalance ? negativeBalance === "true" : undefined,
       from: from ? new Date(from) : undefined,
       to: to ? new Date(to) : undefined,
       mistakesThreshold: mistakesThreshold
