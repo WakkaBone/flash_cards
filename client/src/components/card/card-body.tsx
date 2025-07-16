@@ -97,6 +97,7 @@ export const CardBody = () => {
       setTranslation,
       handleSelectOption,
     },
+    inputRef,
   } = usePracticeContext();
 
   if (!card) return null;
@@ -114,7 +115,7 @@ export const CardBody = () => {
           disabled={showTranslation}
           placeholder="Enter translation"
           onChange={(e) => setTranslation(e.target.value)}
-          inputRef={(ref) => ref && ref.focus()}
+          inputRef={inputRef}
         />
       );
     case PracticeModes.ethSelect:

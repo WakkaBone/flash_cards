@@ -6,7 +6,12 @@ import {
 import { CollapsibleSection } from "../collapsible/collapsible-section";
 import { PracticeIntervalInput } from "./practice-interval-input";
 import { Box, Stack } from "@mui/material";
-import { useDebounce, useScreenSize, useTTS } from "../../hooks";
+import {
+  useDebounce,
+  useOnValueChange,
+  useScreenSize,
+  useTTS,
+} from "../../hooks";
 import { PracticeVoiceEnabledToggle } from "./practice-voice-enabled-toggle";
 import { Timer } from "../card/timer";
 import { PracticeLastCardsControl } from "./practice-last-cards-control";
@@ -48,9 +53,11 @@ export const PracticeSettings = ({
   }, [debouncedLastCards, setSettings]);
 
   const timerProps = useTimerContext();
-  useEffect(() => {
-    debouncedLastCards && timerProps.sessionActive && timerProps.handleStop();
-  }, [debouncedLastCards, timerProps]);
+
+  useOnValueChange(
+    debouncedLastCards,
+    () => timerProps.sessionActive && timerProps.handleStop()
+  );
 
   return (
     <CollapsibleSection

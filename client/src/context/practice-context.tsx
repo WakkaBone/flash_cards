@@ -5,6 +5,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import {
@@ -25,6 +26,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 interface PracticeContextType {
   practiceMode: PracticeModes;
   eth: boolean;
+  inputRef: React.RefObject<HTMLInputElement> | null;
   settings: PracticeSettingsType;
   cardState: {
     card?: CardModel | null;
@@ -71,6 +73,7 @@ interface PracticeContextType {
 const PracticeContext = createContext<PracticeContextType>({
   practiceMode: PracticeModes.browse,
   eth: false,
+  inputRef: null,
   settings: { interval: 3, voiceEnabled: false },
   cardState: {
     card: null,
@@ -289,12 +292,22 @@ export const PracticeContextProvider = ({
     hotkeysConfig[key as keyof typeof hotkeysConfig]?.()
   );
 
+  //handle focusing on text input when needed
+  const inputRef = useRef<HTMLInputElement>(null);
+  const shouldFocusOnInput =
+    [PracticeModes.ethInput, PracticeModes.hteInput].includes(practiceMode) &&
+    !showTranslation;
+  useEffect(() => {
+    if (shouldFocusOnInput && inputRef.current) inputRef.current.focus();
+  }, [shouldFocusOnInput]);
+
   return (
     <PracticeContext.Provider
       value={{
         practiceMode,
         eth,
         settings,
+        inputRef,
         cardState: { card, cardIsVerb, options: allOptions },
         translationState: {
           translation,

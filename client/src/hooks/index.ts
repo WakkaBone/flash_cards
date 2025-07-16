@@ -33,6 +33,7 @@ import { useCardsTableColumns } from "./cards/use-cards-table-columns";
 import { useGetVerbConjugations } from "./cards/use-get-verb-conjugations";
 import { useModal } from "./use-modal";
 import { useCardTranslation } from "./cards/use-card-translation";
+import { useOnValueChange } from "./use-on-value-change";
 
 export {
   useAddCard,
@@ -70,4 +71,5 @@ export {
   useGetVerbConjugations,
   useModal,
   useCardTranslation,
+  useOnValueChange,
 };
