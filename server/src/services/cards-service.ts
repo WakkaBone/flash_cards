@@ -68,7 +68,13 @@ export class CardsService {
 
     const { docs } = await getDocs(query(queryRef, ...queries));
 
-    const cards = await Promise.all(docs.map((doc) => mapCardToCardDto(doc)));
+    let cards = await Promise.all(docs.map((doc) => mapCardToCardDto(doc)));
+
+    if (filters.negativeBalance) {
+      cards = cards.filter(
+        ({ statistics }) => statistics.correct < statistics.wrong
+      );
+    }
 
     if (filters.search) {
       const searchableFields = ["english", "hebrew"];

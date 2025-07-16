@@ -8,6 +8,7 @@ import { GetCardsFilters } from "../../models/filters";
 
 export const defaultFilters: Partial<GetCardsFilters> = {
   includeLearned: false,
+  negativeBalance: false,
   priority: AllOptionInt.All,
 };
 
@@ -46,6 +47,9 @@ export const useCardsTableFilters = (initialFilters: GetCardsFilters) => {
   const handleIncludeLearned = (event: React.ChangeEvent<HTMLInputElement>) =>
     setFilters({ ...filters, includeLearned: event.target.checked });
 
+  const handleNegativeBalance = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setFilters({ ...filters, negativeBalance: event.target.checked });
+
   const handleDateRange = (type: "from" | "to", value: Date | null) =>
     setFilters((prevFilters) => ({
       ...prevFilters,
@@ -75,6 +79,7 @@ export const useCardsTableFilters = (initialFilters: GetCardsFilters) => {
     handleSearch,
     handleCategory,
     handleIncludeLearned,
+    handleNegativeBalance,
     handleDateRange,
     handleMistakesThreshold,
     handlePriority,

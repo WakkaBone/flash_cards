@@ -6,6 +6,7 @@ import {
   Input,
   Stack,
   TextField,
+  Tooltip,
 } from "@mui/material";
 import { GetCardsFilters } from "../../models/filters";
 import React, { useEffect } from "react";
@@ -25,6 +26,7 @@ export enum FilterTypes {
   DateRange = "dateRange",
   MistakesThreshold = "mistakesThreshold",
   Priority = "priority",
+  NegativeBalance = "negativeBalance",
 }
 
 type CardsTableFiltersPropsType = {
@@ -44,6 +46,7 @@ export const CardsFilters = React.memo(
       FilterTypes.IncludeLearned,
       FilterTypes.MistakesThreshold,
       FilterTypes.Priority,
+      FilterTypes.NegativeBalance,
     ],
   }: CardsTableFiltersPropsType) => {
     const { isMobile, isTablet } = useScreenSize();
@@ -55,6 +58,7 @@ export const CardsFilters = React.memo(
       handleSearch,
       handleCategory,
       handleIncludeLearned,
+      handleNegativeBalance,
       handleDateRange,
       handleMistakesThreshold,
       handlePriority,
@@ -133,17 +137,36 @@ export const CardsFilters = React.memo(
               />
             )}
           </Stack>
-          {enabledFilters.includes(FilterTypes.IncludeLearned) && (
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={filters.includeLearned}
-                  onChange={handleIncludeLearned}
+          <Stack direction="row" spacing={1} sx={{ width: "100%" }}>
+            {enabledFilters.includes(FilterTypes.NegativeBalance) && (
+              <Tooltip title="Show cards that have more wrong answers than correct">
+                <FormControlLabel
+                  sx={{ width: "100%" }}
+                  control={
+                    <Checkbox
+                      checked={filters.negativeBalance}
+                      onChange={handleNegativeBalance}
+                    />
+                  }
+                  label="Negative balance"
                 />
-              }
-              label="With learned"
-            />
-          )}
+              </Tooltip>
+            )}
+            {enabledFilters.includes(FilterTypes.IncludeLearned) && (
+              <Tooltip title="Include cards that have been marked as learned">
+                <FormControlLabel
+                  sx={{ width: "100%" }}
+                  control={
+                    <Checkbox
+                      checked={filters.includeLearned}
+                      onChange={handleIncludeLearned}
+                    />
+                  }
+                  label="With learned"
+                />
+              </Tooltip>
+            )}
+          </Stack>
           <Button onClick={handleReset}>Reset filters</Button>
         </Box>
       </CollapsibleSection>
