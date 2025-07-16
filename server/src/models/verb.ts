@@ -39,7 +39,7 @@ export type VerbConjugations = {
       plural: string;
     };
   };
-  future?: {
+  future: {
     1: {
       singular: string;
       plural: string;
@@ -57,6 +57,7 @@ export type VerbConjugations = {
     3: {
       singular: {
         male: string;
+        female: string;
       };
       plural: {
         male: string;
