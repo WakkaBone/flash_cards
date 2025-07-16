@@ -174,17 +174,17 @@ export const mapReversoVerbToConjugationsObj = (
     8: past_3_plural,
   } = past.verbs;
 
-  // const {
-  //   0: future_1_singular,
-  //   1: future_2_singular_male,
-  //   2: future_2_singular_female,
-  //   3: future_3_singular_male,
-  //   4: future_1_plural,
-  //   5: future_2_plural_male,
-  //   6: future_2_plural_female,
-  //   7: future_3_plural_male,
-  //   8: future_3_plural_female,
-  // } = res.verbForms[2].verbs;
+  const {
+    0: future_1_singular,
+    1: future_2_singular_male,
+    2: future_2_singular_female,
+    3: future_3_singular_male,
+    4: future_1_plural,
+    5: future_2_plural_male,
+    6: future_2_plural_female,
+    7: future_3_plural_male,
+    8: future_3_plural_female,
+  } = future.verbs;
 
   return {
     infinitive,
@@ -221,30 +221,31 @@ export const mapReversoVerbToConjugationsObj = (
         plural: past_3_plural,
       },
     },
-    // future: {
-    //   1: {
-    //     singular: future_1_singular,
-    //     plural: future_1_plural,
-    //   },
-    //   2: {
-    //     singular: {
-    //       male: future_2_singular_male,
-    //       female: future_2_singular_female,
-    //     },
-    //     plural: {
-    //       male: future_2_plural_male,
-    //       female: future_2_plural_female,
-    //     },
-    //   },
-    //   3: {
-    //     singular: {
-    //       male: future_3_singular_male,
-    //     },
-    //     plural: {
-    //       male: future_3_plural_male,
-    //       female: future_3_plural_female,
-    //     },
-    //   },
-    // },
+    future: {
+      1: {
+        singular: future_1_singular,
+        plural: future_1_plural,
+      },
+      2: {
+        singular: {
+          male: future_2_singular_male,
+          female: future_2_singular_female,
+        },
+        plural: {
+          male: future_2_plural_male,
+          female: future_2_plural_female,
+        },
+      },
+      3: {
+        singular: {
+          male: future_3_singular_male,
+          female: "",
+        },
+        plural: {
+          male: future_3_plural_male,
+          female: future_3_plural_female,
+        },
+      },
+    },
   };
 };
