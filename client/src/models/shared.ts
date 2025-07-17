@@ -16,3 +16,11 @@ export type DateRange = {
   from?: Date;
   to?: Date;
 };
+
+export type Booleanified<T> = {
+  [K in keyof T]: T[K] extends string
+    ? boolean
+    : T[K] extends object
+    ? Booleanified<T[K]>
+    : never;
+};

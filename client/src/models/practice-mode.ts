@@ -4,6 +4,7 @@ export enum PracticeModes {
   ethSelect,
   hteSelect,
   browse,
+  verbForms,
 }
 
 export type PracticeSettingsType = {

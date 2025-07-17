@@ -24,6 +24,7 @@ export const practiceModeMapper: Record<PracticeModes, string> = {
   [PracticeModes.ethSelect]: "English to Hebrew Multi Choice",
   [PracticeModes.hteSelect]: "Hebrew to English Multi Choice",
   [PracticeModes.browse]: "Browse",
+  [PracticeModes.verbForms]: "Verb forms",
 };
 
 export const statisticsLabelsMapper: Record<StatisticsCounters, string> = {

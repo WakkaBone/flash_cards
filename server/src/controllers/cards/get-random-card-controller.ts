@@ -5,6 +5,7 @@ import { isValid } from "../../utils/validation-util";
 import { CardModelDto } from "../../models/card";
 import { getOwnershipFilter } from "../../utils/roles-util";
 import { GetCardsFilters } from "../../models/filters";
+import { VerbConjugations } from "../../models/verb";
 
 export enum PracticeModes {
   ethInput,
@@ -12,6 +13,7 @@ export enum PracticeModes {
   ethSelect,
   hteSelect,
   browse,
+  verbForms,
 }
 
 type GetRandomCardQueryParams = {
@@ -27,7 +29,13 @@ type GetRandomCardQueryParams = {
 
 export const getRandomCardController = async (
   req: Request<null, ApiResponse, null, GetRandomCardQueryParams>,
-  res: Response<ApiResponse<{ card: CardModelDto; options?: string[] }>>
+  res: Response<
+    ApiResponse<{
+      card: CardModelDto;
+      options?: string[];
+      verbForms?: VerbConjugations;
+    }>
+  >
 ) => {
   if (!isValid(req, res)) return;
   try {
@@ -81,11 +89,18 @@ export const getRandomCardController = async (
         )
       : undefined;
 
+    const shouldIncludeVerbForms =
+      mode !== undefined && +mode === PracticeModes.verbForms;
+    const verbForms = shouldIncludeVerbForms
+      ? await CardsService.getVerbConjugations(card.hebrew)
+      : undefined;
+
     res.status(200).json({
       isSuccess: true,
       data: {
         card,
         options,
+        verbForms,
       },
     });
   } catch (error) {

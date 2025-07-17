@@ -21,7 +21,7 @@ const CardDetails = ({ showDetails, details }: CardDetailsPropsType) =>
     <></>
   );
 
-const IntervalCountdown = ({ seconds }: { seconds: number }) => {
+export const IntervalCountdown = ({ seconds }: { seconds: number }) => {
   const [secondsRemaining, setSecondsRemaining] = useState(seconds);
 
   useEffect(() => {

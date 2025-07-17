@@ -239,7 +239,7 @@ export const mapReversoVerbToConjugationsObj = (
       3: {
         singular: {
           male: future_3_singular_male,
-          female: "",
+          female: future_2_singular_male, //TODO: verify this is correct
         },
         plural: {
           male: future_3_plural_male,

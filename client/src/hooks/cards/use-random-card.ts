@@ -26,6 +26,7 @@ export const useRandomCard = (
 
   const cardData = data?.data?.card;
   const options = data?.data?.options || [];
+  const verbForms = data?.data?.verbForms;
 
   useEffect(() => {
     cardData && setCardId(cardData.id);
@@ -77,6 +78,7 @@ export const useRandomCard = (
   return {
     cardData,
     options,
+    verbForms,
     isLoading,
     isFetching,
     getAnotherCard,

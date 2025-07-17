@@ -58,7 +58,11 @@ export const CardActions = () => {
       <Button
         {...buttonStyles}
         loading={isUpdatingStats}
-        disabled={!translation || showTranslation || isLoading}
+        disabled={
+          (mode !== PracticeModes.verbForms && !translation) ||
+          showTranslation ||
+          isLoading
+        }
         onClick={handleCheckTranslation}
         endIcon={<QuestionMarkRounded />}
       >
@@ -79,6 +83,7 @@ export const CardActions = () => {
     switch (mode) {
       case PracticeModes.ethInput:
       case PracticeModes.hteInput:
+      case PracticeModes.verbForms:
         return (
           <>
             <CheckButton />

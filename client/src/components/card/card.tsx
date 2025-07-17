@@ -11,13 +11,16 @@ import { CardBody } from "./card-body";
 import { CardActions } from "./card-actions";
 import { CardFooter } from "./card-footer";
 import { usePracticeContext } from "../../context/practice-context";
+import { PracticeModes } from "../../models/practice-mode";
+import { VerbFormsPractice } from "../verb-forms-practice/verb-forms-practice";
 
 export const WordCard = () => {
   const { isMobile } = useScreenSize();
 
   const {
+    practiceMode,
     loadersState: { isFetchingCard, isLoadingCard },
-    cardState: { card },
+    cardState: { card, verbForms },
     modalsState: { editModal, verbFormsModal },
   } = usePracticeContext();
 
@@ -29,6 +32,8 @@ export const WordCard = () => {
         No cards were found
       </Typography>
     );
+
+  const isCardLayout = practiceMode !== PracticeModes.verbForms;
 
   return (
     <Card
@@ -54,12 +59,14 @@ export const WordCard = () => {
       >
         {isFetchingCard ? (
           <CardSkeletonLoader />
-        ) : (
+        ) : isCardLayout ? (
           <>
             <CardHeader />
             <CardBody />
             <CardFooter />
           </>
+        ) : (
+          <VerbFormsPractice verbForms={verbForms} card={card} />
         )}
       </CardContent>
       <CardActions />

@@ -1,67 +1,87 @@
+export enum Tenses {
+  Present = "present",
+  Past = "past",
+  Future = "future",
+}
+
+export enum Genders {
+  Male = "male",
+  Female = "female",
+}
+
+export enum Quantities {
+  Singular = "singular",
+  Plural = "plural",
+}
+
 export type PresentTenseConjugations = {
-  singular: {
-    male: string;
-    female: string;
+  [Quantities.Singular]: {
+    [Genders.Male]: string;
+    [Genders.Female]: string;
   };
-  plural: {
-    male: string;
-    female: string;
+  [Quantities.Plural]: {
+    [Genders.Male]: string;
+    [Genders.Female]: string;
   };
 };
+
 export type PastTenseConjugations = {
   1: {
-    singular: string;
-    plural: string;
+    [Quantities.Singular]: string;
+    [Quantities.Plural]: string;
   };
   2: {
-    singular: {
-      male: string;
-      female: string;
+    [Quantities.Singular]: {
+      [Genders.Male]: string;
+      [Genders.Female]: string;
     };
-    plural: {
-      male: string;
-      female: string;
+    [Quantities.Plural]: {
+      [Genders.Male]: string;
+      [Genders.Female]: string;
     };
   };
   3: {
-    singular: {
-      male: string;
-      female: string;
+    [Quantities.Singular]: {
+      [Genders.Male]: string;
+      [Genders.Female]: string;
     };
-    plural: string;
+    [Quantities.Plural]: string;
   };
 };
 
 export type FutureTenseConjugations = {
   1: {
-    singular: string;
-    plural: string;
+    [Quantities.Singular]: string;
+    [Quantities.Plural]: string;
   };
   2: {
-    singular: {
-      male: string;
-      female: string;
+    [Quantities.Singular]: {
+      [Genders.Male]: string;
+      [Genders.Female]: string;
     };
-    plural: {
-      male: string;
-      female: string;
+    [Quantities.Plural]: {
+      [Genders.Male]: string;
+      [Genders.Female]: string;
     };
   };
   3: {
-    singular: {
-      male: string;
-      female: string;
+    [Quantities.Singular]: {
+      [Genders.Male]: string;
+      [Genders.Female]: string;
     };
-    plural: {
-      male: string;
-      female: string;
+    [Quantities.Plural]: {
+      [Genders.Male]: string;
+      [Genders.Female]: string;
     };
   };
 };
 
-export type VerbConjugations = {
+export type VerbTenses = {
+  [Tenses.Present]: PresentTenseConjugations;
+  [Tenses.Past]: PastTenseConjugations;
+  [Tenses.Future]: FutureTenseConjugations;
+};
+
+export type VerbConjugations = VerbTenses & {
   infinitive: string;
-  present: PresentTenseConjugations;
-  past: PastTenseConjugations;
-  future: FutureTenseConjugations;
 };
