@@ -56,7 +56,7 @@ export const PastTenseTable = ({
             [gender]: value,
           };
         } else {
-          updated[person][number] = { [gender]: value } as any;
+          updated[person][number] = { [gender]: value } as any; //TODO: fix types
         }
       } else {
         updated[person][number] = value;

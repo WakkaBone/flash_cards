@@ -55,7 +55,7 @@ export const FutureTenseTable = ({
             [gender]: value,
           };
         } else {
-          updated[person][number] = { [gender]: value } as any;
+          updated[person][number] = { [gender]: value } as any; //TODO: fix type
         }
       } else {
         updated[person][number] = value;
@@ -129,8 +129,8 @@ export const FutureTenseTable = ({
       if (
         typeof valueData === "object" &&
         valueData !== null &&
-        "male" in valueData &&
-        "female" in valueData
+        Genders.Male in valueData &&
+        Genders.Female in valueData
       ) {
         value = valueData[gender];
       }

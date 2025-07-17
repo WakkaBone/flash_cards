@@ -40,7 +40,7 @@ export const DEFAULT_VERB_FORMS = {
 };
 
 export function compareVerbForms(input: any, expected: any) {
-  const result = {} as any;
+  const result = {} as any; //TODO: fix type
 
   for (const key of Object.keys(expected) as (keyof typeof expected)[]) {
     const inputVal = input[key];
@@ -67,9 +67,9 @@ export function compareVerbForms(input: any, expected: any) {
       typeof inputVal === "object"
     ) {
       result[key] = compareVerbForms(
-        inputVal as any,
-        expectedVal as any
-      ) as any;
+        inputVal as any, //TODO: fix type
+        expectedVal as any //TODO: fix type
+      ) as any; //TODO: fix type
     }
   }
 
