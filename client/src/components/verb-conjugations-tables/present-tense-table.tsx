@@ -36,14 +36,14 @@ export const PresentTenseTable = ({
   );
 
   const handleChange = (
-    group: keyof VerbConjugations[Tenses.Present],
+    quantity: keyof VerbConjugations[Tenses.Present],
     gender: keyof VerbConjugations[Tenses.Present][Quantities.Singular],
     value: string
   ) => {
     setInputs((prev) => ({
       ...prev,
-      [group]: {
-        ...prev[group],
+      [quantity]: {
+        ...prev[quantity],
         [gender]: value,
       },
     }));
@@ -59,11 +59,11 @@ export const PresentTenseTable = ({
   }, [practiceProps?.showTranslation, forms]);
 
   const renderTextField = (
-    group: keyof VerbConjugations[Tenses.Present],
+    quantity: keyof VerbConjugations[Tenses.Present],
     gender: keyof VerbConjugations[Tenses.Present][Quantities.Singular]
   ) => {
-    const value = inputs[group][gender];
-    const isCorrect = practiceProps?.results?.[group][gender];
+    const value = inputs[quantity][gender];
+    const isCorrect = practiceProps?.results?.[quantity][gender];
     const shouldShowFeedback =
       practiceProps?.verbFormsSubmitted && !practiceProps?.showTranslation;
 
@@ -75,7 +75,7 @@ export const PresentTenseTable = ({
         <VerbFormInput
           value={value}
           disabled={!!practiceProps?.showTranslation}
-          onChange={(e) => handleChange(group, gender, e.target.value)}
+          onChange={(e) => handleChange(quantity, gender, e.target.value)}
           isCorrect={!!isCorrect}
           shouldShowFeedback={!!shouldShowFeedback}
         />
@@ -84,15 +84,15 @@ export const PresentTenseTable = ({
   };
 
   const renderCell = (
-    group: keyof VerbConjugations[Tenses.Present],
+    quantity: keyof VerbConjugations[Tenses.Present],
     gender: keyof VerbConjugations[Tenses.Present][Quantities.Singular]
   ) => {
-    const correctValue = forms[group][gender];
+    const correctValue = forms[quantity][gender];
 
     return (
       <TableCell>
         {isPractice ? (
-          renderTextField(group, gender)
+          renderTextField(quantity, gender)
         ) : (
           <TableCellWithVoiceover>
             <strong>{correctValue}</strong>

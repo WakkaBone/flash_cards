@@ -68,7 +68,7 @@ export const FutureTenseTable = ({
   useEffect(() => {
     if (isPractice) practiceProps?.onInput?.(inputs);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputs]);
+  }, [inputs, isPractice, practiceProps?.onInput]);
 
   useEffect(() => {
     if (practiceProps?.showTranslation) setInputs(forms);
@@ -76,11 +76,11 @@ export const FutureTenseTable = ({
 
   const renderInput = (
     person: keyof VerbConjugations[Tenses.Future],
-    number: Quantities,
+    quantity: Quantities,
     gender?: Genders
   ) => {
-    const inputVal = inputs[person][number];
-    const resultVal = practiceProps?.results?.[person]?.[number];
+    const inputVal = inputs[person][quantity];
+    const resultVal = practiceProps?.results?.[person]?.[quantity];
 
     const value =
       gender && typeof inputVal === "object"
@@ -107,7 +107,12 @@ export const FutureTenseTable = ({
             value={value}
             disabled={!!practiceProps?.showTranslation}
             onChange={(e) =>
-              handleInputChange(person, number, gender ?? null, e.target.value)
+              handleInputChange(
+                person,
+                quantity,
+                gender ?? null,
+                e.target.value
+              )
             }
             isCorrect={!!isCorrect}
             shouldShowFeedback={!!shouldShowFeedback}
@@ -119,10 +124,10 @@ export const FutureTenseTable = ({
 
   const renderTextCell = (
     person: keyof VerbConjugations[Tenses.Future],
-    number: Quantities,
+    quantity: Quantities,
     gender?: Genders
   ) => {
-    const valueData = forms[person][number];
+    const valueData = forms[person][quantity];
 
     let value: string = "";
     if (gender) {

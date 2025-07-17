@@ -77,11 +77,11 @@ export const PastTenseTable = ({
 
   const renderInput = (
     person: keyof VerbConjugations[Tenses.Past],
-    group: Quantities,
-    gender: Genders.Male | Genders.Female | undefined
+    quantity: Quantities,
+    gender: Genders | undefined
   ) => {
-    const inputGroupValue = inputs[person][group];
-    const resultsGroupValue = practiceProps?.results?.[person]?.[group];
+    const inputGroupValue = inputs[person][quantity];
+    const resultsGroupValue = practiceProps?.results?.[person]?.[quantity];
 
     const value =
       gender && typeof inputGroupValue === "object" && inputGroupValue !== null
@@ -112,7 +112,12 @@ export const PastTenseTable = ({
             value={value}
             disabled={!!practiceProps?.showTranslation}
             onChange={(e) =>
-              handleInputChange(person, group, gender ?? null, e.target.value)
+              handleInputChange(
+                person,
+                quantity,
+                gender ?? null,
+                e.target.value
+              )
             }
             isCorrect={!!isCorrect}
             shouldShowFeedback={!!shouldShowFeedback}
@@ -124,10 +129,10 @@ export const PastTenseTable = ({
 
   const renderTextCell = (
     person: keyof VerbConjugations[Tenses.Past],
-    group: Quantities,
+    quantity: Quantities,
     gender?: Genders
   ) => {
-    const groupValue = forms[person][group];
+    const groupValue = forms[person][quantity];
     const value =
       gender && typeof groupValue === "object" && groupValue !== null
         ? groupValue[gender]
