@@ -25,6 +25,7 @@ export interface VerbTenseTablePropsType<Tense extends keyof VerbTenses> {
   forms: VerbConjugations[Tense];
   isPractice?: boolean;
   practiceProps?: {
+    input: VerbConjugations[Tense];
     onInput?: (input: VerbConjugations[Tense]) => void;
     results?: BooleanifiedVerbConjugations[Tense];
     showTranslation?: boolean;

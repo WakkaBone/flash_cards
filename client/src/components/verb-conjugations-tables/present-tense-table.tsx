@@ -8,7 +8,6 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
 import {
   Genders,
   Quantities,
@@ -22,7 +21,6 @@ import {
   VerbTenseTablePropsType,
   VoiceoverWrapper,
 } from "./shared";
-import { DEFAULT_VERB_FORMS } from "../../hooks/cards/use-card-translation";
 
 type PresentTenseTablePropsType = VerbTenseTablePropsType<Tenses.Present>;
 
@@ -31,38 +29,24 @@ export const PresentTenseTable = ({
   isPractice = false,
   practiceProps,
 }: PresentTenseTablePropsType) => {
-  const [inputs, setInputs] = useState<VerbConjugations[Tenses.Present]>(
-    DEFAULT_VERB_FORMS.present
-  );
-
   const handleChange = (
     quantity: keyof VerbConjugations[Tenses.Present],
     gender: keyof VerbConjugations[Tenses.Present][Quantities.Singular],
     value: string
   ) => {
-    setInputs((prev) => ({
-      ...prev,
-      [quantity]: {
-        ...prev[quantity],
-        [gender]: value,
-      },
-    }));
+    if (!practiceProps?.input) return;
+    const newValue = {
+      ...practiceProps.input,
+      [quantity]: { ...practiceProps.input[quantity], [gender]: value },
+    };
+    practiceProps?.onInput?.(newValue);
   };
-
-  useEffect(() => {
-    if (isPractice) practiceProps?.onInput?.(inputs);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputs, isPractice, practiceProps?.onInput]);
-
-  useEffect(() => {
-    if (practiceProps?.showTranslation) setInputs(forms);
-  }, [practiceProps?.showTranslation, forms]);
 
   const renderTextField = (
     quantity: keyof VerbConjugations[Tenses.Present],
     gender: keyof VerbConjugations[Tenses.Present][Quantities.Singular]
   ) => {
-    const value = inputs[quantity][gender];
+    const value = practiceProps?.input?.[quantity][gender];
     const isCorrect = practiceProps?.results?.[quantity][gender];
     const shouldShowFeedback =
       practiceProps?.verbFormsSubmitted && !practiceProps?.showTranslation;
@@ -70,7 +54,7 @@ export const PresentTenseTable = ({
     return (
       <VoiceoverWrapper
         shouldPlay={!!practiceProps?.showTranslation}
-        value={value}
+        value={value || ""}
       >
         <VerbFormInput
           value={value}

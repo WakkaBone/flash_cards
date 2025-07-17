@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { Tenses, VerbConjugations, VerbTenses } from "../../models/verb";
 import { usePracticeContext } from "../../context/practice-context";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { PresentTenseTable } from "../verb-conjugations-tables/present-tense-table";
 import { PastTenseTable } from "../verb-conjugations-tables/past-tense-table";
 import { FutureTenseTable } from "../verb-conjugations-tables/future-tense-table";
@@ -20,6 +20,7 @@ export const VerbFormsPractice = ({
     settings: { interval },
     loadersState: { inTransition },
     translationState: {
+      inputtedVerbForms,
       setInputtedVerbForms,
       verbFormsResult,
       showTranslation,
@@ -37,57 +38,21 @@ export const VerbFormsPractice = ({
     [setInputtedVerbForms]
   );
 
-  const sharedTensePracticeProps = useMemo(
-    () => ({
+  const getPracticeProps = useCallback(
+    <T extends keyof VerbTenses>(tense: T) => ({
+      input: inputtedVerbForms[tense],
+      onInput: (input: VerbConjugations[T]) => handleInput(tense, input),
+      results: verbFormsResult?.[tense],
       showTranslation,
       verbFormsSubmitted,
     }),
-    [showTranslation, verbFormsSubmitted]
-  );
-
-  const onInputPresentTense = useCallback(
-    (input: VerbConjugations[Tenses.Present]) => {
-      handleInput(Tenses.Present, input);
-    },
-    [handleInput]
-  );
-  const presentTensePracticeProps = useMemo(
-    () => ({
-      ...sharedTensePracticeProps,
-      onInput: onInputPresentTense,
-      results: verbFormsResult?.present,
-    }),
-    [sharedTensePracticeProps, verbFormsResult?.present, onInputPresentTense]
-  );
-
-  const onInputPastTense = useCallback(
-    (input: VerbConjugations[Tenses.Past]) => {
-      handleInput(Tenses.Past, input);
-    },
-    [handleInput]
-  );
-  const pastTensePracticeProps = useMemo(
-    () => ({
-      ...sharedTensePracticeProps,
-      onInput: onInputPastTense,
-      results: verbFormsResult?.past,
-    }),
-    [sharedTensePracticeProps, verbFormsResult?.past, onInputPastTense]
-  );
-
-  const onInputFutureTense = useCallback(
-    (input: VerbConjugations[Tenses.Future]) => {
-      handleInput(Tenses.Future, input);
-    },
-    [handleInput]
-  );
-  const futureTensePracticeProps = useMemo(
-    () => ({
-      ...sharedTensePracticeProps,
-      onInput: onInputFutureTense,
-      results: verbFormsResult?.future,
-    }),
-    [sharedTensePracticeProps, verbFormsResult?.future, onInputFutureTense]
+    [
+      handleInput,
+      inputtedVerbForms,
+      verbFormsResult,
+      showTranslation,
+      verbFormsSubmitted,
+    ]
   );
 
   if (!verbForms)
@@ -105,17 +70,17 @@ export const VerbFormsPractice = ({
       <PresentTenseTable
         forms={verbForms.present}
         isPractice
-        practiceProps={presentTensePracticeProps}
+        practiceProps={getPracticeProps(Tenses.Present)}
       />
       <PastTenseTable
         forms={verbForms.past}
         isPractice
-        practiceProps={pastTensePracticeProps}
+        practiceProps={getPracticeProps(Tenses.Past)}
       />
       <FutureTenseTable
         forms={verbForms.future}
         isPractice
-        practiceProps={futureTensePracticeProps}
+        practiceProps={getPracticeProps(Tenses.Future)}
       />
       {inTransition && (
         <Box mt={2}>

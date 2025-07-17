@@ -8,7 +8,6 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
 import {
   Genders,
   PastTenseConjugations,
@@ -23,7 +22,6 @@ import {
   VerbTenseTablePropsType,
   VoiceoverWrapper,
 } from "./shared";
-import { DEFAULT_VERB_FORMS } from "../../hooks/cards/use-card-translation";
 import { useScreenSize } from "../../hooks";
 
 type PastTenseTablePropsType = VerbTenseTablePropsType<Tenses.Past>;
@@ -35,53 +33,42 @@ export const PastTenseTable = ({
 }: PastTenseTablePropsType) => {
   const { isMobile } = useScreenSize();
 
-  const [inputs, setInputs] = useState<VerbConjugations[Tenses.Past]>(
-    DEFAULT_VERB_FORMS.past
-  );
-
   const handleInputChange = (
     person: keyof PastTenseConjugations,
     number: Quantities,
     gender: Genders | null,
     value: string
   ) => {
-    setInputs((prev) => {
-      const updated = { ...prev };
-      const currentVal = updated[person][number];
+    if (!practiceProps?.input) return;
 
-      if (gender) {
-        if (typeof currentVal === "object" && currentVal !== null) {
-          updated[person][number] = {
-            ...currentVal,
-            [gender]: value,
-          };
-        } else {
-          updated[person][number] = { [gender]: value } as any; //TODO: fix types
-        }
+    const updated = { ...practiceProps.input };
+    const currentVal = updated[person][number];
+
+    if (gender) {
+      if (typeof currentVal === "object" && currentVal !== null) {
+        updated[person][number] = {
+          ...currentVal,
+          [gender]: value,
+        };
       } else {
-        updated[person][number] = value;
+        updated[person][number] = { [gender]: value } as any; //TODO: fix types
       }
+    } else {
+      updated[person][number] = value;
+    }
 
-      return updated;
-    });
+    practiceProps?.onInput?.(updated);
   };
-
-  useEffect(() => {
-    if (isPractice) practiceProps?.onInput?.(inputs);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputs, isPractice, practiceProps?.onInput]);
-
-  useEffect(() => {
-    if (practiceProps?.showTranslation) setInputs(forms);
-  }, [practiceProps?.showTranslation, forms]);
 
   const renderInput = (
     person: keyof VerbConjugations[Tenses.Past],
     quantity: Quantities,
     gender: Genders | undefined
   ) => {
-    const inputGroupValue = inputs[person][quantity];
-    const resultsGroupValue = practiceProps?.results?.[person]?.[quantity];
+    if (!practiceProps?.input || !practiceProps.results) return;
+
+    const inputGroupValue = practiceProps.input[person][quantity];
+    const resultsGroupValue = practiceProps.results[person]?.[quantity];
 
     const value =
       gender && typeof inputGroupValue === "object" && inputGroupValue !== null

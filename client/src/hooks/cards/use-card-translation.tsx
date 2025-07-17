@@ -107,7 +107,10 @@ export const useCardTranslation = (
     setVerbFormsSubmitted(false);
   }, []);
 
-  useEffect(() => setTranslation(""), [showTranslation]);
+  useEffect(() => {
+    if (showTranslation) setInputtedVerbForms(verbForms || DEFAULT_VERB_FORMS);
+    setTranslation("");
+  }, [showTranslation, verbForms]);
 
   useEffect(() => resetTranslation(), [card?.id, resetTranslation]); //cleanup on card change
 

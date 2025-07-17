@@ -23,7 +23,10 @@ import { MAIN_CATEGORIES } from "../constants";
 import { shuffleArray } from "../utils/array-util";
 import { useHotkeys } from "react-hotkeys-hook";
 import { VerbConjugations, VerbTenses } from "../models/verb";
-import { BooleanifiedVerbConjugations } from "../hooks/cards/use-card-translation";
+import {
+  BooleanifiedVerbConjugations,
+  DEFAULT_VERB_FORMS,
+} from "../hooks/cards/use-card-translation";
 
 interface PracticeContextType {
   practiceMode: PracticeModes;
@@ -55,6 +58,7 @@ interface PracticeContextType {
   translationState: {
     translation: string;
     setTranslation: React.Dispatch<React.SetStateAction<string>>;
+    inputtedVerbForms: VerbTenses;
     setInputtedVerbForms: React.Dispatch<React.SetStateAction<VerbTenses>>;
     verbFormsResult: BooleanifiedVerbConjugations | null;
     showTranslation: boolean;
@@ -105,6 +109,7 @@ const PracticeContext = createContext<PracticeContextType>({
   translationState: {
     translation: "",
     setTranslation: () => {},
+    inputtedVerbForms: DEFAULT_VERB_FORMS,
     setInputtedVerbForms: () => {},
     verbFormsResult: null,
     verbFormsSubmitted: false,
@@ -195,6 +200,7 @@ export const PracticeContextProvider = ({
     setShowTranslation,
     isCorrectTranslation,
     handleSelectOption,
+    inputtedVerbForms,
     setInputtedVerbForms,
     verbFormsResult,
     verbFormsSubmitted,
@@ -335,6 +341,7 @@ export const PracticeContextProvider = ({
         translationState: {
           translation,
           setTranslation,
+          inputtedVerbForms,
           setInputtedVerbForms,
           verbFormsResult,
           verbFormsSubmitted,
