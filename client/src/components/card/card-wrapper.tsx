@@ -28,6 +28,7 @@ export const CardWrapper = ({
   const {
     cardData,
     options,
+    verbForms,
     getAnotherCard,
     isFetching: isFetchingCard,
     isLoading: isLoadingCard,
@@ -84,6 +85,7 @@ export const CardWrapper = ({
     <PracticeContextProvider
       cardData={cardData}
       options={options}
+      verbForms={verbForms}
       isFetching={isFetchingCard}
       isLoading={isLoadingCard}
       updateCardStats={updateCardStats}

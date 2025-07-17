@@ -22,6 +22,8 @@ import { MutateOptionsEnhanced } from "../models/mutate-options-enhanced";
 import { MAIN_CATEGORIES } from "../constants";
 import { shuffleArray } from "../utils/array-util";
 import { useHotkeys } from "react-hotkeys-hook";
+import { VerbConjugations, VerbTenses } from "../models/verb";
+import { BooleanifiedVerbConjugations } from "../hooks/cards/use-card-translation";
 
 interface PracticeContextType {
   practiceMode: PracticeModes;
@@ -32,6 +34,7 @@ interface PracticeContextType {
     card?: CardModel | null;
     cardIsVerb: boolean;
     options: string[];
+    verbForms?: VerbConjugations;
   };
   actions: {
     getNextCard: () => Promise<void>;
@@ -52,8 +55,11 @@ interface PracticeContextType {
   translationState: {
     translation: string;
     setTranslation: React.Dispatch<React.SetStateAction<string>>;
+    setInputtedVerbForms: React.Dispatch<React.SetStateAction<VerbTenses>>;
+    verbFormsResult: BooleanifiedVerbConjugations | null;
     showTranslation: boolean;
     handleSelectOption: (option: string) => void;
+    verbFormsSubmitted: boolean;
   };
   modalsState: {
     verbFormsModal: {
@@ -99,6 +105,9 @@ const PracticeContext = createContext<PracticeContextType>({
   translationState: {
     translation: "",
     setTranslation: () => {},
+    setInputtedVerbForms: () => {},
+    verbFormsResult: null,
+    verbFormsSubmitted: false,
     showTranslation: false,
     handleSelectOption: () => {},
   },
@@ -129,11 +138,13 @@ export const PracticeContextProvider = ({
   settings,
   updateStatsRest: { isPending: isUpdatingStats },
   cardData,
+  verbForms,
   timerProps,
   getNextCard,
 }: PropsWithChildren<{
   cardData?: CardModel | null;
   options: string[];
+  verbForms?: VerbConjugations;
   isFetching: boolean;
   isLoading: boolean;
   updateCardStats: (
@@ -184,10 +195,21 @@ export const PracticeContextProvider = ({
     setShowTranslation,
     isCorrectTranslation,
     handleSelectOption,
-  } = useCardTranslation(card, eth, hasOptions);
+    setInputtedVerbForms,
+    verbFormsResult,
+    verbFormsSubmitted,
+    setVerbFormsSubmitted,
+  } = useCardTranslation(card, eth, hasOptions, verbForms);
 
   const handleCheckTranslation = useCallback(() => {
-    if (!card || practiceMode === PracticeModes.browse || !translation) return;
+    if (
+      !card ||
+      practiceMode === PracticeModes.browse ||
+      (practiceMode !== PracticeModes.verbForms && !translation)
+    )
+      return;
+
+    practiceMode === PracticeModes.verbForms && setVerbFormsSubmitted(true);
 
     timerProps.pause();
     updateCardStats(
@@ -216,6 +238,7 @@ export const PracticeContextProvider = ({
     timerProps,
     translation,
     setShowTranslation,
+    setVerbFormsSubmitted,
   ]);
 
   const handleToggleTranslation = useCallback(() => {
@@ -308,10 +331,13 @@ export const PracticeContextProvider = ({
         eth,
         settings,
         inputRef,
-        cardState: { card, cardIsVerb, options: allOptions },
+        cardState: { card, cardIsVerb, options: allOptions, verbForms },
         translationState: {
           translation,
           setTranslation,
+          setInputtedVerbForms,
+          verbFormsResult,
+          verbFormsSubmitted,
           showTranslation,
           handleSelectOption,
         },

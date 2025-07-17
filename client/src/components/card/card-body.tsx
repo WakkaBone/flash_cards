@@ -132,5 +132,7 @@ export const CardBody = () => {
     }
     case PracticeModes.browse:
       return <TextField value={card.english} sx={{ pointerEvents: "none" }} />;
+    default:
+      return <></>;
   }
 };

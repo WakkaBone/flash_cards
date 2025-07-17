@@ -2,6 +2,7 @@ import { CardModel, Priorities } from "./card";
 import { CategoryModel } from "./category";
 import { AllOptionInt, AllOptionString } from "./shared";
 import { Roles, UserModel } from "./user";
+import { VerbConjugations } from "./verb";
 
 export interface ApiError<T = any> {
   message?: string;
@@ -18,6 +19,7 @@ export interface ApiResponse<T = any, E = any> {
 export type GetRandomCardResponse = ApiResponse<{
   card: CardModel | null;
   options?: string[];
+  verbForms?: VerbConjugations;
 }>;
 
 export type PrioritiesExtended = Priorities | AllOptionInt;

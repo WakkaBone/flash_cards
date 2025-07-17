@@ -13,6 +13,9 @@ import { useScreenSize } from "../../hooks";
 import { useGetCategories, useAddCategory } from "../../hooks";
 import { mapCategoryToSelectOption } from "../../utils/mappers";
 import { IdLabel } from "../../models/shared";
+import { MAIN_CATEGORIES } from "../../constants";
+
+export const VERBS_CATEGORY = { id: MAIN_CATEGORIES.verb, label: "Verbs" };
 
 export type CategoryOptionType = IdLabel;
 
