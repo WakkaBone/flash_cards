@@ -207,42 +207,61 @@ export function VerbFormsTable<T extends keyof VerbTenses>(
     ]
   );
 
+  const buildRow = useCallback(
+    (
+      label: string,
+      person: 1 | 2 | 3,
+      quantity: Quantities,
+      genders?: Genders[]
+    ): TableRowData => ({
+      label,
+      cells: genders
+        ? genders.map((g) => renderCell(person, quantity, g))
+        : [renderCell(person, quantity)],
+    }),
+    [renderCell]
+  );
+
   const tableRows = useMemo(() => {
+    const sgPostfix = isMobile ? "Sg." : " Singular";
+    const plPostfix = isMobile ? "Pl." : " Plural";
+    let rows: { label: string; cells: JSX.Element[] }[] = [];
+
     switch (tense) {
       case Tenses.Present: {
-        const rows = [Quantities.Singular, Quantities.Plural].map(
-          (quantity) => ({
-            label: quantity[0].toUpperCase() + quantity.slice(1),
-            cells: [
-              renderCell(undefined, quantity, Genders.Male),
-              renderCell(undefined, quantity, Genders.Female),
-            ],
-          })
-        );
-
-        return rows.map(({ label, cells }, index) => (
-          <TableRow key={index}>
-            <TableCell>{label}</TableCell>
-            {cells}
-          </TableRow>
-        ));
+        rows = [Quantities.Singular, Quantities.Plural].map((quantity) => ({
+          label: quantity[0].toUpperCase() + quantity.slice(1),
+          cells: [
+            renderCell(undefined, quantity, Genders.Male),
+            renderCell(undefined, quantity, Genders.Female),
+          ],
+        }));
+        break;
       }
 
-      case Tenses.Past:
-      case Tenses.Future: {
-        const buildRow = (
-          label: string,
-          person: 1 | 2 | 3,
-          quantity: Quantities,
-          genders?: Genders[]
-        ): TableRowData => ({
-          label,
-          cells: genders
-            ? genders.map((g) => renderCell(person, quantity, g))
-            : [renderCell(person, quantity)],
-        });
+      case Tenses.Past: {
+        rows = [
+          buildRow(`1st ${sgPostfix}`, 1, Quantities.Singular),
+          buildRow(`2nd ${sgPostfix}`, 2, Quantities.Singular, [
+            Genders.Male,
+            Genders.Female,
+          ]),
+          buildRow(`3rd ${sgPostfix}`, 3, Quantities.Singular, [
+            Genders.Male,
+            Genders.Female,
+          ]),
+          buildRow(`1st ${plPostfix}`, 1, Quantities.Plural),
+          buildRow(`2nd ${plPostfix}`, 2, Quantities.Plural, [
+            Genders.Male,
+            Genders.Female,
+          ]),
+          buildRow(`3rd ${plPostfix}`, 3, Quantities.Plural),
+        ];
+        break;
+      }
 
-        const rows = [
+      case Tenses.Future: {
+        rows = [
           buildRow("1st Singular", 1, Quantities.Singular),
           buildRow("2nd Singular", 2, Quantities.Singular, [
             Genders.Male,
@@ -262,30 +281,33 @@ export function VerbFormsTable<T extends keyof VerbTenses>(
             Genders.Female,
           ]),
         ];
-
-        return rows.map(({ label, cells }, index) => (
-          <TableRow key={index}>
-            <TableCell>
-              {label}{" "}
-              {isMobile
-                ? index < 3
-                  ? "Sg."
-                  : "Pl."
-                : index < 3
-                ? "Singular"
-                : "Plural"}
-            </TableCell>
-            {cells}
-          </TableRow>
-        ));
+        break;
       }
     }
-  }, [tense, isMobile, renderCell]);
+
+    return rows.map(({ label, cells }, index) => (
+      <TableRow key={index}>
+        <TableCell>{label}</TableCell>
+        {cells}
+      </TableRow>
+    ));
+  }, [tense, isMobile, renderCell, buildRow]);
+
+  const tableTitle = useMemo(() => {
+    switch (tense) {
+      case Tenses.Present:
+        return "Present Tense (הווה)";
+      case Tenses.Past:
+        return "Past Tense (עבר)";
+      case Tenses.Future:
+        return "Future Tense (עתיד)";
+    }
+  }, [tense]);
 
   return (
     <TableContainer component={Paper} sx={{ margin: "auto", mt: 2 }}>
       <Typography variant="h6" align="center" sx={{ mt: 2 }}>
-        Present Tense (הווה)
+        {tableTitle}
       </Typography>
       <Table>
         <TableHead>
