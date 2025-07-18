@@ -2,11 +2,9 @@ import { Box, Typography } from "@mui/material";
 import { Tenses, VerbConjugations, VerbTenses } from "../../models/verb";
 import { usePracticeContext } from "../../context/practice-context";
 import { useCallback } from "react";
-import { PresentTenseTable } from "../verb-conjugations-tables/present-tense-table";
-import { PastTenseTable } from "../verb-conjugations-tables/past-tense-table";
-import { FutureTenseTable } from "../verb-conjugations-tables/future-tense-table";
 import { CardModel } from "../../models/card";
 import { IntervalCountdown } from "../card/card-footer";
+import { VerbFormsTable } from "../verb-forms-table/verb-forms-table";
 
 type VerbFormsPracticePropsType = {
   card: CardModel | null | undefined;
@@ -32,9 +30,7 @@ export const VerbFormsPractice = ({
     <T extends VerbConjugations[keyof VerbConjugations]>(
       tense: keyof VerbTenses,
       input: T
-    ) => {
-      setInputtedVerbForms((prev) => ({ ...prev, [tense]: input }));
-    },
+    ) => setInputtedVerbForms((prev) => ({ ...prev, [tense]: input })),
     [setInputtedVerbForms]
   );
 
@@ -67,21 +63,15 @@ export const VerbFormsPractice = ({
       <Typography align="center" typography={"h4"}>
         {verbForms.infinitive} - {card?.english}
       </Typography>
-      <PresentTenseTable
-        forms={verbForms.present}
-        isPractice
-        practiceProps={getPracticeProps(Tenses.Present)}
-      />
-      <PastTenseTable
-        forms={verbForms.past}
-        isPractice
-        practiceProps={getPracticeProps(Tenses.Past)}
-      />
-      <FutureTenseTable
-        forms={verbForms.future}
-        isPractice
-        practiceProps={getPracticeProps(Tenses.Future)}
-      />
+      {[Tenses.Present, Tenses.Past, Tenses.Future].map((tense) => (
+        <VerbFormsTable
+          key={tense}
+          tense={tense}
+          isPractice={true}
+          forms={verbForms[tense]}
+          practiceProps={getPracticeProps(tense)}
+        />
+      ))}
       {inTransition && (
         <Box mt={2}>
           <IntervalCountdown seconds={interval} />

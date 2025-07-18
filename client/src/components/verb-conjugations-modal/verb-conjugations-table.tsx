@@ -1,9 +1,7 @@
 import { Box, Typography } from "@mui/material";
-import { VerbConjugations } from "../../models/verb";
+import { Tenses, VerbConjugations } from "../../models/verb";
 import { useTTS } from "../../hooks";
-import { FutureTenseTable } from "../verb-conjugations-tables/future-tense-table";
-import { PresentTenseTable } from "../verb-conjugations-tables/present-tense-table";
-import { PastTenseTable } from "../verb-conjugations-tables/past-tense-table";
+import { VerbFormsTable } from "../verb-forms-table/verb-forms-table";
 
 type VerbConjugationsTablePropsType = {
   verbConjugations?: VerbConjugations | null;
@@ -19,7 +17,7 @@ export const VerbConjugationsTable = ({
   if (verbConjugations === undefined)
     return <Typography>Loading...</Typography>;
 
-  const { infinitive, present, past, future } = verbConjugations;
+  const { infinitive } = verbConjugations;
 
   return (
     <Box>
@@ -30,9 +28,13 @@ export const VerbConjugationsTable = ({
       >
         {infinitive}
       </Typography>
-      <PresentTenseTable forms={present} />
-      <PastTenseTable forms={past} />
-      <FutureTenseTable forms={future} />
+      {[Tenses.Present, Tenses.Past, Tenses.Future].map((tense) => (
+        <VerbFormsTable
+          key={tense}
+          tense={tense}
+          forms={verbConjugations[tense]}
+        />
+      ))}
     </Box>
   );
 };

@@ -13,3 +13,7 @@ export const removeFalsyValues = <T extends Record<string, unknown>>(
 
   return result;
 };
+
+export function deepCopy<T>(obj: T): T {
+  return JSON.parse(JSON.stringify(obj));
+}
