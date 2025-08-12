@@ -1,4 +1,5 @@
 {
     "entry": "./src",
-    "theme": "mint"
+    "theme": "mint",
+    "name": "My Project Docs"
 }
