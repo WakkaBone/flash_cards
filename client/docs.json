@@ -1,5 +1,17 @@
 {
-    "entry": "./src",
+    "name": "My Project Docs",
     "theme": "mint",
-    "name": "My Project Docs"
+    "colors": {
+        "accent": "#6366f1"
+    },
+    "navigation": [
+        {
+            "group": "Getting Started",
+            "pages": [
+                "introduction.md"
+            ]
+        }
+    ],
+    "entry": "./src",
+    "docs": "./docs"
 }
