@@ -22,7 +22,7 @@ export class UsersService {
       AxiosPromise<ApiResponse<CategoryModel[]>> | AxiosError<ApiResponse>
     >(url);
     if (response instanceof AxiosError) return handleError(response);
-    return response.data;
+    return false;
   }
 
   static async addUser(user: AddUserPayload) {
